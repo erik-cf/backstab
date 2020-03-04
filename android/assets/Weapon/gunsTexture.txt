@@ -1,0 +1,47 @@
+guns.png
+size: 1948, 1411
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+gun1
+  rotate: false
+  xy: 0, 0
+  size: 410, 331
+  orig: 410, 331
+  offset: 0, 0
+  index: -1
+gun2
+  rotate: false
+  xy: 410, 0
+  size: 661, 479
+  orig: 661, 479
+  offset: 0, 0
+  index: -1
+gun3
+  rotate: false
+  xy: 1071, 0
+  size: 782, 584
+  orig: 782, 584
+  offset: 0, 0
+  index: -1
+gun4
+  rotate: false
+  xy: 0, 584
+  size: 870, 377
+  orig: 870, 377
+  offset: 0, 0
+  index: -1
+gun5
+  rotate: false
+  xy: 0, 1000
+  size: 1193, 411
+  orig: 1193, 411
+  offset: 0, 0
+  index: -1
+gun6
+  rotate: false
+  xy: 870, 584
+  size: 1078, 416
+  orig: 1078, 416
+  offset: 0, 0
+  index: -1
