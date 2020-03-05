@@ -1,4 +1,4 @@
-package com.mpec.backstab;
+package com.mpec.backstab.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class MyGdxGame extends ApplicationAdapter {
+public class Backstab extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
 	

@@ -423,258 +423,258 @@ repeat: none
   orig: 64, 64
   offset: 0, 0
   index: -1
-104
+move_up
   rotate: false
   xy: 256, 448
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-105
+  index: 0
+move_up
   rotate: false
   xy: 320, 448
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-106
+  index: 1
+move_up
   rotate: false
   xy: 384, 448
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-107
+  index: 2
+move_up
   rotate: false
   xy: 448, 448
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-108
+  index: 3
+move_up
   rotate: false
   xy: 0, 512
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-109
+  index: 4
+move_up
   rotate: false
   xy: 64, 512
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-110
+  index: 5
+move_up
   rotate: false
   xy: 128, 512
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-111
+  index: 6
+move_up
   rotate: false
   xy: 192, 512
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-112
+  index: 7
+move_up
   rotate: false
   xy: 256, 512
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-117
+  index: 8
+move_left
   rotate: false
   xy: 320, 512
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-118
+  index: 0
+move_left
   rotate: false
   xy: 384, 512
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-119
+  index: 1
+move_left
   rotate: false
   xy: 448, 512
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-120
+  index: 2
+move_left
   rotate: false
   xy: 0, 576
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-121
+  index: 3
+move_left
   rotate: false
   xy: 64, 576
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-122
+  index: 4
+move_left
   rotate: false
   xy: 128, 576
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-123
+  index: 5
+move_left
   rotate: false
   xy: 192, 576
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-124
+  index: 6
+move_left
   rotate: false
   xy: 256, 576
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-125
+  index: 7
+move_left
   rotate: false
   xy: 320, 576
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-130
+  index: 8
+move_down
   rotate: false
   xy: 384, 576
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-131
+  index: 0
+move_down
   rotate: false
   xy: 448, 576
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-132
+  index: 1
+move_down
   rotate: false
   xy: 0, 640
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-133
+  index: 2
+move_down
   rotate: false
   xy: 64, 640
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-134
+  index: 3
+move_down
   rotate: false
   xy: 128, 640
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-135
+  index: 4
+move_down
   rotate: false
   xy: 192, 640
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-136
+  index: 5
+move_down
   rotate: false
   xy: 256, 640
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-137
+  index: 6
+move_down
   rotate: false
   xy: 320, 640
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-138
+  index: 7
+move_down
   rotate: false
   xy: 384, 640
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-143
+  index: 8
+move_right
   rotate: false
   xy: 448, 640
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-144
+  index: 0
+move_right
   rotate: false
   xy: 0, 704
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-145
+  index: 1
+move_right
   rotate: false
   xy: 64, 704
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-146
+  index: 2
+move_right
   rotate: false
   xy: 128, 704
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-147
+  index: 3
+move_right
   rotate: false
   xy: 192, 704
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-148
+  index: 4
+move_right
   rotate: false
   xy: 256, 704
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-149
+  index: 5
+move_right
   rotate: false
   xy: 320, 704
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-150
+  index: 6
+move_right
   rotate: false
   xy: 384, 704
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-151
+  index: 7
+move_right
   rotate: false
   xy: 448, 704
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
+  index: 8
 156
   rotate: false
   xy: 0, 768
