@@ -3,20 +3,20 @@ size: 512, 1472
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-000
+IDLE_UP
   rotate: false
   xy: 0, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-001
+  index: 0
+IDLE_UP
   rotate: false
   xy: 64, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
+  index: 1
 002
   rotate: false
   xy: 128, 0
@@ -52,20 +52,20 @@ repeat: none
   orig: 64, 64
   offset: 0, 0
   index: -1
-013
+IDLE_LEFT
   rotate: false
   xy: 448, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-014
+  index: 0
+IDLE_LEFT
   rotate: false
   xy: 0, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
+  index: 1
 015
   rotate: false
   xy: 64, 64
@@ -101,20 +101,20 @@ repeat: none
   orig: 64, 64
   offset: 0, 0
   index: -1
-026
+IDLE_DOWN
   rotate: false
   xy: 384, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-027
+  index: 0
+IDLE_DOWN
   rotate: false
   xy: 448, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
+  index: 1
 028
   rotate: false
   xy: 0, 128
@@ -150,20 +150,20 @@ repeat: none
   orig: 64, 64
   offset: 0, 0
   index: -1
-039
+IDLE_RIGHT
   rotate: false
   xy: 320, 128
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
-040
+  index: 0
+IDLE_RIGHT
   rotate: false
   xy: 384, 128
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: -1
+  index: 1
 041
   rotate: false
   xy: 448, 128

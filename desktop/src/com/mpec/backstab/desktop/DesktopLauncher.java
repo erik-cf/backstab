@@ -11,5 +11,6 @@ public class DesktopLauncher {
 		config.title = "Backstab";
 		config.width = 1024;
 		config.height = 768;
+		config.foregroundFPS = 30;
 	}
 }
