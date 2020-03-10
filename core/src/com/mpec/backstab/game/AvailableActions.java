@@ -29,6 +29,21 @@ public interface AvailableActions {
 
     String name_die = "die";
 
+    String name_die_up_mgzomb = "die_up_mgzomb";
+    String name_die_left_mgzomb = "die_left_mgzomb";
+    String name_die_down_mgzomb = "die_down_mgzomb";
+    String name_die_right_mgzomb = "die_right_mgzomb";
+
+    String name_move_up_mgzomb = "move_up_mgzomb";
+    String name_move_left_mgzomb = "move_left_mgzomb";
+    String name_move_down_mgzomb = "move_down_mgzomb";
+    String name_move_right_mgzomb = "move_right_mgzomb";
+
+    String name_attack_up_mgzomb = "attack_up_mgzomb";
+    String name_attack_left_mgzomb = "attack_left_mgzomb";
+    String name_attack_down_mgzomb = "attack_down_mgzomb";
+    String name_attack_right_mgzomb = "attack_right_mgzomb";
+
     String name_Run="Run";
     String name_Walk="Walk";
     String name_Idle="Idle";

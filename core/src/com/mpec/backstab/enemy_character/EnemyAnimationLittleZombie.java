@@ -1,6 +1,5 @@
 package com.mpec.backstab.enemy_character;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -10,10 +9,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.mpec.backstab.game.Backstab;
 import com.mpec.backstab.game.AvailableActions;
+import com.mpec.backstab.game.Backstab;
 
-public class EnemyAnimation implements Screen, AvailableActions {
+public class EnemyAnimationLittleZombie implements Screen, AvailableActions {
 
     public TextureAtlas enemyAtlas;
     public SpriteBatch batch;
@@ -27,9 +26,9 @@ public class EnemyAnimation implements Screen, AvailableActions {
     int direction;
 
 
-    public EnemyAnimation(Backstab game){
+    public EnemyAnimationLittleZombie(Backstab game){
         this.game = game;
-        enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/zombie1.txt"));
+        enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/zombie/zombie_two_enemies.txt"));
         batch = new SpriteBatch();
         stateTime = 1;
         direction = LOOK_DOWN;
@@ -109,13 +108,16 @@ public class EnemyAnimation implements Screen, AvailableActions {
     private void actionToDraw(int action) {
         switch(action){
             case MOVE_UP:
-                animation = new Animation<TextureRegion>(2f, enemyAtlas.findRegions(name_Run), Animation.PlayMode.LOOP);
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_up_mgzomb), Animation.PlayMode.LOOP);
                 break;
             case MOVE_DOWN:
-                animation = new Animation<TextureRegion>(2f, enemyAtlas.findRegions(name_Walk), Animation.PlayMode.LOOP);
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_down_mgzomb), Animation.PlayMode.LOOP);
                 break;
             case MOVE_RIGHT:
-                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_Dead), Animation.PlayMode.LOOP);
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_right_mgzomb), Animation.PlayMode.LOOP);
+                break;
+            case MOVE_LEFT:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_left_mgzomb), Animation.PlayMode.LOOP);
                 break;
 
         }
@@ -124,14 +126,38 @@ public class EnemyAnimation implements Screen, AvailableActions {
     }
 
     private void goIdle(){
-        animation = new Animation<TextureRegion>(5f,enemyAtlas.findRegions(name_Idle), Animation.PlayMode.LOOP);
+        switch(direction){
+            case LOOK_UP:
+                animation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_up_mgzomb), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_RIGHT:
+                animation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_right_mgzomb), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_DOWN:
+                animation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_down_mgzomb), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_LEFT:
+                animation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_left_mgzomb), Animation.PlayMode.LOOP);
+                break;
+        }
         enemyAction = new Sprite(animation.getKeyFrame(stateTime, true));
-        resize(100,200);
-
     }
 
     private void goAttack(){
-        animation = new Animation<TextureRegion>(6f,enemyAtlas.findRegions(name_Attack), Animation.PlayMode.LOOP);
+        switch(direction){
+            case LOOK_UP:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_up_mgzomb), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_RIGHT:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_right_mgzomb), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_DOWN:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_down_mgzomb), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_LEFT:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_left_mgzomb), Animation.PlayMode.LOOP);
+                break;
+        }
         enemyAction = new Sprite(animation.getKeyFrame(stateTime, true));
 
     }
