@@ -29,7 +29,7 @@ public class EnemyAnimation implements Screen, AvailableActions {
 
     public EnemyAnimation(Backstab game){
         this.game = game;
-        enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/zombie1.txt"));
+        enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/golemEnemy.txt"));
         batch = new SpriteBatch();
         stateTime = 1;
         direction = LOOK_DOWN;
@@ -70,9 +70,6 @@ public class EnemyAnimation implements Screen, AvailableActions {
             direction = LOOK_RIGHT;
             actionToDraw(MOVE_RIGHT);
             batch.draw(enemyAction, 100, 100);
-        }else if (Gdx.input.isKeyPressed(Input.Keys.E)) {
-            goAttack();
-            batch.draw(enemyAction, 100, 100);
         }else{
             goIdle();
             batch.draw(enemyAction, 100, 100);
@@ -109,13 +106,16 @@ public class EnemyAnimation implements Screen, AvailableActions {
     private void actionToDraw(int action) {
         switch(action){
             case MOVE_UP:
-                animation = new Animation<TextureRegion>(2f, enemyAtlas.findRegions(name_Run), Animation.PlayMode.LOOP);
+                animation = new Animation<TextureRegion>(2f, enemyAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
                 break;
             case MOVE_DOWN:
-                animation = new Animation<TextureRegion>(2f, enemyAtlas.findRegions(name_Walk), Animation.PlayMode.LOOP);
+                animation = new Animation<TextureRegion>(3f, enemyAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
                 break;
             case MOVE_RIGHT:
-                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_Dead), Animation.PlayMode.LOOP);
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
+                break;
+            case MOVE_LEFT:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_left), Animation.PlayMode.LOOP);
                 break;
 
         }
@@ -124,15 +124,11 @@ public class EnemyAnimation implements Screen, AvailableActions {
     }
 
     private void goIdle(){
-        animation = new Animation<TextureRegion>(5f,enemyAtlas.findRegions(name_Idle), Animation.PlayMode.LOOP);
+        animation = new Animation<TextureRegion>(3f, enemyAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
         enemyAction = new Sprite(animation.getKeyFrame(stateTime, true));
         resize(100,200);
 
     }
 
-    private void goAttack(){
-        animation = new Animation<TextureRegion>(6f,enemyAtlas.findRegions(name_Attack), Animation.PlayMode.LOOP);
-        enemyAction = new Sprite(animation.getKeyFrame(stateTime, true));
 
-    }
 }
