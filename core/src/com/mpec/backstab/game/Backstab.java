@@ -2,15 +2,15 @@ package com.mpec.backstab.game;
 
 import com.badlogic.gdx.Game;
 import com.mpec.backstab.enemy_character.EnemyAnimation;
-import com.mpec.backstab.enemy_character.EnemyAnimationLittleZombie;
 import com.mpec.backstab.main_character.CharacterAnimation;
+import com.mpec.backstab.map.MapGenerator;
 
 public class Backstab extends Game {
 	
 	@Override
 	public void create () {
         this.setScreen(new CharacterAnimation(this));
-        this.setScreen(new EnemyAnimationLittleZombie(this));
+        this.setScreen(new MapGenerator(this));
 	}
 
 
