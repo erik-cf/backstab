@@ -29,6 +29,12 @@ public interface AvailableActions {
 
     String name_die = "die";
 
+    String name_Run="Run";
+    String name_Walk="Walk";
+    String name_Idle="Idle";
+    String name_Attack="Attack";
+    String name_Dead="Dead";
+
     int LOOK_UP = 0x000001f;
     int LOOK_LEFT = 0x000002f;
     int LOOK_DOWN = 0x000003f;

@@ -3,104 +3,104 @@ size: 2043, 1954
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-Attack1
+Attack
   rotate: false
   xy: 1655, 772
   size: 245, 362
   orig: 245, 362
   offset: 0, 0
-  index: -1
-Attack2
+  index: 0
+Attack
   rotate: false
   xy: 1412, 772
   size: 243, 362
   orig: 243, 362
   offset: 0, 0
-  index: -1
-Attack3
+  index: 1
+Attack
   rotate: false
   xy: 216, 390
   size: 217, 362
   orig: 217, 362
   offset: 0, 0
-  index: -1
-Attack4
+  index: 2
+Attack
   rotate: false
   xy: 0, 390
   size: 216, 342
   orig: 216, 342
   offset: 0, 0
-  index: -1
-Attack5
+  index: 3
+Attack
   rotate: false
   xy: 1328, 390
   size: 227, 342
   orig: 227, 342
   offset: 0, 0
-  index: -1
-Attack6
+  index: 4
+Attack
   rotate: false
   xy: 537, 0
   size: 187, 360
   orig: 187, 360
   offset: 0, 0
-  index: -1
-Dead1
+  index: 5
+Dead
   rotate: false
   xy: 912, 0
   size: 188, 364
   orig: 188, 364
   offset: 0, 0
-  index: -1
-Dead2
+  index: 0
+Dead
   rotate: false
   xy: 1173, 772
   size: 239, 357
   orig: 239, 357
   offset: 0, 0
-  index: -1
-Dead3
+  index: 1
+Dead
   rotate: false
   xy: 1398, 1152
   size: 312, 332
   orig: 312, 332
   offset: 0, 0
-  index: -1
-Dead4
+  index: 2
+Dead
   rotate: false
   xy: 374, 1532
   size: 380, 270
   orig: 380, 270
   offset: 0, 0
-  index: -1
-Dead5
+  index: 3
+Dead
   rotate: false
   xy: 0, 1532
   size: 374, 237
   orig: 374, 237
   offset: 0, 0
-  index: -1
-Dead6
+  index: 4
+Dead
   rotate: false
   xy: 754, 1532
   size: 402, 145
   orig: 402, 145
   offset: 0, 0
-  index: -1
-Dead7
+  index: 5
+Dead
   rotate: false
   xy: 0, 1802
   size: 449, 152
   orig: 449, 152
   offset: 0, 0
-  index: -1
-Dead8
+  index: 6
+Dead
   rotate: false
   xy: 1156, 1532
   size: 448, 169
   orig: 448, 169
   offset: 0, 0
-  index: -1
+  index: 7
 Hurt1
   rotate: false
   xy: 173, 0
@@ -136,143 +136,143 @@ Hurt5
   orig: 188, 370
   offset: 0, 0
   index: -1
-Idle1
+Idle
   rotate: false
   xy: 653, 390
   size: 222, 372
   orig: 222, 372
   offset: 0, 0
-  index: -1
-Idle2
+  index: 0
+Idle
   rotate: false
   xy: 875, 390
   size: 226, 373
   orig: 226, 373
   offset: 0, 0
-  index: -1
-Idle3
+  index: 1
+Idle
   rotate: false
   xy: 0, 772
   size: 232, 372
   orig: 232, 372
   offset: 0, 0
-  index: -1
-Idle4
+  index: 2
+Idle
   rotate: false
   xy: 464, 772
   size: 233, 371
   orig: 233, 371
   offset: 0, 0
-  index: -1
-Run1
+  index: 3
+Run
   rotate: false
   xy: 0, 0
   size: 173, 377
   orig: 173, 377
   offset: 0, 0
-  index: -1
-Run2
+  index: 0
+Run
   rotate: false
   xy: 1686, 0
   size: 210, 379
   orig: 210, 379
   offset: 0, 0
-  index: -1
-Run3
+  index: 1
+Run
   rotate: false
   xy: 433, 390
   size: 220, 369
   orig: 220, 369
   offset: 0, 0
-  index: -1
-Run4
+  index: 2
+Run
   rotate: false
   xy: 934, 772
   size: 239, 369
   orig: 239, 369
   offset: 0, 0
-  index: -1
-Run5
+  index: 3
+Run
   rotate: false
   xy: 1101, 390
   size: 227, 370
   orig: 227, 370
   offset: 0, 0
-  index: -1
-Run6
+  index: 4
+Run
   rotate: false
   xy: 1102, 1152
   size: 296, 380
   orig: 296, 380
   offset: 0, 0
-  index: -1
-Run7
+  index: 5
+Run
   rotate: false
   xy: 1710, 1152
   size: 333, 374
   orig: 333, 374
   offset: 0, 0
-  index: -1
-Run8
+  index: 6
+Run
   rotate: false
   xy: 808, 1152
   size: 294, 343
   orig: 294, 343
   offset: 0, 0
-  index: -1
-Run9
+  index: 7
+Run
   rotate: false
   xy: 0, 1152
   size: 246, 379
   orig: 246, 379
   offset: 0, 0
-  index: -1
-Run10
+  index: 8
+Run
   rotate: false
   xy: 246, 1152
   size: 274, 363
   orig: 274, 363
   offset: 0, 0
-  index: -1
-Walk1
+  index: 9
+Walk
   rotate: false
   xy: 354, 0
   size: 183, 378
   orig: 183, 378
   offset: 0, 0
-  index: -1
-Walk2
+  index: 0
+Walk
   rotate: false
   xy: 1555, 390
   size: 229, 382
   orig: 229, 382
   offset: 0, 0
-  index: -1
-Walk3
+  index: 1
+Walk
   rotate: false
   xy: 232, 772
   size: 232, 380
   orig: 232, 380
   offset: 0, 0
-  index: -1
-Walk4
+  index: 2
+Walk
   rotate: false
   xy: 1100, 0
   size: 191, 379
   orig: 191, 379
   offset: 0, 0
-  index: -1
-Walk5
+  index: 3
+Walk
   rotate: false
   xy: 1291, 0
   size: 194, 379
   orig: 194, 379
   offset: 0, 0
-  index: -1
-Walk6
+  index: 4
+Walk
   rotate: false
   xy: 1485, 0
   size: 201, 390
   orig: 201, 390
   offset: 0, 0
-  index: -1
+  index: 5
