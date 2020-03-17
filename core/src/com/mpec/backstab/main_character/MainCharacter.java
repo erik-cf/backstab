@@ -1,6 +1,8 @@
 package com.mpec.backstab.main_character;
 
-public class MainCharacter {
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
+public class MainCharacter extends CharacterAnimation {
 
     private double attack;
     private double defense;
@@ -8,8 +10,11 @@ public class MainCharacter {
     private double hp;
     private double movement_speed;
 
-    public MainCharacter(){
+    private Sprite mainCharacter;
 
+    public MainCharacter(){
+        super();
+        mainCharacter = new Sprite();
     }
 
     public MainCharacter(double attack, double defense, double attack_speed, double hp, double movement_speed) {
@@ -58,5 +63,25 @@ public class MainCharacter {
 
     public void setMovement_speed(double movement_speed) {
         this.movement_speed = movement_speed;
+    }
+
+    public int getDirection(){
+        return this.direction;
+    }
+
+    public void setDirection(int direction){
+        this.direction = direction;
+    }
+
+    public void doMove(int action){
+        this.goMove(action);
+    }
+
+    public void doAttack(){
+        this.goAttack();
+    }
+
+    public void doIdle(){
+        this.goIdle();
     }
 }

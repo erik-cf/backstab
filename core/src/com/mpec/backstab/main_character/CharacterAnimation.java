@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.mpec.backstab.game.Backstab;
 import com.mpec.backstab.game.AvailableActions;
 
 public class CharacterAnimation implements Screen, AvailableActions {
@@ -21,18 +20,15 @@ public class CharacterAnimation implements Screen, AvailableActions {
 
     public float stateTime;
 
-    final Backstab game;
 
     int direction;
 
 
-    public CharacterAnimation(Backstab game){
-        this.game = game;
+    public CharacterAnimation(){
         playerAtlas = new TextureAtlas(Gdx.files.internal("Player/tilesetCaracter.txt"));
         batch = new SpriteBatch();
         stateTime = 1;
         direction = LOOK_DOWN;
-
     }
 
     @Override
@@ -53,19 +49,19 @@ public class CharacterAnimation implements Screen, AvailableActions {
         }
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             direction = LOOK_UP;
-            actionToDraw(MOVE_UP);
+            goMove(MOVE_UP);
             batch.draw(playerAction, 50, 50);
         }else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             direction = LOOK_DOWN;
-            actionToDraw(MOVE_DOWN);
+            goMove(MOVE_DOWN);
             batch.draw(playerAction, 50, 50);
         }else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             direction = LOOK_LEFT;
-            actionToDraw(MOVE_LEFT);
+            goMove(MOVE_LEFT);
             batch.draw(playerAction, 50, 50);
         }else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             direction = LOOK_RIGHT;
-            actionToDraw(MOVE_RIGHT);
+            goMove(MOVE_RIGHT);
             batch.draw(playerAction, 50, 50);
         }else if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             goAttack();
@@ -103,7 +99,7 @@ public class CharacterAnimation implements Screen, AvailableActions {
 
     }
 
-    private void actionToDraw(int action) {
+    protected Sprite goMove(int action) {
         switch(action){
             case MOVE_UP:
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
@@ -118,10 +114,10 @@ public class CharacterAnimation implements Screen, AvailableActions {
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
                 break;
         }
-        playerAction = new Sprite(animation.getKeyFrame(stateTime, true));
+        return new Sprite(animation.getKeyFrame(stateTime, true));
     }
 
-    private void goIdle(){
+    protected Sprite goIdle(){
         switch(direction){
             case LOOK_UP:
                 animation = new Animation<TextureRegion>(10f, playerAtlas.findRegions(name_idle_up), Animation.PlayMode.LOOP);
@@ -136,11 +132,10 @@ public class CharacterAnimation implements Screen, AvailableActions {
                 animation = new Animation<TextureRegion>(10f, playerAtlas.findRegions(name_idle_left), Animation.PlayMode.LOOP);
                 break;
         }
-        playerAction = new Sprite(animation.getKeyFrame(stateTime, true));
-
+        return new Sprite(animation.getKeyFrame(stateTime, true));
     }
 
-    private void goAttack(){
+    protected Sprite goAttack(){
         switch(direction){
             case LOOK_UP:
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_bow_up), Animation.PlayMode.LOOP);
@@ -155,6 +150,6 @@ public class CharacterAnimation implements Screen, AvailableActions {
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_bow_left), Animation.PlayMode.LOOP);
                 break;
         }
-        playerAction = new Sprite(animation.getKeyFrame(stateTime, true));
+        return new Sprite(animation.getKeyFrame(stateTime, true));
     }
 }

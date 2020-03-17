@@ -18,8 +18,6 @@ public class Backstab extends Game {
 		this.setScreen(new GameScreen(this));
 	}
 
-
-
 	@Override
 	public void render () {
 		super.render();
