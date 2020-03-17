@@ -339,339 +339,339 @@ die_up_mgzomb
   orig: 64, 66
   offset: 0, 0
   index: 3
-48
+move_down_swzomb
   rotate: false
   xy: 0, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-49
+  index: 0
+move_down_swzomb
   rotate: false
   xy: 64, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-50
+  index: 1
+move_down_swzomb
   rotate: false
   xy: 128, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-51
+  index: 2
+move_down_swzomb
   rotate: false
   xy: 192, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-52
+  index: 3
+attack_down_swzomb
   rotate: false
   xy: 256, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-53
+  index: 0
+attack_down_swzomb
   rotate: false
   xy: 320, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-54
+  index: 1
+attack_down_swzomb
   rotate: false
   xy: 384, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-55
+  index: 2
+attack_down_swzomb
   rotate: false
   xy: 448, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-56
+  index: 3
+die_down_swzomb
   rotate: false
   xy: 512, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-57
+  index: 0
+die_down_swzomb
   rotate: false
   xy: 576, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-58
+  index: 1
+die_down_swzomb
   rotate: false
   xy: 640, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-59
+  index: 2
+die_down_swzomb
   rotate: false
   xy: 704, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-60
+  index: 3
+move_left_swzomb
   rotate: false
   xy: 768, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-61
+  index: 0
+move_left_swzomb
   rotate: false
   xy: 832, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-62
+  index: 1
+move_left_swzomb
   rotate: false
   xy: 896, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-63
+  index: 2
+move_left_swzomb
   rotate: false
   xy: 960, 198
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-64
+  index: 3
+attack_left_swzomb
   rotate: false
   xy: 0, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-65
+  index: 0
+attack_left_swzomb
   rotate: false
   xy: 64, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-66
+  index: 1
+attack_left_swzomb
   rotate: false
   xy: 128, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-67
+  index: 2
+attack_left_swzomb
   rotate: false
   xy: 192, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-68
+  index: 3
+die_left_swzomb
   rotate: false
   xy: 256, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-69
+  index: 0
+die_left_swzomb
   rotate: false
   xy: 320, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-70
+  index: 1
+die_left_swzomb
   rotate: false
   xy: 384, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-71
+  index: 2
+die_left_swzomb
   rotate: false
   xy: 448, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-72
+  index: 3
+move_right_swzomb
   rotate: false
   xy: 512, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-73
+  index: 0
+move_right_swzomb
   rotate: false
   xy: 576, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-74
+  index: 1
+move_right_swzomb
   rotate: false
   xy: 640, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-75
+  index: 2
+move_right_swzomb
   rotate: false
   xy: 704, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-76
+  index: 3
+attack_right_swzomb
   rotate: false
   xy: 768, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-77
+  index: 0
+move_right_swzomb
   rotate: false
   xy: 832, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-78
+  index: 1
+move_right_swzomb
   rotate: false
   xy: 896, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-79
+  index: 2
+move_right_swzomb
   rotate: false
   xy: 960, 264
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-80
+  index: 3
+die_right_swzomb
   rotate: false
   xy: 0, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-81
+  index: 0
+die_right_swzomb
   rotate: false
   xy: 64, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-82
+  index: 1
+die_right_swzomb
   rotate: false
   xy: 128, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-83
+  index: 2
+die_right_swzomb
   rotate: false
   xy: 192, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-84
+  index: 3
+move_up_swzomb
   rotate: false
   xy: 256, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-85
+  index: 0
+move_up_swzomb
   rotate: false
   xy: 320, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-86
+  index: 1
+move_up_swzomb
   rotate: false
   xy: 384, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-87
+  index: 2
+move_up_swzomb
   rotate: false
   xy: 448, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-88
+  index: 3
+attack_up_swzomb
   rotate: false
   xy: 512, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-89
+  index: 0
+attack_up_swzomb
   rotate: false
   xy: 576, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-90
+  index: 1
+attack_up_swzomb
   rotate: false
   xy: 640, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-91
+  index: 2
+attack_up_swzomb
   rotate: false
   xy: 704, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-92
+  index: 3
+die_up_swzomb
   rotate: false
   xy: 768, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-93
+  index: 0
+die_up_swzomb
   rotate: false
   xy: 832, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-94
+  index: 1
+die_up_swzomb
   rotate: false
   xy: 896, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
-95
+  index: 2
+die_up_swzomb
   rotate: false
   xy: 960, 330
   size: 64, 66
   orig: 64, 66
   offset: 0, 0
-  index: -1
+  index: 3

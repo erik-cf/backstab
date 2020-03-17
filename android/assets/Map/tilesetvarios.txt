@@ -108,7 +108,7 @@ ytree
   orig: 16, 16
   offset: 0, 0
   index: 2
-ground
+littlerock
   rotate: false
   xy: 16, 112
   size: 16, 16

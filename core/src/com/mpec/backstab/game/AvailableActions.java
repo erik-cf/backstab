@@ -34,15 +34,30 @@ public interface AvailableActions {
     String name_die_down_mgzomb = "die_down_mgzomb";
     String name_die_right_mgzomb = "die_right_mgzomb";
 
+    String name_die_up_swzomb = "die_up_mgzomb";
+    String name_die_left_swzomb = "die_left_mgzomb";
+    String name_die_down_swzomb = "die_down_mgzomb";
+    String name_die_right_swzomb = "die_right_mgzomb";
+
     String name_move_up_mgzomb = "move_up_mgzomb";
     String name_move_left_mgzomb = "move_left_mgzomb";
     String name_move_down_mgzomb = "move_down_mgzomb";
     String name_move_right_mgzomb = "move_right_mgzomb";
 
+    String name_move_up_swzomb = "move_up_swzomb";
+    String name_move_left_swzomb = "move_left_swzomb";
+    String name_move_down_swzomb = "move_down_swzomb";
+    String name_move_right_swzomb = "move_right_swzomb";
+
     String name_attack_up_mgzomb = "attack_up_mgzomb";
     String name_attack_left_mgzomb = "attack_left_mgzomb";
     String name_attack_down_mgzomb = "attack_down_mgzomb";
     String name_attack_right_mgzomb = "attack_right_mgzomb";
+
+    String name_attack_up_swzomb = "attack_up_swzomb";
+    String name_attack_left_swzomb = "attack_left_swzomb";
+    String name_attack_down_swzomb = "attack_down_swzomb";
+    String name_attack_right_swzomb = "attack_right_swzomb";
 
     String name_Run="Run";
     String name_Walk="Walk";
