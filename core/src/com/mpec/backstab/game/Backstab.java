@@ -15,13 +15,13 @@ public class Backstab extends Game {
 
 	SpriteBatch batch;
 
+	public float stateTime;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		this.setScreen(new GameScreen(this));
-
-
-
+		stateTime = 0;
 	}
 
 	@Override
@@ -33,5 +33,13 @@ public class Backstab extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
+	}
+
+	public float getStateTime() {
+		return stateTime;
+	}
+
+	public void setStateTime(float stateTime) {
+		this.stateTime = stateTime;
 	}
 }

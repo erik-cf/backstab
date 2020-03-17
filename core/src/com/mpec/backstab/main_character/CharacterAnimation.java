@@ -10,8 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mpec.backstab.game.AvailableActions;
+import com.mpec.backstab.game.GameScreen;
 
-public class CharacterAnimation implements Screen, AvailableActions {
+public class CharacterAnimation implements AvailableActions {
 
     public TextureAtlas playerAtlas;
     public SpriteBatch batch;
@@ -19,7 +20,6 @@ public class CharacterAnimation implements Screen, AvailableActions {
     public Sprite playerAction;
 
     public float stateTime;
-
 
     int direction;
 
@@ -31,75 +31,7 @@ public class CharacterAnimation implements Screen, AvailableActions {
         direction = LOOK_DOWN;
     }
 
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        stateTime += 1 + Gdx.graphics.getDeltaTime();
-
-        batch.begin();
-        if(delta < 1){
-            goIdle();
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            direction = LOOK_UP;
-            goMove(MOVE_UP);
-            batch.draw(playerAction, 50, 50);
-        }else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            direction = LOOK_DOWN;
-            goMove(MOVE_DOWN);
-            batch.draw(playerAction, 50, 50);
-        }else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            direction = LOOK_LEFT;
-            goMove(MOVE_LEFT);
-            batch.draw(playerAction, 50, 50);
-        }else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            direction = LOOK_RIGHT;
-            goMove(MOVE_RIGHT);
-            batch.draw(playerAction, 50, 50);
-        }else if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            goAttack();
-            batch.draw(playerAction, 50, 50);
-        }else{
-            goIdle();
-            batch.draw(playerAction, 50, 50);
-        }
-        batch.end();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-        playerAtlas.dispose();
-
-    }
-
-    protected Sprite goMove(int action) {
+    protected Sprite goMove(int action, float stateTime) {
         switch(action){
             case MOVE_UP:
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
@@ -114,10 +46,10 @@ public class CharacterAnimation implements Screen, AvailableActions {
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
                 break;
         }
-        return new Sprite(animation.getKeyFrame(stateTime, true));
+        return new Sprite(animation.getKeyFrame(GameScreen.staticDelta, true));
     }
 
-    protected Sprite goIdle(){
+    protected Sprite goIdle(float stateTime){
         switch(direction){
             case LOOK_UP:
                 animation = new Animation<TextureRegion>(10f, playerAtlas.findRegions(name_idle_up), Animation.PlayMode.LOOP);
@@ -132,10 +64,10 @@ public class CharacterAnimation implements Screen, AvailableActions {
                 animation = new Animation<TextureRegion>(10f, playerAtlas.findRegions(name_idle_left), Animation.PlayMode.LOOP);
                 break;
         }
-        return new Sprite(animation.getKeyFrame(stateTime, true));
+        return new Sprite(animation.getKeyFrame(GameScreen.staticDelta, true));
     }
 
-    protected Sprite goAttack(){
+    protected Sprite goAttack(float stateTime){
         switch(direction){
             case LOOK_UP:
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_bow_up), Animation.PlayMode.LOOP);
@@ -150,6 +82,6 @@ public class CharacterAnimation implements Screen, AvailableActions {
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_bow_left), Animation.PlayMode.LOOP);
                 break;
         }
-        return new Sprite(animation.getKeyFrame(stateTime, true));
+        return new Sprite(animation.getKeyFrame(GameScreen.staticDelta, true));
     }
 }
