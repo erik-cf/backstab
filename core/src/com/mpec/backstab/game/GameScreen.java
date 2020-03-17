@@ -28,6 +28,9 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
         mapGenerator.paintMap(game.batch);
+        AnalogStick asMove = new AnalogStick(400, 15);
+        asMove.draw(game.batch,1);
+
         game.batch.end();
     }
 
