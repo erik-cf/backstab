@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.mpec.backstab.main_character.MainCharacter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mpec.backstab.map.MapGenerator;
@@ -16,6 +17,12 @@ public class GameScreen implements Screen {
     Stage stage;
     Sprite playerSprite;
     TouchPadTest touchpad;
+    Rectangle player;
+
+    boolean canMoveUp = true;
+    boolean canMoveDown = true;
+    boolean canMoveLeft = true;
+    boolean canMoveRight = true;
 
     public GameScreen(Backstab game){
         this.game = game;
@@ -27,6 +34,9 @@ public class GameScreen implements Screen {
         stage = new Stage();
         stage.addActor(touchpad.getTouchpad());
         Gdx.input.setInputProcessor(stage);
+        player = new Rectangle();
+        player.setX(mainCharacter.getAction().getX());
+        player.setY(mainCharacter.getAction().getY());
     }
 
     @Override
@@ -43,14 +53,14 @@ public class GameScreen implements Screen {
         playerSprite = checkCharacterAction();
 
 
-        //Move blockSprite with TouchPad
-        game.camera.translate((float)(touchpad.getTouchpad().getKnobPercentX()*mainCharacter.getMovement_speed()), (float)(touchpad.getTouchpad().getKnobPercentY()*mainCharacter.getMovement_speed()));
-        playerSprite.setX((float)(playerSprite.getX() + touchpad.getTouchpad().getKnobPercentX()*mainCharacter.getMovement_speed()));
-        playerSprite.setY((float)(playerSprite.getY() + touchpad.getTouchpad().getKnobPercentY()*mainCharacter.getMovement_speed()));
+        player.setX((float) (player.getX() + touchpad.getTouchpad().getKnobPercentX() * mainCharacter.getMovement_speed()));
+        player.setY((float) (player.getY() + touchpad.getTouchpad().getKnobPercentY() * mainCharacter.getMovement_speed()));
+        checkMovement();
         game.batch.begin();
         mapGenerator.paintMap(game.batch);
+        game.batch.draw(playerSprite, player.x, player.y);
+        //playerSprite.draw(game.batch);
         touchpad.getTouchpad().draw(game.batch,1);
-        playerSprite.draw(game.batch);
         game.batch.end();
     }
 
@@ -113,4 +123,28 @@ public class GameScreen implements Screen {
 
         return mainCharacter.getAction();
     }
+
+    private void checkMovement(){
+        for(Rectangle r : MapGenerator.collision){
+            if(player.overlaps(r)){
+                switch(mainCharacter.getDirection()){
+                    case AvailableActions.LOOK_LEFT:
+                        player.setX(player.getX() + 5);
+                        break;
+                    case AvailableActions.LOOK_RIGHT:
+                        player.setX(player.getX() - 5);
+                        break;
+                    case AvailableActions.LOOK_UP:
+                        player.setY(player.getY() - 5);
+                        break;
+                    case AvailableActions.LOOK_DOWN:
+                        player.setY(player.getY() + 5);
+                        break;
+                }
+            }
+        }
+
+    }
+
+
 }

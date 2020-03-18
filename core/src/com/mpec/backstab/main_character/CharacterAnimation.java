@@ -92,4 +92,52 @@ public class CharacterAnimation implements AvailableActions {
         action = new Sprite(animation.getKeyFrame(stateTime, true));
         action.setPosition(x, y);
     }
+
+    public TextureAtlas getPlayerAtlas() {
+        return playerAtlas;
+    }
+
+    public void setPlayerAtlas(TextureAtlas playerAtlas) {
+        this.playerAtlas = playerAtlas;
+    }
+
+    public SpriteBatch getBatch() {
+        return batch;
+    }
+
+    public void setBatch(SpriteBatch batch) {
+        this.batch = batch;
+    }
+
+    public Animation<TextureRegion> getAnimation() {
+        return animation;
+    }
+
+    public void setAnimation(Animation<TextureRegion> animation) {
+        this.animation = animation;
+    }
+
+    public float getStateTime() {
+        return stateTime;
+    }
+
+    public void setStateTime(float stateTime) {
+        this.stateTime = stateTime;
+    }
+
+    public Sprite getAction() {
+        return action;
+    }
+
+    public void setAction(Sprite action) {
+        this.action = action;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
 }

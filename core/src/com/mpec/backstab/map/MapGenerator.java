@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MapGenerator {
 
@@ -25,11 +27,13 @@ public class MapGenerator {
     Array<AtlasRegion> rock;
 
     AtlasRegion[][] groundMap;
+    AtlasRegion[][] objectsMap;
 
     int whereToDrawX;
     int whereToDrawY;
 
     public static ArrayList<String> paintedNumbers;
+    public static Array<Rectangle> collision = new Array<Rectangle>();
 
     public MapGenerator(){
         mapAtlas = new TextureAtlas(Gdx.files.internal("Map/tilesetvarios.txt"));
@@ -39,22 +43,25 @@ public class MapGenerator {
         water = mapAtlas.findRegions("water");
         hole = mapAtlas.findRegions("hole");
 
+
         paintedNumbers = new ArrayList<String>();
         groundMap = new AtlasRegion[768 / 16][1024 / 16];
+        objectsMap = new AtlasRegion[768 / 16][1024 / 16];
 
     }
 
-    private void whatToPaint(int random, int x, int y){
+    private boolean whatToPaint(int random, int x, int y){
         switch(random){
             case 0:
-                paintWater(x, y);
+                return paintWater(x, y);
             case 1:
-                paintHole(x, y);
+                return paintHole(x, y);
             case 2:
-                paintYTree(y, x);
+                return paintYTree(y, x);
             case 3:
-                paintOTree(y, x);
+                return paintOTree(y, x);
         }
+        return false;
     }
 
     public void createMap(){
@@ -64,7 +71,9 @@ public class MapGenerator {
                     if(paintObject()){
                         //paintWater(j, i);
                         //int n = whatToPaint((int)(Math.random() * 5));
-                        whatToPaint((int)(Math.random() * 4), j, i);
+                        if(!whatToPaint((int)(Math.random() * 4), j, i)){
+                            groundMap[i][j] = ground.get((int) (Math.random() * 10));
+                        }
                     }else {
                         groundMap[i][j] = ground.get((int) (Math.random() * 10));
                     }
@@ -88,9 +97,18 @@ public class MapGenerator {
     public void paintMap(SpriteBatch batch){
         whereToDrawY = 0;
         whereToDrawX = 0;
+        Rectangle rect;
         for(int i = (768 / 16) - 1; i >= 0; i--){
             for(int j = 0; j < (Gdx.graphics.getWidth() / 16); j++){
-                batch.draw(groundMap[i][j], whereToDrawX, whereToDrawY);
+                if(groundMap[i][j] != null) {
+                    batch.draw(groundMap[i][j], whereToDrawX, whereToDrawY);
+                }else{
+                    rect = new Rectangle();
+                    batch.draw(objectsMap[i][j], whereToDrawX, whereToDrawY);
+                    rect.setPosition(whereToDrawX - 32, whereToDrawY);
+                    rect.setSize(16, 16);
+                    collision.add(rect);
+                }
                 whereToDrawX += 16;
             }
             whereToDrawX = 0;
@@ -105,138 +123,144 @@ public class MapGenerator {
         return false;
     }
 
-    private void paintWater(int x, int y){
+    private boolean paintWater(int x, int y){
         int randI = (int)((Math.random() * 2) + 3);
         int randJ = (int)((Math.random() * 2) + 3);
         if(checkOverlap(x, y, randJ, randI)){
-            return;
+            return false;
         }
-
         for(int i = randI - 1; i >= 0; i--){
             for(int j = 0; j < randJ; j++){
                 if(i == randI - 1){
                     if(j == 0){
-                        groundMap[y - i][x + j] = water.get(0);
+                        objectsMap[y - i][x + j] = water.get(0);
                     }else if(j == (randJ - 1)){
-                        groundMap[y - i][x + j] = water.get(2);
+                        objectsMap[y - i][x + j] = water.get(2);
                     }else{
-                        groundMap[y - i][x + j] = water.get(1);
+                        objectsMap[y - i][x + j] = water.get(1);
                     }
                 }else if(i == (randI - 2)){
                     if(j == 0){
-                        groundMap[y - i][x + j] = water.get(3);
+                        objectsMap[y - i][x + j] = water.get(3);
                     }else if(j == (randJ - 1)){
-                        groundMap[y - i][x + j] = water.get(5);
+                        objectsMap[y - i][x + j] = water.get(5);
                     }else{
-                        groundMap[y - i][x + j] = water.get(4);
+                        objectsMap[y - i][x + j] = water.get(4);
                     }
                 }else if(i == 0){
                     if(j == 0){
-                        groundMap[y - i][x + j] = water.get(9);
+                        objectsMap[y - i][x + j] = water.get(9);
                     }else if(j == (randJ - 1)){
-                        groundMap[y - i][x + j] = water.get(11);
+                        objectsMap[y - i][x + j] = water.get(11);
                     }else{
-                        groundMap[y - i][x + j] = water.get(10);
+                        objectsMap[y - i][x + j] = water.get(10);
                     }
                 }else{
                     if(j == 0){
-                        groundMap[y - i][x + j] = water.get(6);
+                        objectsMap[y - i][x + j] = water.get(6);
                     }else if(j == (randJ - 1)){
-                        groundMap[y - i][x + j] = water.get(8);
+                        objectsMap[y - i][x + j] = water.get(8);
                     }else{
-                        groundMap[y - i][x + j] = water.get(7);
+                        objectsMap[y - i][x + j] = water.get(7);
+                    }
+                }
+                //realPositions.put(x * 16, y * 16);
+                paintedNumbers.add((y - i) + "," + (x + j));
+            }
+        }
+        return true;
+    }
+
+    private boolean paintHole(int x, int y){
+        int randI = (int)((Math.random() * 2) + 3);
+        int randJ = (int)((Math.random() * 2) + 3);
+
+        if(checkOverlap(x, y, randJ, randI)){
+            return false;
+        }
+        for(int i = randI - 1; i >= 0; i--){
+            for(int j = 0; j < randJ; j++){
+                if(i == randI - 1){
+                    if(j == 0){
+                        objectsMap[y - i][x + j] = hole.get(0);
+                    }else if(j == (randJ - 1)){
+                        objectsMap[y - i][x + j] = hole.get(2);
+                    }else{
+                        objectsMap[y - i][x + j] = hole.get(1);
+                    }
+                }else if(i == (randI - 2)){
+                    if(j == 0){
+                        objectsMap[y - i][x + j] = hole.get(3);
+                    }else if(j == (randJ - 1)){
+                        objectsMap[y - i][x + j] = hole.get(5);
+                    }else{
+                        objectsMap[y - i][x + j] = hole.get(4);
+                    }
+                }else if(i == 0){
+                    if(j == 0){
+                        objectsMap[y - i][x + j] = hole.get(9);
+                    }else if(j == (randJ - 1)){
+                        objectsMap[y - i][x + j] = hole.get(11);
+                    }else{
+                        objectsMap[y - i][x + j] = hole.get(10);
+                    }
+                }else{
+                    if(j == 0){
+                        objectsMap[y - i][x + j] = hole.get(6);
+                    }else if(j == (randJ - 1)){
+                        objectsMap[y - i][x + j] = hole.get(8);
+                    }else{
+                        objectsMap[y - i][x + j] = hole.get(7);
                     }
                 }
                 paintedNumbers.add((y - i) + "," + (x + j));
             }
         }
+        return true;
     }
 
-    private void paintHole(int x, int y){
-        int randI = (int)((Math.random() * 2) + 3);
-        int randJ = (int)((Math.random() * 2) + 3);
-        if(checkOverlap(x, y, randJ, randI)){
-            return;
-        }
-
-        for(int i = randI - 1; i >= 0; i--){
-            for(int j = 0; j < randJ; j++){
-                if(i == randI - 1){
-                    if(j == 0){
-                        groundMap[y - i][x + j] = hole.get(0);
-                    }else if(j == (randJ - 1)){
-                        groundMap[y - i][x + j] = hole.get(2);
-                    }else{
-                        groundMap[y - i][x + j] = hole.get(1);
-                    }
-                }else if(i == (randI - 2)){
-                    if(j == 0){
-                        groundMap[y - i][x + j] = hole.get(3);
-                    }else if(j == (randJ - 1)){
-                        groundMap[y - i][x + j] = hole.get(5);
-                    }else{
-                        groundMap[y - i][x + j] = hole.get(4);
-                    }
-                }else if(i == 0){
-                    if(j == 0){
-                        groundMap[y - i][x + j] = hole.get(9);
-                    }else if(j == (randJ - 1)){
-                        groundMap[y - i][x + j] = hole.get(11);
-                    }else{
-                        groundMap[y - i][x + j] = hole.get(10);
-                    }
-                }else{
-                    if(j == 0){
-                        groundMap[y - i][x + j] = hole.get(6);
-                    }else if(j == (randJ - 1)){
-                        groundMap[y - i][x + j] = hole.get(8);
-                    }else{
-                        groundMap[y - i][x + j] = hole.get(7);
-                    }
-                }
-                paintedNumbers.add((y - i) + "," + (x + j));
-            }
-        }
-    }
-
-    private void paintOTree(int y, int x){
+    private boolean paintOTree(int y, int x){
         int cont = 8;
         if(checkOverlap(x, y, 3, 3)){
-            return;
+            return false;
         }
+
         for(int i = 2; i >= 0; i--) {
             for(int j = 0; j < 3; j++) {
                 if(j == 0){
-                    groundMap[y - i][x + j] = otree.get(cont - 2);
+                    objectsMap[y - i][x + j] = otree.get(cont - 2);
                 }else if(j == 2){
-                    groundMap[y - i][x + j] = otree.get(cont + 2);
+                    objectsMap[y - i][x + j] = otree.get(cont + 2);
                 }else {
-                    groundMap[y - i][x + j] = otree.get(cont);
+                    objectsMap[y - i][x + j] = otree.get(cont);
                 }
                 cont--;
                 paintedNumbers.add((y-i) + "," + (x+j));
             }
         }
+        return true;
     }
 
-    private void paintYTree(int y, int x){
+    private boolean paintYTree(int y, int x){
         int cont = 8;
         if(checkOverlap(x, y, 3, 3)){
-            return;
+            return false;
         }
+
         for(int i = 2; i >= 0; i--) {
             for(int j = 0; j < 3; j++) {
                 if(j == 0){
-                    groundMap[y - i][x + j] = ytree.get(cont - 2);
+                    objectsMap[y - i][x + j] = ytree.get(cont - 2);
                 }else if(j == 2){
-                    groundMap[y - i][x + j] = ytree.get(cont + 2);
+                    objectsMap[y - i][x + j] = ytree.get(cont + 2);
                 }else {
-                    groundMap[y - i][x + j] = ytree.get(cont);
+                    objectsMap[y - i][x + j] = ytree.get(cont);
                 }
                 cont--;
                 paintedNumbers.add((y - i) + "," + (x + j));
             }
         }
+        return true;
     }
 
     private boolean checkOverlap(int x, int y, int width, int height){
