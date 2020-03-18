@@ -1,37 +1,35 @@
 package com.mpec.backstab.main_character;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mpec.backstab.game.AvailableActions;
-import com.mpec.backstab.game.GameScreen;
 
 public class CharacterAnimation implements AvailableActions {
 
     public TextureAtlas playerAtlas;
     public SpriteBatch batch;
     public Animation<TextureRegion> animation;
-    public Sprite playerAction;
 
     public float stateTime;
 
-    int direction;
+    public Sprite action;
 
+    int direction;
 
     public CharacterAnimation(){
         playerAtlas = new TextureAtlas(Gdx.files.internal("Player/tilesetCaracter.txt"));
         batch = new SpriteBatch();
         stateTime = 1;
         direction = LOOK_DOWN;
+        action = new Sprite(playerAtlas.findRegion(name_idle_down));
+        action.setPosition(Gdx.graphics.getWidth()/2-action.getWidth()/2, Gdx.graphics.getHeight()/2-action.getHeight()/2);
     }
 
-    protected Sprite goMove(int action, float stateTime) {
+    public void goMove(int action, float stateTime) {
         switch(action){
             case MOVE_UP:
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
@@ -46,10 +44,14 @@ public class CharacterAnimation implements AvailableActions {
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
                 break;
         }
-        return new Sprite(animation.getKeyFrame(GameScreen.staticDelta, true));
+
+        float x = this.action.getX();
+        float y = this.action.getY();
+        this.action = new Sprite(animation.getKeyFrame(stateTime, true));
+        this.action.setPosition(x, y);
     }
 
-    protected Sprite goIdle(float stateTime){
+    public void goIdle(float stateTime){
         switch(direction){
             case LOOK_UP:
                 animation = new Animation<TextureRegion>(10f, playerAtlas.findRegions(name_idle_up), Animation.PlayMode.LOOP);
@@ -64,10 +66,13 @@ public class CharacterAnimation implements AvailableActions {
                 animation = new Animation<TextureRegion>(10f, playerAtlas.findRegions(name_idle_left), Animation.PlayMode.LOOP);
                 break;
         }
-        return new Sprite(animation.getKeyFrame(GameScreen.staticDelta, true));
+        float x = action.getX();
+        float y = action.getY();
+        action = new Sprite(animation.getKeyFrame(stateTime, true));
+        action.setPosition(x, y);
     }
 
-    protected Sprite goAttack(float stateTime){
+    public void goAttack(float stateTime){
         switch(direction){
             case LOOK_UP:
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_bow_up), Animation.PlayMode.LOOP);
@@ -82,6 +87,9 @@ public class CharacterAnimation implements AvailableActions {
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_bow_left), Animation.PlayMode.LOOP);
                 break;
         }
-        return new Sprite(animation.getKeyFrame(GameScreen.staticDelta, true));
+        float x = action.getX();
+        float y = action.getY();
+        action = new Sprite(animation.getKeyFrame(stateTime, true));
+        action.setPosition(x, y);
     }
 }

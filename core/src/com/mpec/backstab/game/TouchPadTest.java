@@ -40,9 +40,9 @@ public class TouchPadTest implements ApplicationListener, Screen {
 
         touchpadSkin = new Skin();
         //Set background image
-        touchpadSkin.add("touchBackground", new Texture("touchpad/touchBackground.png"));
+        touchpadSkin.add("touchBackground", new Texture("touchpad/analog_base.png"));
         //Set knob image
-        touchpadSkin.add("touchKnob", new Texture("touchpad/touchKnob.png"));
+        touchpadSkin.add("touchKnob", new Texture("touchpad/analog_button.png"));
         //Create TouchPad Style
         touchpadStyle = new TouchpadStyle();
         //Create Drawable's from TouchPad skin
@@ -54,7 +54,7 @@ public class TouchPadTest implements ApplicationListener, Screen {
         //Create new TouchPad with the created style
         touchpad = new Touchpad(10, touchpadStyle);
         //setBounds(x,y,width,height)
-        touchpad.setBounds(15, 15, 200, 200);
+        touchpad.setBounds(Gdx.graphics.getWidth()/2-touchpad.getWidth()/2, 15, 150, 150);
 
         //Create a Stage and add TouchPad
 
@@ -95,7 +95,7 @@ public class TouchPadTest implements ApplicationListener, Screen {
         //Create new TouchPad with the created style
         touchpad = new Touchpad(10, touchpadStyle);
         //setBounds(x,y,width,height)
-        touchpad.setBounds(15, 15, 200, 200);
+        touchpad.setBounds(Gdx.graphics.getWidth()/2-blockSprite.getWidth()/2, 15, 200, 200);
 
 
 

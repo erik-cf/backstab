@@ -8,13 +8,11 @@ public class MainCharacter extends CharacterAnimation {
     private double defense;
     private double attack_speed;
     private double hp;
-    private double movement_speed;
+    private double movement_speed = 10;
 
-    private Sprite action;
 
     public MainCharacter(){
         super();
-        action = new Sprite();
     }
 
     public MainCharacter(double attack, double defense, double attack_speed, double hp, double movement_speed) {
@@ -81,7 +79,7 @@ public class MainCharacter extends CharacterAnimation {
         this.action = action;
     }
 
-    public Sprite doMove(int action, float stateTime){
+    /*public Sprite doMove(int action, float stateTime){
         return this.goMove(action, stateTime);
     }
 
@@ -91,5 +89,5 @@ public class MainCharacter extends CharacterAnimation {
 
     public Sprite doIdle(float stateTime){
         return this.goIdle(stateTime);
-    }
+    }*/
 }

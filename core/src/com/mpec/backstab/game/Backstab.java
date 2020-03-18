@@ -2,6 +2,7 @@ package com.mpec.backstab.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -13,6 +14,7 @@ import com.mpec.backstab.map.MapGenerator;
 
 public class Backstab extends Game {
 
+	public OrthographicCamera camera;
 	SpriteBatch batch;
 
 	public float stateTime;
@@ -20,6 +22,9 @@ public class Backstab extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		float aspectRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 10f*aspectRatio, 10f);
 		this.setScreen(new GameScreen(this));
 		stateTime = 0;
 	}
