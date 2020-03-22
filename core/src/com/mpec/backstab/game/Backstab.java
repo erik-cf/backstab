@@ -4,34 +4,41 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mpec.backstab.enemy_character.EnemyAnimation;
-import com.mpec.backstab.enemy_character.EnemyAnimationLittleZombie;
-import com.mpec.backstab.enemy_character.EnemyAnimationSwordZombie;
-import com.mpec.backstab.main_character.CharacterAnimation;
+import com.badlogic.gdx.math.Rectangle;
+import com.mpec.backstab.main_character.MainCharacter;
 import com.mpec.backstab.map.MapGenerator;
 
 public class Backstab extends Game {
 
 	public OrthographicCamera camera;
 	SpriteBatch batch;
+	MapGenerator mapGenerator;
+	MainCharacter mainCharacter;
+	Rectangle mainCharacterRectangle;
 
 	public float stateTime;
 
 	@Override
 	public void create () {
+
+
 		batch = new SpriteBatch();
+		mapGenerator = new MapGenerator();
 		float aspectRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 10f*aspectRatio, 10f);
-		this.setScreen(new GameScreen(this));
+
 		stateTime = 0;
+		mainCharacter = new MainCharacter(this);
+		mainCharacterRectangle = new Rectangle();
+		mainCharacterRectangle.setX(mainCharacter.getAction().getX());
+		mainCharacterRectangle.setY(mainCharacter.getAction().getY());
+
+		this.setScreen(new MainMenuScreen(this));
 	}
 
 	@Override
 	public void render () {
-
 		super.render();
 	}
 	
@@ -40,11 +47,5 @@ public class Backstab extends Game {
 		batch.dispose();
 	}
 
-	public float getStateTime() {
-		return stateTime;
-	}
 
-	public void setStateTime(float stateTime) {
-		this.stateTime = stateTime;
-	}
 }

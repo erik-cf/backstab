@@ -56,7 +56,6 @@ public class EnemyAnimationLittleZombie implements Screen, AvailableActions {
             direction = LOOK_UP;
             actionToDraw(MOVE_UP);
             batch.draw(enemyAction, 100, 100);
-
         }else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             direction = LOOK_DOWN;
             actionToDraw(MOVE_DOWN);
@@ -71,6 +70,9 @@ public class EnemyAnimationLittleZombie implements Screen, AvailableActions {
             batch.draw(enemyAction, 100, 100);
         }else if (Gdx.input.isKeyPressed(Input.Keys.E)) {
             goAttack();
+            batch.draw(enemyAction, 100, 100);
+        }else if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+            goDie();
             batch.draw(enemyAction, 100, 100);
         }else{
             goIdle();
@@ -160,5 +162,23 @@ public class EnemyAnimationLittleZombie implements Screen, AvailableActions {
         }
         enemyAction = new Sprite(animation.getKeyFrame(stateTime, true));
 
+    }
+
+    private void goDie(){
+        switch(direction){
+            case LOOK_UP:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_die_up_mgzomb), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_RIGHT:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_die_right_mgzomb), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_DOWN:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_die_down_mgzomb), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_LEFT:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_die_left_mgzomb), Animation.PlayMode.LOOP);
+                break;
+        }
+        enemyAction = new Sprite(animation.getKeyFrame(stateTime, true));
     }
 }

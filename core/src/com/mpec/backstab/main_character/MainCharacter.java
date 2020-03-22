@@ -1,6 +1,7 @@
 package com.mpec.backstab.main_character;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.mpec.backstab.game.Backstab;
 
 public class MainCharacter extends CharacterAnimation {
 
@@ -11,11 +12,13 @@ public class MainCharacter extends CharacterAnimation {
     private double movement_speed = 10;
 
 
-    public MainCharacter(){
-        super();
+    public MainCharacter(Backstab game){
+        super(game);
+
     }
 
-    public MainCharacter(double attack, double defense, double attack_speed, double hp, double movement_speed) {
+    public MainCharacter(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed) {
+        super(game);
         this.attack = attack;
         this.defense = defense;
         this.attack_speed = attack_speed;
@@ -78,16 +81,4 @@ public class MainCharacter extends CharacterAnimation {
     public void setAction(Sprite action){
         this.action = action;
     }
-
-    /*public Sprite doMove(int action, float stateTime){
-        return this.goMove(action, stateTime);
-    }
-
-    public Sprite doAttack(float stateTime){
-        return this.goAttack(stateTime);
-    }
-
-    public Sprite doIdle(float stateTime){
-        return this.goIdle(stateTime);
-    }*/
 }

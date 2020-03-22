@@ -72,7 +72,10 @@ public class EnemyAnimationSwordZombie implements Screen, AvailableActions {
         } else if (Gdx.input.isKeyPressed(Input.Keys.E)) {
             goAttack();
             batch.draw(enemyAction, 100, 100);
-        } else {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+            goDie();
+            batch.draw(enemyAction, 100, 100);
+        }else {
             goIdle();
             batch.draw(enemyAction, 100, 100);
         }
@@ -155,6 +158,24 @@ public class EnemyAnimationSwordZombie implements Screen, AvailableActions {
                 break;
             case LOOK_LEFT:
                 animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_left_swzomb), Animation.PlayMode.LOOP);
+                break;
+        }
+        enemyAction = new Sprite(animation.getKeyFrame(stateTime, true));
+    }
+
+    private void goDie(){
+        switch(direction){
+            case LOOK_UP:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_die_up_swzomb), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_RIGHT:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_die_right_swzomb), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_DOWN:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_die_down_swzomb), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_LEFT:
+                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_die_left_swzomb), Animation.PlayMode.LOOP);
                 break;
         }
         enemyAction = new Sprite(animation.getKeyFrame(stateTime, true));
