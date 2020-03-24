@@ -13,7 +13,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mpec.backstab.game.Backstab;
 import com.mpec.backstab.game.AvailableActions;
 
-public class EnemyAnimation implements Screen, AvailableActions {
+public class EnemyAnimation {
+    /*
 
     public TextureAtlas enemyAtlas;
     public SpriteBatch batch;
@@ -27,7 +28,7 @@ public class EnemyAnimation implements Screen, AvailableActions {
     int direction;
 
 
-    public EnemyAnimation(Backstab game){
+    public EnemyAnimation(Backstab game) {
         this.game = game;
         enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/golemEnemy.txt"));
         batch = new SpriteBatch();
@@ -50,27 +51,27 @@ public class EnemyAnimation implements Screen, AvailableActions {
         stateTime += 1 + Gdx.graphics.getDeltaTime();
 
         batch.begin();
-        if(delta < 1){
+        if (delta < 1) {
             goIdle();
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             direction = LOOK_UP;
             actionToDraw(MOVE_UP);
             batch.draw(enemyAction, 100, 100);
 
-        }else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             direction = LOOK_DOWN;
             actionToDraw(MOVE_DOWN);
             batch.draw(enemyAction, 100, 100);
-        }else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             direction = LOOK_LEFT;
             actionToDraw(MOVE_LEFT);
             batch.draw(enemyAction, 100, 100);
-        }else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             direction = LOOK_RIGHT;
             actionToDraw(MOVE_RIGHT);
             batch.draw(enemyAction, 100, 100);
-        }else{
+        } else {
             goIdle();
             batch.draw(enemyAction, 100, 100);
         }
@@ -103,32 +104,7 @@ public class EnemyAnimation implements Screen, AvailableActions {
 
     }
 
-    private void actionToDraw(int action) {
-        switch(action){
-            case MOVE_UP:
-                animation = new Animation<TextureRegion>(2f, enemyAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
-                break;
-            case MOVE_DOWN:
-                animation = new Animation<TextureRegion>(3f, enemyAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
-                break;
-            case MOVE_RIGHT:
-                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
-                break;
-            case MOVE_LEFT:
-                animation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_left), Animation.PlayMode.LOOP);
-                break;
+}
 
-        }
-        enemyAction = new Sprite(animation.getKeyFrame(stateTime, true));
-        resize(100,200);
-    }
-
-    private void goIdle(){
-        animation = new Animation<TextureRegion>(3f, enemyAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
-        enemyAction = new Sprite(animation.getKeyFrame(stateTime, true));
-        resize(100,200);
-
-    }
-
-
+*/
 }

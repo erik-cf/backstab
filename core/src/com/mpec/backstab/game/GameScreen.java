@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mpec.backstab.enemy_character.EnemyAnimation;
+import com.mpec.backstab.enemy_character.EnemyAnimationSwordZombie;
+import com.mpec.backstab.enemy_character.Golem;
 import com.mpec.backstab.map.MapGenerator;
 
 public class GameScreen implements Screen {
@@ -14,14 +17,17 @@ public class GameScreen implements Screen {
     Stage stage;
     Sprite playerSprite;
     TouchPadTest touchpad;
+    Golem golem;
 
     public GameScreen(Backstab game){
         this.game = game;
         touchpad=new TouchPadTest();
-
+        golem= new Golem(game);
         stage = new Stage();
         stage.addActor(touchpad.getTouchpad());
         Gdx.input.setInputProcessor(stage);
+        golem.getGolemSprite().setX(100);
+        golem.getGolemSprite().setY(100);
 
     }
 
@@ -42,9 +48,12 @@ public class GameScreen implements Screen {
         game.mainCharacterRectangle.setX((float) (game.mainCharacterRectangle.getX() + touchpad.getTouchpad().getKnobPercentX() * game.mainCharacter.getMovement_speed()));
         game.mainCharacterRectangle.setY((float) (game.mainCharacterRectangle.getY() + touchpad.getTouchpad().getKnobPercentY() * game.mainCharacter.getMovement_speed()));
         checkMovement();
+        golem.followPlayer((int)game.mainCharacterRectangle.getX(),(int)game.mainCharacterRectangle.getY());
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
+        game.batch.draw(golem.getGolemSprite(),golem.getGolemSprite().getX(),golem.getGolemSprite().getY());
         game.batch.draw(playerSprite, game.mainCharacterRectangle.x, game.mainCharacterRectangle.y);
+
         touchpad.getTouchpad().draw(game.batch,1);
         game.batch.end();
     }

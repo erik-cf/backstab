@@ -11,7 +11,9 @@ public class enemyStatsObject {
         private double hp;
         private double movement_speed;
 
+        public enemyStatsObject(){
 
+        }
 
         public enemyStatsObject(double attack, double defense, double attack_speed, double hp, double movement_speed) {
             this.attack = attack;
