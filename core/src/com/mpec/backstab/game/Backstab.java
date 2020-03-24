@@ -19,7 +19,7 @@ public class Backstab extends Game {
 	MainCharacter mainCharacter;
 	Rectangle mainCharacterRectangle;
 	EnemyAnimation enemyAnimation;
-	Date startDate;
+
 
 	public float stateTime;
 

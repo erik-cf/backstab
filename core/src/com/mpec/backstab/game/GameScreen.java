@@ -11,23 +11,35 @@ import com.mpec.backstab.enemy_character.EnemyAnimationSwordZombie;
 import com.mpec.backstab.enemy_character.Golem;
 import com.mpec.backstab.map.MapGenerator;
 
+import java.util.ArrayList;
+import java.util.Date;
+
+import javax.management.openmbean.ArrayType;
+
 public class GameScreen implements Screen {
 
     final Backstab game;
     Stage stage;
     Sprite playerSprite;
     TouchPadTest touchpad;
-    Golem golem;
+    ArrayList<Golem> golemAL= new ArrayList<Golem>();
+    Date startDate= new Date();
+    Boolean crearGolem=false;
 
     public GameScreen(Backstab game){
         this.game = game;
         touchpad=new TouchPadTest();
-        golem= new Golem(game);
+
+        Golem golem1=new Golem(game);
+
+        golemAL.add(golem1);
         stage = new Stage();
         stage.addActor(touchpad.getTouchpad());
         Gdx.input.setInputProcessor(stage);
-        golem.getGolemSprite().setX(100);
-        golem.getGolemSprite().setY(100);
+        golem1.getGolemSprite().setX(100);
+        golem1.getGolemSprite().setY(100);
+
+
 
     }
 
@@ -44,14 +56,28 @@ public class GameScreen implements Screen {
         game.stateTime = game.stateTime + 1 + Gdx.graphics.getDeltaTime();
         playerSprite = checkCharacterAction();
 
-
+        Date endDate= new Date();
+        int numSeconds = (int)((endDate.getTime() - startDate.getTime()) / 1000);
+        System.out.println(numSeconds);
         game.mainCharacterRectangle.setX((float) (game.mainCharacterRectangle.getX() + touchpad.getTouchpad().getKnobPercentX() * game.mainCharacter.getMovement_speed()));
         game.mainCharacterRectangle.setY((float) (game.mainCharacterRectangle.getY() + touchpad.getTouchpad().getKnobPercentY() * game.mainCharacter.getMovement_speed()));
         checkMovement();
-        golem.followPlayer((int)game.mainCharacterRectangle.getX(),(int)game.mainCharacterRectangle.getY());
+        int i=0;
+        for (Golem golem : golemAL) {
+
+            golemAL.get(i).followPlayer((int)game.mainCharacterRectangle.getX(),(int)game.mainCharacterRectangle.getY());
+            i++;
+        }
+        createGolem(numSeconds);
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
-        game.batch.draw(golem.getGolemSprite(),golem.getGolemSprite().getX(),golem.getGolemSprite().getY());
+        int l=0;
+        for (Golem golem : golemAL) {
+
+            game.batch.draw(golemAL.get(l).getGolemSprite(),golemAL.get(l).getGolemSprite().getX(),golemAL.get(l).getGolemSprite().getY());
+            l++;
+        }
+
         game.batch.draw(playerSprite, game.mainCharacterRectangle.x, game.mainCharacterRectangle.y);
 
         touchpad.getTouchpad().draw(game.batch,1);
@@ -137,6 +163,22 @@ public class GameScreen implements Screen {
                 }
             }
         }
+
+    }
+
+    private void createGolem(int numSeconds){
+        if(numSeconds%3!=0){
+            crearGolem=true;
+        }
+        else if(numSeconds%3==0 && crearGolem==true){
+            Golem golem1=new Golem(game);
+            golem1.getGolemSprite().setX((float)Math.random()*800);
+            golem1.getGolemSprite().setY((float)Math.random()*800);
+            golemAL.add(golem1);
+            crearGolem=false;
+        }
+
+
 
     }
 
