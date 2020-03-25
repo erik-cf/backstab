@@ -24,7 +24,7 @@ public class GameScreen implements Screen {
     TouchPadTest touchpad;
     ArrayList<Golem> golemAL= new ArrayList<Golem>();
     Date startDate= new Date();
-    Boolean crearGolem=false;
+    boolean crearGolem=false;
 
     public GameScreen(Backstab game){
         this.game = game;
@@ -38,8 +38,6 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         golem1.getGolemSprite().setX(100);
         golem1.getGolemSprite().setY(100);
-
-
 
     }
 
@@ -177,9 +175,23 @@ public class GameScreen implements Screen {
             golemAL.add(golem1);
             crearGolem=false;
         }
+    }
 
+    private void createEnemy(int numSeconds, int whichEnemy){
 
+    }
 
+    private void whichEnemy(int rdm) throws Exception {
+        switch(rdm){
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            default:
+                throw new Exception("Error! Number out of range (0-2)!");
+        }
     }
 
 

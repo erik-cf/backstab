@@ -2,6 +2,9 @@ package com.mpec.backstab.game;
 
 public interface AvailableActions {
 
+    /**
+     *
+     */
     String name_gun_up = "gun_up";
     String name_gun_left = "gun_left";
     String name_gun_down = "gun_down";
@@ -75,12 +78,12 @@ public interface AvailableActions {
     int MOVE_RIGHT = 0x100003f;
     int MOVE_UP = 0x100004f;
 
+    int CREATE_GOLEM = 0x200001f;
+    int CREATE_SWORD_ZOMBIE = 0x200002f;
+    int CREATE_WIZARD_ZOMBIE = 0x200003f;
+
     int IDLE_UP = 0x900001f;
     int IDLE_DOWN = 0x900002f;
     int IDLE_LEFT = 0x900003f;
     int IDLE_RIGHT = 0x900004f;
-
-
-
-
 }

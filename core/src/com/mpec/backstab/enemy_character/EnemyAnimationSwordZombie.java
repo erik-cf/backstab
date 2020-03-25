@@ -32,8 +32,6 @@ public class EnemyAnimationSwordZombie implements Screen, AvailableActions {
         batch = new SpriteBatch();
         stateTime = 1;
         direction = LOOK_DOWN;
-
-
     }
 
     @Override

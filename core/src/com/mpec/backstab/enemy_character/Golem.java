@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.mpec.backstab.game.AvailableActions;
 import com.mpec.backstab.game.Backstab;
 
-public class Golem extends enemyStatsObject implements AvailableActions {
+public class Golem extends Enemy implements AvailableActions {
 
     private Sprite golemSprite;
     private Rectangle golemRectangle;
@@ -32,11 +32,8 @@ public class Golem extends enemyStatsObject implements AvailableActions {
         golemAtlas = new TextureAtlas(Gdx.files.internal("Enemy/golemEnemy.txt"));
         direction= AvailableActions.LOOK_DOWN;
         goIdle();
-
-
-
-
     }
+
     private void actionToDraw(int action) {
         switch(action){
             case MOVE_UP:
