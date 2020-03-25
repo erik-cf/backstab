@@ -6,15 +6,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.mpec.backstab.enemy_character.EnemyAnimation;
-import com.mpec.backstab.enemy_character.EnemyAnimationSwordZombie;
+import com.mpec.backstab.enemy_character.Enemy;
 import com.mpec.backstab.enemy_character.Golem;
+import com.mpec.backstab.enemy_character.SwordZombie;
+import com.mpec.backstab.enemy_character.WizardZombie;
 import com.mpec.backstab.map.MapGenerator;
 
 import java.util.ArrayList;
 import java.util.Date;
-
-import javax.management.openmbean.ArrayType;
 
 public class GameScreen implements Screen {
 
@@ -22,9 +21,11 @@ public class GameScreen implements Screen {
     Stage stage;
     Sprite playerSprite;
     TouchPadTest touchpad;
-    ArrayList<Golem> golemAL= new ArrayList<Golem>();
+    ArrayList<Enemy> enemyAL = new ArrayList<Enemy>();
     Date startDate= new Date();
-    boolean crearGolem=false;
+    boolean enemyToBeCreated =false;
+    Date endDate;
+    int numSeconds;
 
     public GameScreen(Backstab game){
         this.game = game;
@@ -32,13 +33,12 @@ public class GameScreen implements Screen {
 
         Golem golem1=new Golem(game);
 
-        golemAL.add(golem1);
+        enemyAL.add(golem1);
         stage = new Stage();
         stage.addActor(touchpad.getTouchpad());
         Gdx.input.setInputProcessor(stage);
-        golem1.getGolemSprite().setX(100);
-        golem1.getGolemSprite().setY(100);
-
+        golem1.getEnemySprite().setX(100);
+        golem1.getEnemySprite().setY(100);
     }
 
     @Override
@@ -54,26 +54,33 @@ public class GameScreen implements Screen {
         game.stateTime = game.stateTime + 1 + Gdx.graphics.getDeltaTime();
         playerSprite = checkCharacterAction();
 
-        Date endDate= new Date();
-        int numSeconds = (int)((endDate.getTime() - startDate.getTime()) / 1000);
+        endDate= new Date();
+        numSeconds = (int)((endDate.getTime() - startDate.getTime()) / 1000);
         System.out.println(numSeconds);
         game.mainCharacterRectangle.setX((float) (game.mainCharacterRectangle.getX() + touchpad.getTouchpad().getKnobPercentX() * game.mainCharacter.getMovement_speed()));
         game.mainCharacterRectangle.setY((float) (game.mainCharacterRectangle.getY() + touchpad.getTouchpad().getKnobPercentY() * game.mainCharacter.getMovement_speed()));
         checkMovement();
-        int i=0;
-        for (Golem golem : golemAL) {
+        for (Enemy enemy : enemyAL) {
+            if(enemy.getClass().equals(Golem.class)){
+                ((Golem)enemy).followPlayer(game.mainCharacterRectangle.getX(), game.mainCharacterRectangle.getY());
+            }else if(enemy.getClass().equals(WizardZombie.class)){
+                ((WizardZombie)enemy).followPlayer(game.mainCharacterRectangle.getX(), game.mainCharacterRectangle.getY());
+            }else if(enemy.getClass().equals(SwordZombie.class)){
+                ((SwordZombie)enemy).followPlayer(game.mainCharacterRectangle.getX(), game.mainCharacterRectangle.getY());
+            }
 
-            golemAL.get(i).followPlayer((int)game.mainCharacterRectangle.getX(),(int)game.mainCharacterRectangle.getY());
-            i++;
         }
-        createGolem(numSeconds);
+
+        try {
+            whichEnemy((int)Math.random() * 3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
-        int l=0;
-        for (Golem golem : golemAL) {
 
-            game.batch.draw(golemAL.get(l).getGolemSprite(),golemAL.get(l).getGolemSprite().getX(),golemAL.get(l).getGolemSprite().getY());
-            l++;
+        for (Enemy enemy : enemyAL) {
+            game.batch.draw(enemy.getEnemySprite(), enemy.getEnemySprite().getX(),enemy.getEnemySprite().getY());
         }
 
         game.batch.draw(playerSprite, game.mainCharacterRectangle.x, game.mainCharacterRectangle.y);
@@ -166,28 +173,49 @@ public class GameScreen implements Screen {
 
     private void createGolem(int numSeconds){
         if(numSeconds%3!=0){
-            crearGolem=true;
+            enemyToBeCreated =true;
         }
-        else if(numSeconds%3==0 && crearGolem==true){
+        else if(numSeconds%3==0 && enemyToBeCreated ==true){
             Golem golem1=new Golem(game);
-            golem1.getGolemSprite().setX((float)Math.random()*800);
-            golem1.getGolemSprite().setY((float)Math.random()*800);
-            golemAL.add(golem1);
-            crearGolem=false;
+            golem1.getEnemySprite().setX((float)Math.random()*800);
+            golem1.getEnemySprite().setY((float)Math.random()*800);
+            enemyAL.add(golem1);
+            enemyToBeCreated =false;
         }
     }
 
-    private void createEnemy(int numSeconds, int whichEnemy){
-
+    private void createEnemy(int whichEnemy){
+        if(numSeconds%3!=0){
+            enemyToBeCreated =true;
+        }
+        else if(numSeconds%3==0 && enemyToBeCreated ==true){
+            switch(whichEnemy){
+                case AvailableActions.CREATE_GOLEM:
+                    enemyAL.add(new Golem(game));
+                    enemyToBeCreated = false;
+                    break;
+                case AvailableActions.CREATE_SWORD_ZOMBIE:
+                    enemyAL.add(new SwordZombie(game));
+                    enemyToBeCreated = false;
+                    break;
+                case AvailableActions.CREATE_WIZARD_ZOMBIE:
+                    enemyAL.add(new WizardZombie(game));
+                    enemyToBeCreated = false;
+                    break;
+            }
+        }
     }
 
     private void whichEnemy(int rdm) throws Exception {
         switch(rdm){
             case 0:
+                createEnemy(AvailableActions.CREATE_GOLEM);
                 break;
             case 1:
+                createEnemy(AvailableActions.CREATE_WIZARD_ZOMBIE);
                 break;
             case 2:
+                createEnemy(AvailableActions.CREATE_SWORD_ZOMBIE);
                 break;
             default:
                 throw new Exception("Error! Number out of range (0-2)!");

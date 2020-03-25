@@ -1,6 +1,19 @@
 package com.mpec.backstab.enemy_character;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.mpec.backstab.game.Backstab;
+
 public class Enemy {
+
+    protected Sprite enemySprite;
+    protected Rectangle enemyRectangle;
+    protected TextureAtlas enemyAtlas;
+    protected Animation<TextureRegion> enemyAnimation;
+    protected int direction;
 
     private double attack;
     private double defense;
@@ -9,17 +22,22 @@ public class Enemy {
     private double movement_speed;
     private double range;
 
-    public Enemy(){
+    final Backstab game;
 
+    public Enemy(Backstab game){
+        this.game = game;
     }
 
-    public Enemy(double attack, double defense, double attack_speed, double hp, double movement_speed) {
+    public Enemy(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed) {
+        this.game = game;
         this.attack = attack;
         this.defense = defense;
         this.attack_speed = attack_speed;
         this.hp = hp;
         this.movement_speed = movement_speed;
     }
+
+
 
     public double getAttack() {
         return attack;
@@ -67,5 +85,29 @@ public class Enemy {
 
     public void setRange(double range) {
         this.range = range;
+    }
+
+    public Sprite getEnemySprite() {
+        return enemySprite;
+    }
+
+    public void setEnemySprite(Sprite enemySprite) {
+        this.enemySprite = enemySprite;
+    }
+
+    public Rectangle getEnemyRectangle() {
+        return enemyRectangle;
+    }
+
+    public void setEnemyRectangle(Rectangle enemyRectangle) {
+        this.enemyRectangle = enemyRectangle;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
     }
 }

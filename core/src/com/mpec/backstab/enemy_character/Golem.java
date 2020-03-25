@@ -11,135 +11,118 @@ import com.mpec.backstab.game.Backstab;
 
 public class Golem extends Enemy implements AvailableActions {
 
-    private Sprite golemSprite;
-    private Rectangle golemRectangle;
-    public TextureAtlas golemAtlas;
-    public Animation<TextureRegion> golemAnimation;
-    final Backstab game;
-
-    @Override
-    public void setMovement_speed(double movement_speed) {
-        super.setMovement_speed(movement_speed);
-    }
-
-    int direction;
     public Golem(Backstab game){
-        this.game = game;
-
-        //golemSprite=new Sprite();
-
-        golemRectangle=new Rectangle();
-        golemAtlas = new TextureAtlas(Gdx.files.internal("Enemy/golemEnemy.txt"));
+        super(game);
+        enemyRectangle =new Rectangle();
+        enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/golemEnemy.txt"));
         direction= AvailableActions.LOOK_DOWN;
         goIdle();
+        enemySprite.setX((float)Math.random()*800);
+        enemySprite.setY((float)Math.random()*800);
     }
 
     private void actionToDraw(int action) {
         switch(action){
             case MOVE_UP:
-                golemAnimation = new Animation<TextureRegion>(2f, golemAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
+                enemyAnimation = new Animation<TextureRegion>(2f, enemyAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
                 break;
             case MOVE_DOWN:
-                golemAnimation = new Animation<TextureRegion>(3f, golemAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
+                enemyAnimation = new Animation<TextureRegion>(3f, enemyAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
                 break;
             case MOVE_RIGHT:
-                golemAnimation = new Animation<TextureRegion>(5f, golemAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
                 break;
             case MOVE_LEFT:
-                golemAnimation = new Animation<TextureRegion>(5f, golemAtlas.findRegions(name_move_left), Animation.PlayMode.LOOP);
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_left), Animation.PlayMode.LOOP);
                 break;
 
         }
-        golemSprite = new Sprite(golemAnimation.getKeyFrame(game.stateTime, true));
+        enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
 
     }
 
     private void goIdle(){
-        golemAnimation = new Animation<TextureRegion>(3f, golemAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
-        golemSprite = new Sprite(golemAnimation.getKeyFrame(game.stateTime, true));
+        enemyAnimation = new Animation<TextureRegion>(3f, enemyAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
+        enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
 
 
     }
 
-    public Sprite getGolemSprite() {
-        return golemSprite;
+    public Sprite getEnemySprite() {
+        return enemySprite;
     }
 
-    public void setGolemSprite(Sprite golemSprite) {
-        this.golemSprite = golemSprite;
+    public void setEnemySprite(Sprite enemySprite) {
+        this.enemySprite = enemySprite;
 
     }
 
-    public Rectangle getGolemRectangle() {
-        return golemRectangle;
+    public Rectangle getEnemyRectangle() {
+        return enemyRectangle;
     }
 
-    public void setGolemRectangle(Rectangle golemRectangle) {
-        this.golemRectangle = golemRectangle;
+    public void setEnemyRectangle(Rectangle enemyRectangle) {
+        this.enemyRectangle = enemyRectangle;
     }
 
-    public void followPlayer(int playerPositionX, int playerPositionY){
+    public void followPlayer(float playerPositionX, float playerPositionY){
 
-        int golemPositionX=(int)golemSprite.getX();
-        int golemPositionY=(int)golemSprite.getY();
+        float golemPositionX= enemySprite.getX();
+        float golemPositionY= enemySprite.getY();
         if (((playerPositionY-golemPositionY>=-1)&& (playerPositionY-golemPositionY<=1)) && playerPositionX>golemPositionX){
             actionToDraw(MOVE_RIGHT);
 
 
-            golemSprite.setY(golemPositionY);
-            golemSprite.setX(golemPositionX+2);
+            enemySprite.setY(golemPositionY);
+            enemySprite.setX(golemPositionX+2);
         }
         else if (((playerPositionY-golemPositionY>=-1)&& (playerPositionY-golemPositionY<=1)) && playerPositionX<golemPositionX){
             actionToDraw(MOVE_LEFT);
 
 
-            golemSprite.setY(golemPositionY);
-            golemSprite.setX(golemPositionX-2);
+            enemySprite.setY(golemPositionY);
+            enemySprite.setX(golemPositionX-2);
         }
 
         else if (((playerPositionX-golemPositionX>=-1)&& (playerPositionX-golemPositionX<=1)) && playerPositionY>golemPositionY){
             actionToDraw(MOVE_UP);
 
 
-            golemSprite.setY(golemPositionY+2);
-            golemSprite.setX(golemPositionX);
+            enemySprite.setY(golemPositionY+2);
+            enemySprite.setX(golemPositionX);
         }
         else if (((playerPositionX-golemPositionX>=-1)&& (playerPositionX-golemPositionX<=1)) && playerPositionY<golemPositionY){
             actionToDraw(MOVE_DOWN);
 
 
-            golemSprite.setY(golemPositionY-2);
-            golemSprite.setX(golemPositionX);
+            enemySprite.setY(golemPositionY-2);
+            enemySprite.setX(golemPositionX);
         }
 
         else if(playerPositionY>golemPositionY && playerPositionX>golemPositionX  ){
             actionToDraw(MOVE_RIGHT);
 
-
-           golemSprite.setY(golemPositionY+2);
-            golemSprite.setX(golemPositionX+2);
+            enemySprite.setY(golemPositionY+2);
+            enemySprite.setX(golemPositionX+2);
 
         }
         else if(playerPositionY>golemPositionY  && playerPositionX<golemPositionX  ){
             actionToDraw(MOVE_LEFT);
-            golemSprite.setY(golemPositionY+2);
-            golemSprite.setX(golemPositionX-2);
+            enemySprite.setY(golemPositionY+2);
+            enemySprite.setX(golemPositionX-2);
         }
 
         else if(playerPositionY<golemPositionY && playerPositionX>golemPositionX   ){
             actionToDraw(MOVE_RIGHT);
 
-            golemSprite.setY(golemPositionY-2);
-            golemSprite.setX(golemPositionX+2);
+            enemySprite.setY(golemPositionY-2);
+            enemySprite.setX(golemPositionX+2);
         }
         else if(playerPositionY<golemPositionY && playerPositionX<golemPositionX){
             actionToDraw(MOVE_LEFT);
-            golemSprite.setY(golemPositionY-2);
-            golemSprite.setX(golemPositionX-2);
+            enemySprite.setY(golemPositionY-2);
+            enemySprite.setX(golemPositionX-2);
         }
-
-
-
 
     }
 
