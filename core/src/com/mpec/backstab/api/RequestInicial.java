@@ -35,7 +35,7 @@ public class RequestInicial {
         //print in String
         System.out.println(response.toString());
 
-        //Read JSON response and print
+
        return new JSONObject(response.toString());
 
 
