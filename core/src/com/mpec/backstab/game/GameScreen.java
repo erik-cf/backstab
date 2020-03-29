@@ -17,6 +17,7 @@ import java.util.Date;
 
 public class GameScreen implements Screen {
 
+
     final Backstab game;
     Stage stage;
     Sprite playerSprite;
@@ -26,6 +27,7 @@ public class GameScreen implements Screen {
     boolean enemyToBeCreated =false;
     Date endDate;
     int numSeconds;
+
 
     public GameScreen(Backstab game){
         this.game = game;
@@ -37,8 +39,8 @@ public class GameScreen implements Screen {
         stage = new Stage();
         stage.addActor(touchpad.getTouchpad());
         Gdx.input.setInputProcessor(stage);
-        golem1.getEnemySprite().setX(100);
-        golem1.getEnemySprite().setY(100);
+        golem1.setX(100);
+        golem1.setY(100);
     }
 
     @Override
@@ -56,7 +58,6 @@ public class GameScreen implements Screen {
 
         endDate= new Date();
         numSeconds = (int)((endDate.getTime() - startDate.getTime()) / 1000);
-        System.out.println(numSeconds);
         game.mainCharacterRectangle.setX((float) (game.mainCharacterRectangle.getX() + touchpad.getTouchpad().getKnobPercentX() * game.mainCharacter.getMovement_speed()));
         game.mainCharacterRectangle.setY((float) (game.mainCharacterRectangle.getY() + touchpad.getTouchpad().getKnobPercentY() * game.mainCharacter.getMovement_speed()));
         checkMovement();
@@ -72,7 +73,7 @@ public class GameScreen implements Screen {
         }
 
         try {
-            whichEnemy((int)Math.random() * 3);
+            whichEnemy((int)(Math.random() * 3));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +81,8 @@ public class GameScreen implements Screen {
         game.mapGenerator.paintMap(game.batch);
 
         for (Enemy enemy : enemyAL) {
-            game.batch.draw(enemy.getEnemySprite(), enemy.getEnemySprite().getX(),enemy.getEnemySprite().getY());
+            enemy.draw(game.batch, 1);
+            //game.batch.draw(enemy.getEnemyTexture(), enemy.getX(),enemy.getY());
         }
 
         game.batch.draw(playerSprite, game.mainCharacterRectangle.x, game.mainCharacterRectangle.y);
@@ -171,18 +173,18 @@ public class GameScreen implements Screen {
 
     }
 
-    private void createGolem(int numSeconds){
+    /*private void createGolem(int numSeconds){
         if(numSeconds%3!=0){
             enemyToBeCreated =true;
         }
         else if(numSeconds%3==0 && enemyToBeCreated ==true){
             Golem golem1=new Golem(game);
-            golem1.getEnemySprite().setX((float)Math.random()*800);
-            golem1.getEnemySprite().setY((float)Math.random()*800);
+            golem1.getEnemyTexture().setX((float)Math.random()*800);
+            golem1.getEnemyTexture().setY((float)Math.random()*800);
             enemyAL.add(golem1);
             enemyToBeCreated =false;
         }
-    }
+    }*/
 
     private void createEnemy(int whichEnemy){
         if(numSeconds%3!=0){
@@ -192,17 +194,15 @@ public class GameScreen implements Screen {
             switch(whichEnemy){
                 case AvailableActions.CREATE_GOLEM:
                     enemyAL.add(new Golem(game));
-                    enemyToBeCreated = false;
                     break;
                 case AvailableActions.CREATE_SWORD_ZOMBIE:
                     enemyAL.add(new SwordZombie(game));
-                    enemyToBeCreated = false;
                     break;
                 case AvailableActions.CREATE_WIZARD_ZOMBIE:
                     enemyAL.add(new WizardZombie(game));
-                    enemyToBeCreated = false;
                     break;
             }
+            enemyToBeCreated = false;
         }
     }
 

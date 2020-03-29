@@ -1,24 +1,19 @@
 package com.mpec.backstab.api;
-
-
-
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-public class RequestInicial {
 
+public class ApiTools {
 
-    public static JSONObject InfoRequest(String collection) throws Exception {
+    public static void InfoRequest(String collection) throws Exception {
         String url = "https://backstabio.herokuapp.com/api/"+collection;
+        //String url = "https://localhost:3000/api/"+collection;
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        // optional default is GET
         con.setRequestMethod("GET");
-        //add request header
         con.setRequestProperty("User-Agent", "Mozilla/5.0");
         int responseCode = con.getResponseCode();
         System.out.println("\nSending 'GET' request to URL : " + url);
@@ -31,13 +26,6 @@ public class RequestInicial {
             response.append(inputLine);
         }
         in.close();
-
-        //print in String
-        System.out.println(response.toString());
-
-
-       return new JSONObject(response.toString());
-
-
+        JSONObject jsonObject = new JSONObject(response.toString());
     }
 }

@@ -133,7 +133,7 @@ project(":core") {
         api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
         api "net.dermetfan.libgdx-utils:libgdx-utils:0.13.4"
         api "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.13.4"
-        implementation group: 'org.json', name: 'json', version: '20190722'
+        api group: 'org.json', name: 'json', version: '20190722'
         
     }
 }

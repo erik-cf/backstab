@@ -18,6 +18,9 @@ public class MapGenerator {
     public static final int HOLE = 0x00004f;
     public static final int ROCK = 0x00005f;
 
+    public static final int WORLD_WIDTH = 3200;
+    public static final int WORLD_HEIGHT = 3200;
+
     TextureAtlas mapAtlas;
     Array<AtlasRegion> otree;
     Array<AtlasRegion> ytree;
@@ -25,6 +28,9 @@ public class MapGenerator {
     Array<AtlasRegion> water;
     Array<AtlasRegion> hole;
     Array<AtlasRegion> rock;
+
+    Array<CollisionableObject> collisionableObjects;
+    Array<GroundObject> groundObjects;
 
     AtlasRegion[][] groundMap;
     AtlasRegion[][] objectsMap;
@@ -45,8 +51,8 @@ public class MapGenerator {
 
 
         paintedNumbers = new ArrayList<String>();
-        groundMap = new AtlasRegion[768 / 16][1024 / 16];
-        objectsMap = new AtlasRegion[768 / 16][1024 / 16];
+        groundMap = new AtlasRegion[WORLD_HEIGHT / 16][WORLD_WIDTH / 16];
+        objectsMap = new AtlasRegion[WORLD_HEIGHT / 16][WORLD_WIDTH / 16];
 
     }
 
@@ -65,8 +71,8 @@ public class MapGenerator {
     }
 
     public void createMap(){
-        for(int i = (768 / 16) - 1; i >= 0; i--){
-            for(int j = 0; j < (1024 / 16); j++){
+        for(int i = (WORLD_HEIGHT / 16) - 1; i >= 0; i--){
+            for(int j = 0; j < (WORLD_WIDTH / 16); j++){
                 if(!paintedNumbers.contains(i + "," + j)) {
                     if(paintObject()){
                         //paintWater(j, i);
@@ -98,8 +104,8 @@ public class MapGenerator {
         whereToDrawY = 0;
         whereToDrawX = 0;
         Rectangle rect;
-        for(int i = (768 / 16) - 1; i >= 0; i--){
-            for(int j = 0; j < (Gdx.graphics.getWidth() / 16); j++){
+        for(int i = (WORLD_HEIGHT / 16) - 1; i >= 0; i--){
+            for(int j = 0; j < (WORLD_WIDTH / 16); j++){
                 if(groundMap[i][j] != null) {
                     batch.draw(groundMap[i][j], whereToDrawX, whereToDrawY);
                 }else{

@@ -17,6 +17,8 @@ public class WizardZombie extends Enemy implements AvailableActions {
         direction = LOOK_DOWN;
         enemyRectangle = new Rectangle();
         goIdle();
+        this.setX((float)Math.random()*800);
+        this.setY((float)Math.random()*800);
     }
 
     private void actionToDraw(int action) {
@@ -93,52 +95,52 @@ public class WizardZombie extends Enemy implements AvailableActions {
 
     public void followPlayer(float playerPositionX, float playerPositionY) {
 
-        float wizardZombiePositionX = (float) enemySprite.getX();
-        float wizardZombiePositionY = (float) enemySprite.getY();
+        float wizardZombiePositionX = (float) this.getX();
+        float wizardZombiePositionY = (float) this.getY();
         if (((playerPositionY - wizardZombiePositionY >= -1) && (playerPositionY - wizardZombiePositionY <= 1)) && playerPositionX > wizardZombiePositionX) {
             actionToDraw(MOVE_RIGHT);
 
 
-            enemySprite.setY(wizardZombiePositionY);
-            enemySprite.setX(wizardZombiePositionX + 2);
+            this.setY(wizardZombiePositionY);
+            this.setX(wizardZombiePositionX + 2);
         } else if (((playerPositionY - wizardZombiePositionY >= -1) && (playerPositionY - wizardZombiePositionY <= 1)) && playerPositionX < wizardZombiePositionX) {
             actionToDraw(MOVE_LEFT);
 
 
-            enemySprite.setY(wizardZombiePositionY);
-            enemySprite.setX(wizardZombiePositionX - 2);
+            this.setY(wizardZombiePositionY);
+            this.setX(wizardZombiePositionX - 2);
         } else if (((playerPositionX - wizardZombiePositionX >= -1) && (playerPositionX - wizardZombiePositionX <= 1)) && playerPositionY > wizardZombiePositionY) {
             actionToDraw(MOVE_UP);
 
 
-            enemySprite.setY(wizardZombiePositionY + 2);
-            enemySprite.setX(wizardZombiePositionX);
+            this.setY(wizardZombiePositionY + 2);
+            this.setX(wizardZombiePositionX);
         } else if (((playerPositionX - wizardZombiePositionX >= -1) && (playerPositionX - wizardZombiePositionX <= 1)) && playerPositionY < wizardZombiePositionY) {
             actionToDraw(MOVE_DOWN);
 
 
-            enemySprite.setY(wizardZombiePositionY - 2);
-            enemySprite.setX(wizardZombiePositionX);
+            this.setY(wizardZombiePositionY - 2);
+            this.setX(wizardZombiePositionX);
         } else if (playerPositionY > wizardZombiePositionY && playerPositionX > wizardZombiePositionX) {
             actionToDraw(MOVE_RIGHT);
 
 
-            enemySprite.setY(wizardZombiePositionY + 2);
-            enemySprite.setX(wizardZombiePositionX + 2);
+            this.setY(wizardZombiePositionY + 2);
+            this.setX(wizardZombiePositionX + 2);
 
         } else if (playerPositionY > wizardZombiePositionY && playerPositionX < wizardZombiePositionX) {
             actionToDraw(MOVE_LEFT);
-            enemySprite.setY(wizardZombiePositionY + 2);
-            enemySprite.setX(wizardZombiePositionX - 2);
+            this.setY(wizardZombiePositionY + 2);
+            this.setX(wizardZombiePositionX - 2);
         } else if (playerPositionY < wizardZombiePositionY && playerPositionX > wizardZombiePositionX) {
             actionToDraw(MOVE_RIGHT);
 
-            enemySprite.setY(wizardZombiePositionY - 2);
-            enemySprite.setX(wizardZombiePositionX + 2);
+            this.setY(wizardZombiePositionY - 2);
+            this.setX(wizardZombiePositionX + 2);
         } else if (playerPositionY < wizardZombiePositionY && playerPositionX < wizardZombiePositionX) {
             actionToDraw(MOVE_LEFT);
-            enemySprite.setY(wizardZombiePositionY - 2);
-            enemySprite.setX(wizardZombiePositionX - 2);
+            this.setY(wizardZombiePositionY - 2);
+            this.setX(wizardZombiePositionX - 2);
         }
     }
 }

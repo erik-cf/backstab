@@ -17,8 +17,8 @@ public class Golem extends Enemy implements AvailableActions {
         enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/golemEnemy.txt"));
         direction= AvailableActions.LOOK_DOWN;
         goIdle();
-        enemySprite.setX((float)Math.random()*800);
-        enemySprite.setY((float)Math.random()*800);
+        this.setX((float)Math.random()*800);
+        this.setY((float)Math.random()*800);
     }
 
     private void actionToDraw(int action) {
@@ -48,15 +48,6 @@ public class Golem extends Enemy implements AvailableActions {
 
     }
 
-    public Sprite getEnemySprite() {
-        return enemySprite;
-    }
-
-    public void setEnemySprite(Sprite enemySprite) {
-        this.enemySprite = enemySprite;
-
-    }
-
     public Rectangle getEnemyRectangle() {
         return enemyRectangle;
     }
@@ -67,61 +58,61 @@ public class Golem extends Enemy implements AvailableActions {
 
     public void followPlayer(float playerPositionX, float playerPositionY){
 
-        float golemPositionX= enemySprite.getX();
-        float golemPositionY= enemySprite.getY();
+        float golemPositionX= this.getX();
+        float golemPositionY= this.getY();
         if (((playerPositionY-golemPositionY>=-1)&& (playerPositionY-golemPositionY<=1)) && playerPositionX>golemPositionX){
             actionToDraw(MOVE_RIGHT);
 
 
-            enemySprite.setY(golemPositionY);
-            enemySprite.setX(golemPositionX+2);
+            this.setY(golemPositionY);
+            this.setX(golemPositionX+2);
         }
         else if (((playerPositionY-golemPositionY>=-1)&& (playerPositionY-golemPositionY<=1)) && playerPositionX<golemPositionX){
             actionToDraw(MOVE_LEFT);
 
 
-            enemySprite.setY(golemPositionY);
-            enemySprite.setX(golemPositionX-2);
+            this.setY(golemPositionY);
+            this.setX(golemPositionX-2);
         }
 
         else if (((playerPositionX-golemPositionX>=-1)&& (playerPositionX-golemPositionX<=1)) && playerPositionY>golemPositionY){
             actionToDraw(MOVE_UP);
 
 
-            enemySprite.setY(golemPositionY+2);
-            enemySprite.setX(golemPositionX);
+            this.setY(golemPositionY+2);
+            this.setX(golemPositionX);
         }
         else if (((playerPositionX-golemPositionX>=-1)&& (playerPositionX-golemPositionX<=1)) && playerPositionY<golemPositionY){
             actionToDraw(MOVE_DOWN);
 
 
-            enemySprite.setY(golemPositionY-2);
-            enemySprite.setX(golemPositionX);
+            this.setY(golemPositionY-2);
+            this.setX(golemPositionX);
         }
 
         else if(playerPositionY>golemPositionY && playerPositionX>golemPositionX  ){
             actionToDraw(MOVE_RIGHT);
 
-            enemySprite.setY(golemPositionY+2);
-            enemySprite.setX(golemPositionX+2);
+            this.setY(golemPositionY+2);
+            this.setX(golemPositionX+2);
 
         }
         else if(playerPositionY>golemPositionY  && playerPositionX<golemPositionX  ){
             actionToDraw(MOVE_LEFT);
-            enemySprite.setY(golemPositionY+2);
-            enemySprite.setX(golemPositionX-2);
+            this.setY(golemPositionY+2);
+            this.setX(golemPositionX-2);
         }
 
         else if(playerPositionY<golemPositionY && playerPositionX>golemPositionX   ){
             actionToDraw(MOVE_RIGHT);
 
-            enemySprite.setY(golemPositionY-2);
-            enemySprite.setX(golemPositionX+2);
+            this.setY(golemPositionY-2);
+            this.setX(golemPositionX+2);
         }
         else if(playerPositionY<golemPositionY && playerPositionX<golemPositionX){
             actionToDraw(MOVE_LEFT);
-            enemySprite.setY(golemPositionY-2);
-            enemySprite.setX(golemPositionX-2);
+            this.setY(golemPositionY-2);
+            this.setX(golemPositionX-2);
         }
 
     }

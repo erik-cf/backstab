@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.mpec.backstab.enemy_character.EnemyAnimation;
 import com.mpec.backstab.main_character.MainCharacter;
 import com.mpec.backstab.map.MapGenerator;
 
@@ -18,7 +17,7 @@ public class Backstab extends Game {
 	MapGenerator mapGenerator;
 	MainCharacter mainCharacter;
 	Rectangle mainCharacterRectangle;
-	EnemyAnimation enemyAnimation;
+
 
 
 	public float stateTime;
