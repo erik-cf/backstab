@@ -58,11 +58,11 @@ public class Golem extends Enemy implements AvailableActions {
 
     public void followPlayer(float playerPositionX, float playerPositionY){
 
-        float golemPositionX= this.getX();
-        float golemPositionY= this.getY();
-        if (((playerPositionY-golemPositionY>=-1)&& (playerPositionY-golemPositionY<=1)) && playerPositionX>golemPositionX){
+        float enemyPositionX= this.getX();
+        float enemyPositionY= this.getY();
+        if (((playerPositionY-enemyPositionY>=-1)&& (playerPositionY-enemyPositionY<=1)) && playerPositionX>enemyPositionX){
 
-            if(((playerPositionY - golemPositionY <= 15) && (playerPositionX - golemPositionX <= 15)) && ((playerPositionY - golemPositionY >= -15) && (playerPositionX - golemPositionX >= -15))){
+            if(((playerPositionY - enemyPositionY <= 15) && (playerPositionX - enemyPositionX <= 15)) && ((playerPositionY - enemyPositionY >= -15) && (playerPositionX - enemyPositionX >= -15))){
                 goIdle();
             }
             else {
@@ -70,92 +70,92 @@ public class Golem extends Enemy implements AvailableActions {
                 actionToDraw(MOVE_RIGHT);
 
 
-                this.setY(golemPositionY);
-                this.setX(golemPositionX + 2);
+                this.setY(enemyPositionY);
+                this.setX(enemyPositionX + 2);
             }
         }
-        else if (((playerPositionY-golemPositionY>=-1)&& (playerPositionY-golemPositionY<=1)) && playerPositionX<golemPositionX){
-            if(((playerPositionY - golemPositionY <= 15) && (playerPositionX - golemPositionX <= 15)) && ((playerPositionY - golemPositionY >= -15) && (playerPositionX - golemPositionX >= -15))){
+        else if (((playerPositionY-enemyPositionY>=-1)&& (playerPositionY-enemyPositionY<=1)) && playerPositionX<enemyPositionX){
+            if(((playerPositionY - enemyPositionY <= 15) && (playerPositionX - enemyPositionX <= 15)) && ((playerPositionY - enemyPositionY >= -15) && (playerPositionX - enemyPositionX >= -15))){
                 goIdle();
             }
             else {
                 actionToDraw(MOVE_LEFT);
 
 
-                this.setY(golemPositionY);
-                this.setX(golemPositionX - 2);
+                this.setY(enemyPositionY);
+                this.setX(enemyPositionX - 2);
             }
         }
 
-        else if (((playerPositionX-golemPositionX>=-1)&& (playerPositionX-golemPositionX<=1)) && playerPositionY>golemPositionY){
+        else if (((playerPositionX-enemyPositionX>=-1)&& (playerPositionX-enemyPositionX<=1)) && playerPositionY>enemyPositionY){
 
-            if(((playerPositionY - golemPositionY <= 15) && (playerPositionX - golemPositionX <= 15)) && ((playerPositionY - golemPositionY >= -15) && (playerPositionX - golemPositionX >= -15))){
+            if(((playerPositionY - enemyPositionY <= 15) && (playerPositionX - enemyPositionX <= 15)) && ((playerPositionY - enemyPositionY >= -15) && (playerPositionX - enemyPositionX >= -15))){
                 goIdle();
             }
             else {
                 actionToDraw(MOVE_UP);
 
 
-                this.setY(golemPositionY + 2);
-                this.setX(golemPositionX);
+                this.setY(enemyPositionY + 2);
+                this.setX(enemyPositionX);
             }
         }
-        else if (((playerPositionX-golemPositionX>=-1)&& (playerPositionX-golemPositionX<=1)) && playerPositionY<golemPositionY){
-            if(((playerPositionY - golemPositionY <= 15) && (playerPositionX - golemPositionX <= 15)) && ((playerPositionY - golemPositionY >= -15) && (playerPositionX - golemPositionX >= -15))){
+        else if (((playerPositionX-enemyPositionX>=-1)&& (playerPositionX-enemyPositionX<=1)) && playerPositionY<enemyPositionY){
+            if(((playerPositionY - enemyPositionY <= 15) && (playerPositionX - enemyPositionX <= 15)) && ((playerPositionY - enemyPositionY >= -15) && (playerPositionX - enemyPositionX >= -15))){
                 goIdle();
             }
             else {
                 actionToDraw(MOVE_DOWN);
 
 
-                this.setY(golemPositionY - 2);
-                this.setX(golemPositionX);
+                this.setY(enemyPositionY - 2);
+                this.setX(enemyPositionX);
             }
         }
 
-        else if(playerPositionY>golemPositionY && playerPositionX>golemPositionX  ){
+        else if(playerPositionY>enemyPositionY && playerPositionX>enemyPositionX  ){
 
-            if(((playerPositionY - golemPositionY <= 15) && (playerPositionX - golemPositionX <= 15)) && ((playerPositionY - golemPositionY >= -15) && (playerPositionX - golemPositionX >= -15))){
+            if(((playerPositionY - enemyPositionY <= 15) && (playerPositionX - enemyPositionX <= 15)) && ((playerPositionY - enemyPositionY >= -15) && (playerPositionX - enemyPositionX >= -15))){
                 goIdle();
             }
             else {
                 actionToDraw(MOVE_RIGHT);
 
-                this.setY(golemPositionY + 2);
-                this.setX(golemPositionX + 2);
+                this.setY(enemyPositionY + 2);
+                this.setX(enemyPositionX + 2);
             }
         }
-        else if(playerPositionY>golemPositionY  && playerPositionX<golemPositionX  ){
-            if(((playerPositionY - golemPositionY <= 15) && (playerPositionX - golemPositionX <= 15)) && ((playerPositionY - golemPositionY >= -15) && (playerPositionX - golemPositionX >= -15))){
+        else if(playerPositionY>enemyPositionY  && playerPositionX<enemyPositionX  ){
+            if(((playerPositionY - enemyPositionY <= 15) && (playerPositionX - enemyPositionX <= 15)) && ((playerPositionY - enemyPositionY >= -15) && (playerPositionX - enemyPositionX >= -15))){
                 goIdle();
             }
             else {
                 actionToDraw(MOVE_LEFT);
-                this.setY(golemPositionY + 2);
-                this.setX(golemPositionX - 2);
+                this.setY(enemyPositionY + 2);
+                this.setX(enemyPositionX - 2);
             }
         }
 
-        else if(playerPositionY<golemPositionY && playerPositionX>golemPositionX   ){
-            if(((playerPositionY - golemPositionY <= 15) && (playerPositionX - golemPositionX <= 25)) && ((playerPositionY - golemPositionY >= -15) && (playerPositionX - golemPositionX >= -15))){
+        else if(playerPositionY<enemyPositionY && playerPositionX>enemyPositionX   ){
+            if(((playerPositionY - enemyPositionY <= 15) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -15) && (playerPositionX - enemyPositionX >= -15))){
                 goIdle();
             }
             else {
                 actionToDraw(MOVE_RIGHT);
 
-                this.setY(golemPositionY - 2);
-                this.setX(golemPositionX + 2);
+                this.setY(enemyPositionY - 2);
+                this.setX(enemyPositionX + 2);
             }
         }
-        else if(playerPositionY<golemPositionY && playerPositionX<golemPositionX){
-            if(((playerPositionY - golemPositionY <= 15) && (playerPositionX - golemPositionX <= 25)) && ((playerPositionY - golemPositionY >= -15) && (playerPositionX - golemPositionX >= -15))){
+        else if(playerPositionY<enemyPositionY && playerPositionX<enemyPositionX){
+            if(((playerPositionY - enemyPositionY <= 15) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -15) && (playerPositionX - enemyPositionX >= -15))){
                 goIdle();
             }
 
             else {
                 actionToDraw(MOVE_LEFT);
-                this.setY(golemPositionY - 2);
-                this.setX(golemPositionX - 2);
+                this.setY(enemyPositionY - 2);
+                this.setX(enemyPositionX - 2);
             }
         }
 

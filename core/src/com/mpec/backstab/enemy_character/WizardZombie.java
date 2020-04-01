@@ -95,35 +95,35 @@ public class WizardZombie extends Enemy implements AvailableActions {
 
     public void followPlayer(float playerPositionX, float playerPositionY) {
 
-        float wizardZombiePositionX = (float) this.getX();
-        float wizardZombiePositionY = (float) this.getY();
+        float enemyPositionX = (float) this.getX();
+        float enemyPositionY = (float) this.getY();
         int range=25;
-        if (((playerPositionY - wizardZombiePositionY >= -1) && (playerPositionY - wizardZombiePositionY <= 1)) && playerPositionX > wizardZombiePositionX) {
+        if (((playerPositionY - enemyPositionY >= -1) && (playerPositionY - enemyPositionY <= 1)) && playerPositionX > enemyPositionX) {
 
 
-            if(((playerPositionY - wizardZombiePositionY <= 25) && (playerPositionX - wizardZombiePositionX <= 25)) && ((playerPositionY - wizardZombiePositionY >= -25) && (playerPositionX - wizardZombiePositionX >= -25))){
+            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                 goAttack(LOOK_RIGHT);
             }
             else {
                 actionToDraw(MOVE_RIGHT);
 
 
-                this.setY(wizardZombiePositionY);
-                this.setX(wizardZombiePositionX + 2);
+                this.setY(enemyPositionY);
+                this.setX(enemyPositionX + 2);
             }
-        } else if (((playerPositionY - wizardZombiePositionY >= -1) && (playerPositionY - wizardZombiePositionY <= 1)) && playerPositionX < wizardZombiePositionX) {
-            if(((playerPositionY - wizardZombiePositionY <= 25) && (playerPositionX - wizardZombiePositionX <= 25)) && ((playerPositionY - wizardZombiePositionY >= -25) && (playerPositionX - wizardZombiePositionX >= -25))){
+        } else if (((playerPositionY - enemyPositionY >= -1) && (playerPositionY - enemyPositionY <= 1)) && playerPositionX < enemyPositionX) {
+            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                 goAttack(LOOK_LEFT);
             }
             else {
                 actionToDraw(MOVE_LEFT);
 
 
-                this.setY(wizardZombiePositionY);
-                this.setX(wizardZombiePositionX - 2);
+                this.setY(enemyPositionY);
+                this.setX(enemyPositionX - 2);
             }
-        } else if (((playerPositionX - wizardZombiePositionX >= -1) && (playerPositionX - wizardZombiePositionX <= 1)) && playerPositionY > wizardZombiePositionY) {
-            if(((playerPositionY - wizardZombiePositionY <= 25) && (playerPositionX - wizardZombiePositionX <= 25)) && ((playerPositionY - wizardZombiePositionY >= -25) && (playerPositionX - wizardZombiePositionX >= -25))){
+        } else if (((playerPositionX - enemyPositionX >= -1) && (playerPositionX - enemyPositionX <= 1)) && playerPositionY > enemyPositionY) {
+            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                 goAttack(LOOK_UP);
 
             }
@@ -131,61 +131,61 @@ public class WizardZombie extends Enemy implements AvailableActions {
                 actionToDraw(MOVE_UP);
 
 
-                this.setY(wizardZombiePositionY + 2);
-                this.setX(wizardZombiePositionX);
+                this.setY(enemyPositionY + 2);
+                this.setX(enemyPositionX);
             }
-        } else if (((playerPositionX - wizardZombiePositionX >= -1) && (playerPositionX - wizardZombiePositionX <= 1)) && playerPositionY < wizardZombiePositionY) {
+        } else if (((playerPositionX - enemyPositionX >= -1) && (playerPositionX - enemyPositionX <= 1)) && playerPositionY < enemyPositionY) {
 
-            if(((playerPositionY - wizardZombiePositionY <= 25) && (playerPositionX - wizardZombiePositionX <= 25)) && ((playerPositionY - wizardZombiePositionY >= -25) && (playerPositionX - wizardZombiePositionX >= -25))){
+            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                 goAttack(LOOK_DOWN);
             }
             else {
                 actionToDraw(MOVE_DOWN);
 
 
-                this.setY(wizardZombiePositionY - 2);
-                this.setX(wizardZombiePositionX);
+                this.setY(enemyPositionY - 2);
+                this.setX(enemyPositionX);
             }
-        } else if (playerPositionY > wizardZombiePositionY && playerPositionX > wizardZombiePositionX) {
-            if(((playerPositionY - wizardZombiePositionY <= 25) && (playerPositionX - wizardZombiePositionX <= 25)) && ((playerPositionY - wizardZombiePositionY >= -25) && (playerPositionX - wizardZombiePositionX >= -25))){
+        } else if (playerPositionY > enemyPositionY && playerPositionX > enemyPositionX) {
+            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                 goAttack(LOOK_RIGHT);
             }
             else {
                 actionToDraw(MOVE_RIGHT);
 
 
-                this.setY(wizardZombiePositionY + 2);
-                this.setX(wizardZombiePositionX + 2);
+                this.setY(enemyPositionY + 2);
+                this.setX(enemyPositionX + 2);
             }
 
-        } else if (playerPositionY > wizardZombiePositionY && playerPositionX < wizardZombiePositionX) {
-            if(((playerPositionY - wizardZombiePositionY <= 25) && (playerPositionX - wizardZombiePositionX <= 25)) && ((playerPositionY - wizardZombiePositionY >= -25) && (playerPositionX - wizardZombiePositionX >= -25))){
+        } else if (playerPositionY > enemyPositionY && playerPositionX < enemyPositionX) {
+            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                 goAttack(LOOK_LEFT);
             }
             else {
 
                 actionToDraw(MOVE_LEFT);
-                this.setY(wizardZombiePositionY + 2);
-                this.setX(wizardZombiePositionX - 2);
+                this.setY(enemyPositionY + 2);
+                this.setX(enemyPositionX - 2);
             }
-        } else if (playerPositionY < wizardZombiePositionY && playerPositionX > wizardZombiePositionX) {
-            if(((playerPositionY - wizardZombiePositionY <= 25) && (playerPositionX - wizardZombiePositionX <= 25)) && ((playerPositionY - wizardZombiePositionY >= -25) && (playerPositionX - wizardZombiePositionX >= -25))){
+        } else if (playerPositionY < enemyPositionY && playerPositionX > enemyPositionX) {
+            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                 goAttack(LOOK_RIGHT);
             }
             else {
                 actionToDraw(MOVE_RIGHT);
 
-                this.setY(wizardZombiePositionY - 2);
-                this.setX(wizardZombiePositionX + 2);
+                this.setY(enemyPositionY - 2);
+                this.setX(enemyPositionX + 2);
             }
-        } else if (playerPositionY < wizardZombiePositionY && playerPositionX < wizardZombiePositionX) {
-            if(((playerPositionY - wizardZombiePositionY <= 25) && (playerPositionX - wizardZombiePositionX <= 25)) && ((playerPositionY - wizardZombiePositionY >= -25) && (playerPositionX - wizardZombiePositionX >= -25))){
+        } else if (playerPositionY < enemyPositionY && playerPositionX < enemyPositionX) {
+            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                 goAttack(LOOK_LEFT);
             }
             else {
                 actionToDraw(MOVE_LEFT);
-                this.setY(wizardZombiePositionY - 2);
-                this.setX(wizardZombiePositionX - 2);
+                this.setY(enemyPositionY - 2);
+                this.setX(enemyPositionX - 2);
             }
         }
     }

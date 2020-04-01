@@ -98,96 +98,96 @@ public class SwordZombie extends Enemy implements AvailableActions {
 
     public void followPlayer(float playerPositionX, float playerPositionY) {
 
-        float swordZombiePositionX = this.getX();
-        float swordZombiePositionY = this.getY();
+        float enemyPositionX = this.getX();
+        float enemyPositionY = this.getY();
 
-         if (((playerPositionY - swordZombiePositionY >= -1) && (playerPositionY - swordZombiePositionY <= 1)) && playerPositionX > swordZombiePositionX) {
+         if (((playerPositionY - enemyPositionY >= -1) && (playerPositionY - enemyPositionY <= 1)) && playerPositionX > enemyPositionX) {
 
-             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                 goAttack(LOOK_RIGHT);
              }
              else {
                  actionToDraw(MOVE_RIGHT);
 
-                 this.setY(swordZombiePositionY);
-                 this.setX(swordZombiePositionX + 2);
+                 this.setY(enemyPositionY);
+                 this.setX(enemyPositionX + 2);
              }
-        } else if (((playerPositionY - swordZombiePositionY >= -1) && (playerPositionY - swordZombiePositionY <= 1)) && playerPositionX < swordZombiePositionX) {
+        } else if (((playerPositionY - enemyPositionY >= -1) && (playerPositionY - enemyPositionY <= 1)) && playerPositionX < enemyPositionX) {
 
-             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                  goAttack(LOOK_LEFT);
              }
              else {
                  actionToDraw(MOVE_LEFT);
 
-                 this.setY(swordZombiePositionY);
-                 this.setX(swordZombiePositionX - 2);
+                 this.setY(enemyPositionY);
+                 this.setX(enemyPositionX - 2);
              }
-        } else if (((playerPositionX - swordZombiePositionX >= -1) && (playerPositionX - swordZombiePositionX <= 1)) && playerPositionY > swordZombiePositionY) {
+        } else if (((playerPositionX - enemyPositionX >= -1) && (playerPositionX - enemyPositionX <= 1)) && playerPositionY > enemyPositionY) {
 
 
-             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                  goAttack(LOOK_UP);
              }
              else {
                  actionToDraw(MOVE_UP);
 
 
-                 this.setY(swordZombiePositionY + 2);
-                 this.setX(swordZombiePositionX);
+                 this.setY(enemyPositionY + 2);
+                 this.setX(enemyPositionX);
              }
-        } else if (((playerPositionX - swordZombiePositionX >= -1) && (playerPositionX - swordZombiePositionX <= 1)) && playerPositionY < swordZombiePositionY) {
-             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+        } else if (((playerPositionX - enemyPositionX >= -1) && (playerPositionX - enemyPositionX <= 1)) && playerPositionY < enemyPositionY) {
+             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                  goAttack(LOOK_DOWN);
              }
              else {
                  actionToDraw(MOVE_DOWN);
 
 
-                 this.setY(swordZombiePositionY - 2);
-                 this.setX(swordZombiePositionX);
+                 this.setY(enemyPositionY - 2);
+                 this.setX(enemyPositionX);
              }
-        } else if (playerPositionY > swordZombiePositionY && playerPositionX > swordZombiePositionX) {
-             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+        } else if (playerPositionY > enemyPositionY && playerPositionX > enemyPositionX) {
+             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                  goAttack(LOOK_RIGHT);
              }
              else {
 
                  actionToDraw(LOOK_RIGHT);
 
-                 this.setY(swordZombiePositionY + 2);
-                 this.setX(swordZombiePositionX + 2);
+                 this.setY(enemyPositionY + 2);
+                 this.setX(enemyPositionX + 2);
              }
 
-        } else if (playerPositionY > swordZombiePositionY && playerPositionX < swordZombiePositionX) {
+        } else if (playerPositionY > enemyPositionY && playerPositionX < enemyPositionX) {
 
-             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                  goAttack(LOOK_LEFT);
              }
              else {
                  actionToDraw(MOVE_LEFT);
-                 this.setY(swordZombiePositionY + 2);
-                 this.setX(swordZombiePositionX - 2);
+                 this.setY(enemyPositionY + 2);
+                 this.setX(enemyPositionX - 2);
              }
-        } else if (playerPositionY < swordZombiePositionY && playerPositionX > swordZombiePositionX) {
+        } else if (playerPositionY < enemyPositionY && playerPositionX > enemyPositionX) {
 
-             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                  goAttack(LOOK_RIGHT);
              }
              else {
                  actionToDraw(MOVE_RIGHT);
 
-                 this.setY(swordZombiePositionY - 2);
-                 this.setX(swordZombiePositionX + 2);
+                 this.setY(enemyPositionY - 2);
+                 this.setX(enemyPositionX + 2);
              }
-        } else if (playerPositionY < swordZombiePositionY && playerPositionX < swordZombiePositionX) {
-             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+        } else if (playerPositionY < enemyPositionY && playerPositionX < enemyPositionX) {
+             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
                  goAttack(LOOK_LEFT);
              }
              else {
                  actionToDraw(MOVE_LEFT);
-                 this.setY(swordZombiePositionY - 2);
-                 this.setX(swordZombiePositionX - 2);
+                 this.setY(enemyPositionY - 2);
+                 this.setX(enemyPositionX - 2);
              }
         }
     }
