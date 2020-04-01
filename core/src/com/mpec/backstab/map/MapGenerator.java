@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.mpec.backstab.game.Backstab;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,7 +137,7 @@ public class MapGenerator {
     }
 
     private boolean paintObject(){
-        int n = (int)(Math.random() * 100);
+        int n = (int)(Math.random() * Backstab.collisionProb);
         if(n == 5)
             return true;
         return false;

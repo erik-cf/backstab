@@ -104,7 +104,7 @@ public class MainMenuScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 try {
                     introMusic.stop();
-                    game.setScreen(new GameScreen(game));
+                    game.setScreen(new Loader(game));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -32,19 +32,14 @@ public class Enemy extends Actor {
 
     final Backstab game;
 
-    public Enemy(Backstab game){
-        this.game = game;
-        this.healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
-        this.slashEnemy=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
-    }
-
-    public Enemy(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed) {
+    public Enemy(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range) {
         this.game = game;
         this.attack = attack;
         this.defense = defense;
         this.attack_speed = attack_speed;
         this.hp = hp;
         this.movement_speed = movement_speed;
+        this.range = range;
         this.healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
         slashEnemy=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
     }

@@ -11,8 +11,15 @@ import com.mpec.backstab.game.Backstab;
 
 public class Golem extends Enemy implements AvailableActions {
 
-    public Golem(Backstab game){
-        super(game);
+    public static double baseAttack;
+    public static double baseDefense;
+    public static double baseMovementSpeed;
+    public static double baseHp;
+    public static double baseAttackSpeed;
+    public static double baseRange;
+
+    public Golem(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range){
+        super(game, attack, defense, attack_speed, hp, movement_speed, range);
         enemyRectangle =new Rectangle();
         enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/golemEnemy.txt"));
         direction= AvailableActions.LOOK_DOWN;
@@ -71,7 +78,7 @@ public class Golem extends Enemy implements AvailableActions {
 
 
                 this.setY(enemyPositionY);
-                this.setX(enemyPositionX + 2);
+                this.setX(enemyPositionX + (int)getMovement_speed());
             }
         }
         else if (((playerPositionY-enemyPositionY>=-1)&& (playerPositionY-enemyPositionY<=1)) && playerPositionX<enemyPositionX){
@@ -83,7 +90,7 @@ public class Golem extends Enemy implements AvailableActions {
 
 
                 this.setY(enemyPositionY);
-                this.setX(enemyPositionX - 2);
+                this.setX(enemyPositionX - (int)getMovement_speed());
             }
         }
 
@@ -96,7 +103,7 @@ public class Golem extends Enemy implements AvailableActions {
                 actionToDraw(MOVE_UP);
 
 
-                this.setY(enemyPositionY + 2);
+                this.setY(enemyPositionY + (int)getMovement_speed());
                 this.setX(enemyPositionX);
             }
         }
@@ -108,7 +115,7 @@ public class Golem extends Enemy implements AvailableActions {
                 actionToDraw(MOVE_DOWN);
 
 
-                this.setY(enemyPositionY - 2);
+                this.setY(enemyPositionY - (int)getMovement_speed());
                 this.setX(enemyPositionX);
             }
         }
@@ -121,8 +128,8 @@ public class Golem extends Enemy implements AvailableActions {
             else {
                 actionToDraw(MOVE_RIGHT);
 
-                this.setY(enemyPositionY + 2);
-                this.setX(enemyPositionX + 2);
+                this.setY(enemyPositionY + (int)getMovement_speed());
+                this.setX(enemyPositionX + (int)getMovement_speed());
             }
         }
         else if(playerPositionY>enemyPositionY  && playerPositionX<enemyPositionX  ){
@@ -131,8 +138,8 @@ public class Golem extends Enemy implements AvailableActions {
             }
             else {
                 actionToDraw(MOVE_LEFT);
-                this.setY(enemyPositionY + 2);
-                this.setX(enemyPositionX - 2);
+                this.setY(enemyPositionY + (int)getMovement_speed());
+                this.setX(enemyPositionX - (int)getMovement_speed());
             }
         }
 
@@ -143,8 +150,8 @@ public class Golem extends Enemy implements AvailableActions {
             else {
                 actionToDraw(MOVE_RIGHT);
 
-                this.setY(enemyPositionY - 2);
-                this.setX(enemyPositionX + 2);
+                this.setY(enemyPositionY - (int)getMovement_speed());
+                this.setX(enemyPositionX + (int)getMovement_speed());
             }
         }
         else if(playerPositionY<enemyPositionY && playerPositionX<enemyPositionX){
@@ -154,8 +161,8 @@ public class Golem extends Enemy implements AvailableActions {
 
             else {
                 actionToDraw(MOVE_LEFT);
-                this.setY(enemyPositionY - 2);
-                this.setX(enemyPositionX - 2);
+                this.setY(enemyPositionY - (int)getMovement_speed());
+                this.setX(enemyPositionX - (int)getMovement_speed());
             }
         }
 

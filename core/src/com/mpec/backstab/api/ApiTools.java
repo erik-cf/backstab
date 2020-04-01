@@ -8,7 +8,9 @@ import java.net.URL;
 
 public class ApiTools {
 
-    public static void InfoRequest(String collection) throws Exception {
+
+
+    public static JSONObject InfoRequest(String collection) throws Exception {
         String url = "https://backstabio.herokuapp.com/api/"+collection;
         //String url = "https://localhost:3000/api/"+collection;
         URL obj = new URL(url);
@@ -26,6 +28,6 @@ public class ApiTools {
             response.append(inputLine);
         }
         in.close();
-        JSONObject jsonObject = new JSONObject(response.toString());
+        return new JSONObject(response.toString());
     }
 }

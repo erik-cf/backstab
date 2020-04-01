@@ -33,15 +33,10 @@ public class GameScreen implements Screen {
     public GameScreen(Backstab game){
         this.game = game;
         touchpad=new TouchPadTest();
-
-        Golem golem1=new Golem(game);
-
-        enemyAL.add(golem1);
         stage = new Stage();
         stage.addActor(touchpad.getTouchpad());
         Gdx.input.setInputProcessor(stage);
-        golem1.setX(100);
-        golem1.setY(100);
+
     }
 
     @Override
@@ -90,6 +85,8 @@ public class GameScreen implements Screen {
         }
 
         game.batch.draw(playerSprite, game.mainCharacterRectangle.x, game.mainCharacterRectangle.y);
+        game.batch.draw(game.mainCharacter.healthRedBar, game.mainCharacterRectangle.x - 23, game.mainCharacterRectangle.y - 25,
+                (int)(game.mainCharacter.healthRedBar.getWidth()*0.8), game.mainCharacter.healthRedBar.getHeight());
 
         touchpad.getTouchpad().draw(game.batch,1);
         game.batch.end();
@@ -129,7 +126,6 @@ public class GameScreen implements Screen {
         game.mainCharacter.getWalkPlayer().dispose();
         game.mainCharacter.getPlayerAtlas().dispose();
         game.mainCharacter.getWalkPlayer().dispose();
-
     }
 
     private Sprite checkCharacterAction(){
@@ -194,16 +190,16 @@ public class GameScreen implements Screen {
         if(numSeconds%3!=0){
             enemyToBeCreated =true;
         }
-        else if(numSeconds%5==0 && enemyToBeCreated ==true){
+        else if(numSeconds%3==0 && enemyToBeCreated ==true){
             switch(whichEnemy){
                 case AvailableActions.CREATE_GOLEM:
-                    enemyAL.add(new Golem(game));
+                    enemyAL.add(new Golem(game, Golem.baseAttack * game.multiplier,Golem.baseDefense * game.multiplier, Golem.baseAttackSpeed * game.multiplier, Golem.baseHp * game.multiplier, Golem.baseMovementSpeed * game.multiplier, Golem.baseRange * game.multiplier));
                     break;
                 case AvailableActions.CREATE_SWORD_ZOMBIE:
-                    enemyAL.add(new SwordZombie(game));
+                    enemyAL.add(new SwordZombie(game, SwordZombie.baseAttack * game.multiplier,SwordZombie.baseDefense * game.multiplier, SwordZombie.baseAttackSpeed * game.multiplier, SwordZombie.baseHp * game.multiplier, SwordZombie.baseMovementSpeed * game.multiplier, SwordZombie.baseRange * game.multiplier));
                     break;
                 case AvailableActions.CREATE_WIZARD_ZOMBIE:
-                    enemyAL.add(new WizardZombie(game));
+                    enemyAL.add(new WizardZombie(game, WizardZombie.baseAttack * game.multiplier,WizardZombie.baseDefense * game.multiplier, WizardZombie.baseAttackSpeed * game.multiplier, WizardZombie.baseHp * game.multiplier, WizardZombie.baseMovementSpeed * game.multiplier, WizardZombie.baseRange * game.multiplier));
                     break;
             }
             enemyToBeCreated = false;
