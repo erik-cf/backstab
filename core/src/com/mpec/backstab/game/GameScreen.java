@@ -1,6 +1,7 @@
 package com.mpec.backstab.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -60,6 +61,9 @@ public class GameScreen implements Screen {
         numSeconds = (int)((endDate.getTime() - startDate.getTime()) / 1000);
         game.mainCharacterRectangle.setX((float) (game.mainCharacterRectangle.getX() + touchpad.getTouchpad().getKnobPercentX() * game.mainCharacter.getMovement_speed()));
         game.mainCharacterRectangle.setY((float) (game.mainCharacterRectangle.getY() + touchpad.getTouchpad().getKnobPercentY() * game.mainCharacter.getMovement_speed()));
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+            game.setScreen(new EndMenuScreen(game,numSeconds));
+        }
         checkMovement();
         for (Enemy enemy : enemyAL) {
             if(enemy.getClass().equals(Golem.class)){
@@ -125,6 +129,7 @@ public class GameScreen implements Screen {
         game.mainCharacter.getWalkPlayer().dispose();
         game.mainCharacter.getPlayerAtlas().dispose();
         game.mainCharacter.getWalkPlayer().dispose();
+
     }
 
     private Sprite checkCharacterAction(){

@@ -49,6 +49,11 @@ public class Backstab extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		mapGenerator.dispose();
+		mainCharacter.getAction().getTexture().dispose();
+		mainCharacter.getWalkPlayer().dispose();
+		mainCharacter.getPlayerAtlas().dispose();
+		mainCharacter.getWalkPlayer().dispose();
 	}
 
 

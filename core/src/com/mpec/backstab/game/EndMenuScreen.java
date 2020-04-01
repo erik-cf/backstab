@@ -24,10 +24,14 @@ public class EndMenuScreen implements Screen {
     Texture endGameMenu;
     TextureAtlas buttonAtlas;
     BitmapFont font;
+    BitmapFont gameTimeFont;
+    BitmapFont totalKillsFont;
+    BitmapFont totalObjectsFont;
     Stage stage;
     Music introMusic;
+    int totalTiempo;
 
-    public EndMenuScreen(Backstab game){
+    public EndMenuScreen(Backstab game,int totalTiempo){
         stage = new Stage();
         introMusic= Gdx.audio.newMusic(Gdx.files.internal("Sounds/Menu/menuIntro.wav"));
         Gdx.input.setInputProcessor(stage);
@@ -37,6 +41,12 @@ public class EndMenuScreen implements Screen {
         skin = new Skin();
         skin.addRegions(buttonAtlas);
         font = new BitmapFont();
+        gameTimeFont = new BitmapFont();
+        gameTimeFont.setColor(0,0,0,1);
+        totalKillsFont = new BitmapFont();
+        totalKillsFont.setColor(0,0,0,1);
+        totalObjectsFont = new BitmapFont();
+        totalObjectsFont.setColor(0,0,0,1);
         endButtonStyle = new TextButton.TextButtonStyle();
         endButtonStyle.font = font;
         endButtonStyle.down = skin.getDrawable("touched");
@@ -48,6 +58,8 @@ public class EndMenuScreen implements Screen {
         endButton.setWidth(510f);
         endButton.setHeight(78f);
         introMusic.play();
+        this.totalTiempo=totalTiempo;
+
 
         stage.addActor(endButton);
         listeners();
@@ -68,8 +80,11 @@ public class EndMenuScreen implements Screen {
 
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
-        game.batch.draw(endGameMenu, Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2, Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2);
-        endButton.draw(game.batch, 1);
+       game.batch.draw(endGameMenu, Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2, Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2);
+      endButton.draw(game.batch, 1);
+        gameTimeFont.draw(game.batch,"Tiempo de partida: "+totalTiempo,(Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2)+100, (Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2)+250);
+        totalKillsFont.draw(game.batch,"Enemigos Matados: Over 9000",(Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2)+100, (Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2)+225);
+        totalObjectsFont.draw(game.batch,"Objetos recogidos: 1",(Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2)+100, (Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2)+200);
         game.batch.end();
     }
 
@@ -96,6 +111,11 @@ public class EndMenuScreen implements Screen {
     @Override
     public void dispose() {
         game.batch.dispose();
+        game.mapGenerator.dispose();
+        game.mainCharacter.getAction().getTexture().dispose();
+        game.mainCharacter.getWalkPlayer().dispose();
+        game.mainCharacter.getPlayerAtlas().dispose();
+        game.mainCharacter.getWalkPlayer().dispose();
     }
 
     private void listeners(){

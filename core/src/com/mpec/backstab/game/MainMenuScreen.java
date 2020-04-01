@@ -91,6 +91,11 @@ public class MainMenuScreen implements Screen {
     @Override
     public void dispose() {
         game.batch.dispose();
+        game.mapGenerator.dispose();
+        game.mainCharacter.getAction().getTexture().dispose();
+        game.mainCharacter.getWalkPlayer().dispose();
+        game.mainCharacter.getPlayerAtlas().dispose();
+        game.mainCharacter.getWalkPlayer().dispose();
     }
 
     private void listeners(){
@@ -99,7 +104,7 @@ public class MainMenuScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 try {
                     introMusic.stop();
-                    game.setScreen(new EndMenuScreen(game));
+                    game.setScreen(new GameScreen(game));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
