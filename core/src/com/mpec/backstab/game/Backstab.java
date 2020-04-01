@@ -38,13 +38,7 @@ public class Backstab extends Game {
 		mainCharacterRectangle = new Rectangle();
 		mainCharacterRectangle.setX(mainCharacter.getAction().getX());
 		mainCharacterRectangle.setY(mainCharacter.getAction().getY());
-
-
-
-
-
-
-				this.setScreen(new MainMenuScreen(this));
+		this.setScreen(new MainMenuScreen(this));
 	}
 
 	@Override

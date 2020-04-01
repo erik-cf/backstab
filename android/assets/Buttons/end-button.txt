@@ -1,0 +1,19 @@
+end-button.png
+size: 1020, 78
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+touched
+  rotate: false
+  xy: 0, 0
+  size: 510, 78
+  orig: 510, 78
+  offset: 0, 0
+  index: -1
+untouched
+  rotate: false
+  xy: 510, 0
+  size: 510, 78
+  orig: 510, 78
+  offset: 0, 0
+  index: -1

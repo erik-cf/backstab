@@ -49,10 +49,10 @@ public class MapGenerator {
         water = mapAtlas.findRegions("water");
         hole = mapAtlas.findRegions("hole");
 
-
-        paintedNumbers = new ArrayList<String>();
         groundMap = new AtlasRegion[WORLD_HEIGHT / 16][WORLD_WIDTH / 16];
         objectsMap = new AtlasRegion[WORLD_HEIGHT / 16][WORLD_WIDTH / 16];
+        paintedNumbers = new ArrayList<String>();
+
 
     }
 
@@ -71,6 +71,7 @@ public class MapGenerator {
     }
 
     public void createMap(){
+
         for(int i = (WORLD_HEIGHT / 16) - 1; i >= 0; i--){
             for(int j = 0; j < (WORLD_WIDTH / 16); j++){
                 if(!paintedNumbers.contains(i + "," + j)) {

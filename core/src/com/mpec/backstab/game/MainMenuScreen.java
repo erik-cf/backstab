@@ -43,14 +43,14 @@ public class MainMenuScreen implements Screen {
         startButton.setWidth(510f);
         startButton.setHeight(78f);
         introMusic.play();
-
+        game.mapGenerator.createMap();
         stage.addActor(startButton);
         listeners();
     }
 
     @Override
     public void show() {
-        game.mapGenerator.createMap();
+
     }
 
     @Override
@@ -99,7 +99,7 @@ public class MainMenuScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 try {
                     introMusic.stop();
-                    game.setScreen(new GameScreen(game));
+                    game.setScreen(new EndMenuScreen(game));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

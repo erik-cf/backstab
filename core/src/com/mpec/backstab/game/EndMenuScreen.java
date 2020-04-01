@@ -18,8 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 public class EndMenuScreen implements Screen {
 
     final Backstab game;
-    TextButton startButton;
-    TextButton.TextButtonStyle startButtonStyle;
+    TextButton endButton;
+    TextButton.TextButtonStyle endButtonStyle;
     Skin skin;
     Texture endGameMenu;
     TextureAtlas buttonAtlas;
@@ -32,30 +32,30 @@ public class EndMenuScreen implements Screen {
         introMusic= Gdx.audio.newMusic(Gdx.files.internal("Sounds/Menu/menuIntro.wav"));
         Gdx.input.setInputProcessor(stage);
         this.game = game;
-        endGameMenu= new Texture(Gdx.files.internal("Menu/endMenu"));
+        endGameMenu= new Texture(Gdx.files.internal("Menu/endMenu.png"));
         buttonAtlas = new TextureAtlas(Gdx.files.internal("Buttons/end-button.txt"));
         skin = new Skin();
         skin.addRegions(buttonAtlas);
         font = new BitmapFont();
-        startButtonStyle = new TextButton.TextButtonStyle();
-        startButtonStyle.font = font;
-        startButtonStyle.down = skin.getDrawable("touched");
-        startButtonStyle.up = skin.getDrawable("untouched");
-        startButton = new TextButton("", startButtonStyle);
-        startButton.setBackground(skin.getDrawable("untouched"));
-        startButton.setX(Gdx.graphics.getWidth() / 2 - startButton.getWidth() / 2);
-        startButton.setY(100f);
-        startButton.setWidth(510f);
-        startButton.setHeight(78f);
+        endButtonStyle = new TextButton.TextButtonStyle();
+        endButtonStyle.font = font;
+        endButtonStyle.down = skin.getDrawable("touched");
+        endButtonStyle.up = skin.getDrawable("untouched");
+        endButton = new TextButton("", endButtonStyle);
+        endButton.setBackground(skin.getDrawable("untouched"));
+        endButton.setX(Gdx.graphics.getWidth() / 2 - endButton.getWidth() / 2);
+        endButton.setY(100f);
+        endButton.setWidth(510f);
+        endButton.setHeight(78f);
         introMusic.play();
 
-        stage.addActor(startButton);
+        stage.addActor(endButton);
         listeners();
     }
 
     @Override
     public void show() {
-        game.mapGenerator.createMap();
+
     }
 
     @Override
@@ -68,8 +68,8 @@ public class EndMenuScreen implements Screen {
 
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
-        game.mainCharacter.action.draw(game.batch);
-        startButton.draw(game.batch, 1);
+        game.batch.draw(endGameMenu, Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2, Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2);
+        endButton.draw(game.batch, 1);
         game.batch.end();
     }
 
@@ -99,12 +99,12 @@ public class EndMenuScreen implements Screen {
     }
 
     private void listeners(){
-        startButton.addListener(new ChangeListener() {
+        endButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 try {
                     introMusic.stop();
-                    game.setScreen(new GameScreen(game));
+                    game.setScreen(new MainMenuScreen(game));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
