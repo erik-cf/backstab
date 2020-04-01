@@ -1,5 +1,6 @@
 package com.mpec.backstab.enemy_character;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -16,6 +17,7 @@ public class Enemy extends Actor {
     protected Sprite enemySprite;
     protected Rectangle enemyRectangle;
     protected TextureAtlas enemyAtlas;
+    protected Texture healthRedBar;
     protected Circle enemyCircle;
     protected Animation<TextureRegion> enemyAnimation;
     protected int direction;
@@ -31,6 +33,7 @@ public class Enemy extends Actor {
 
     public Enemy(Backstab game){
         this.game = game;
+        this.healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
     }
 
     public Enemy(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed) {
@@ -40,12 +43,14 @@ public class Enemy extends Actor {
         this.attack_speed = attack_speed;
         this.hp = hp;
         this.movement_speed = movement_speed;
+        this.healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
 
         batch.draw(enemySprite, getX(), getY());
+        batch.draw(healthRedBar,getX()-7,getY()-25,(int)(healthRedBar.getWidth()*0.5),healthRedBar.getHeight());
     }
 
 
@@ -121,6 +126,8 @@ public class Enemy extends Actor {
     public void setDirection(int direction) {
         this.direction = direction;
     }
+
+
 
 
 }
