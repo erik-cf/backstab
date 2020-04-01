@@ -80,9 +80,9 @@ public class EndMenuScreen implements Screen {
 
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
-       game.batch.draw(endGameMenu, Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2, Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2);
-      endButton.draw(game.batch, 1);
-        gameTimeFont.draw(game.batch,"Tiempo de partida: "+totalTiempo,(Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2)+100, (Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2)+250);
+        game.batch.draw(endGameMenu, Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2, Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2);
+        endButton.draw(game.batch, 1);
+        gameTimeFont.draw(game.batch,"Tiempo de partida: "+totalTiempo+" segundos",(Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2)+100, (Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2)+250);
         totalKillsFont.draw(game.batch,"Enemigos Matados: Over 9000",(Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2)+100, (Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2)+225);
         totalObjectsFont.draw(game.batch,"Objetos recogidos: 1",(Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2)+100, (Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2)+200);
         game.batch.end();
