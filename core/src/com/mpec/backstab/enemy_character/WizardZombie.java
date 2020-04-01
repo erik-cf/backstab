@@ -11,6 +11,9 @@ import com.mpec.backstab.game.Backstab;
 
 public class WizardZombie extends Enemy implements AvailableActions {
 
+    boolean playSoundSlash=true;
+    int contadorSlash=0;
+
     public WizardZombie(Backstab game){
         super(game);
         enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/zombie/zombie_two_enemies.txt"));
@@ -58,6 +61,14 @@ public class WizardZombie extends Enemy implements AvailableActions {
     }
 
     private void goAttack(int direction){
+        if(playSoundSlash==true ) {
+            slashEnemy.play(1);
+            playSoundSlash=false;
+
+        }
+        else if (contadorSlash%10==0){
+            playSoundSlash=true;
+        }
         switch(direction){
             case LOOK_UP:
                 enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_up_mgzomb), Animation.PlayMode.LOOP);
@@ -72,6 +83,8 @@ public class WizardZombie extends Enemy implements AvailableActions {
                 enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_left_mgzomb), Animation.PlayMode.LOOP);
                 break;
         }
+        contadorSlash++;
+
         enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
     }
 

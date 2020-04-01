@@ -17,7 +17,11 @@ public class CharacterAnimation implements AvailableActions {
     public TextureAtlas playerAtlas;
     public Animation<TextureRegion> animation;
     public Sprite action;
+    public Sound walkPlayer;
     int direction;
+    boolean playSoundWalk=true;
+    private int contadorWalk=0;
+    private int velocityWalk=10;
 
     final Backstab game;
 
@@ -25,6 +29,7 @@ public class CharacterAnimation implements AvailableActions {
         this.game = game;
         playerAtlas = new TextureAtlas(Gdx.files.internal("Player/tilesetCaracter.txt"));
         slashPlayer= Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
+        walkPlayer=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/footstepGrass.wav"));
 
         direction = LOOK_DOWN;
 
@@ -34,7 +39,18 @@ public class CharacterAnimation implements AvailableActions {
     }
 
     public void goMove(int action) {
+
+        if(playSoundWalk==true ) {
+            walkPlayer.play(1);
+            playSoundWalk=false;
+
+        }
+        else if (contadorWalk%velocityWalk==0){
+            playSoundWalk=true;
+        }
+
         switch(action){
+
             case MOVE_UP:
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
                 break;
@@ -48,7 +64,7 @@ public class CharacterAnimation implements AvailableActions {
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
                 break;
         }
-
+        contadorWalk++;
         float x = this.action.getX();
         float y = this.action.getY();
         this.action = new Sprite(animation.getKeyFrame(game.stateTime, true));

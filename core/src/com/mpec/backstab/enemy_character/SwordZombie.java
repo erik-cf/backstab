@@ -24,6 +24,7 @@ public class SwordZombie extends Enemy implements AvailableActions {
         goIdle();
         this.setX((float)Math.random()*800);
         this.setY((float)Math.random()*800);
+        setAttack_speed(10);
     }
 
     private void actionToDraw(int action) {
@@ -70,14 +71,14 @@ public class SwordZombie extends Enemy implements AvailableActions {
             playSoundSlash=false;
 
         }
-        else if (contadorSlash%10==0){
+        else if (contadorSlash%(int)(getAttack_speed())==0){
             playSoundSlash=true;
         }
 
         switch (direction) {
             case LOOK_UP:
                 enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_up_swzomb), Animation.PlayMode.LOOP);
-                System.out.println(enemyAnimation.isAnimationFinished(game.stateTime));
+
 
                 break;
             case LOOK_RIGHT:
@@ -94,7 +95,7 @@ public class SwordZombie extends Enemy implements AvailableActions {
                 break;
         }
         contadorSlash++;
-        System.out.println(contadorSlash);
+
 
         enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
     }

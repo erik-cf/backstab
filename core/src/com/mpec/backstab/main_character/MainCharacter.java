@@ -1,5 +1,7 @@
 package com.mpec.backstab.main_character;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.mpec.backstab.game.Backstab;
 
@@ -12,8 +14,10 @@ public class MainCharacter extends CharacterAnimation {
     private double movement_speed = 10;
 
 
+
     public MainCharacter(Backstab game){
         super(game);
+
 
     }
 
@@ -24,6 +28,7 @@ public class MainCharacter extends CharacterAnimation {
         this.attack_speed = attack_speed;
         this.hp = hp;
         this.movement_speed = movement_speed;
+
     }
 
     public double getAttack() {
