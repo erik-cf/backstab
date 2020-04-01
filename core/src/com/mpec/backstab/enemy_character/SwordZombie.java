@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.mpec.backstab.game.AvailableActions;
 import com.mpec.backstab.game.Backstab;
@@ -15,6 +16,7 @@ public class SwordZombie extends Enemy implements AvailableActions {
         super(game);
         enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/zombie/zombie_two_enemies.txt"));
         enemyRectangle = new Rectangle();
+        enemyCircle= new Circle();
         direction = LOOK_DOWN;
         goIdle();
         this.setX((float)Math.random()*800);
@@ -58,7 +60,7 @@ public class SwordZombie extends Enemy implements AvailableActions {
         enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
     }
 
-    private void goAttack() {
+    private void goAttack(int direction) {
         switch (direction) {
             case LOOK_UP:
                 enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_up_swzomb), Animation.PlayMode.LOOP);
@@ -98,47 +100,95 @@ public class SwordZombie extends Enemy implements AvailableActions {
 
         float swordZombiePositionX = this.getX();
         float swordZombiePositionY = this.getY();
-        if (((playerPositionY - swordZombiePositionY >= -1) && (playerPositionY - swordZombiePositionY <= 1)) && playerPositionX > swordZombiePositionX) {
-            actionToDraw(MOVE_RIGHT);
 
-            this.setY(swordZombiePositionY);
-            this.setX(swordZombiePositionX + 2);
+         if (((playerPositionY - swordZombiePositionY >= -1) && (playerPositionY - swordZombiePositionY <= 1)) && playerPositionX > swordZombiePositionX) {
+
+             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+                goAttack(LOOK_RIGHT);
+             }
+             else {
+                 actionToDraw(MOVE_RIGHT);
+
+                 this.setY(swordZombiePositionY);
+                 this.setX(swordZombiePositionX + 2);
+             }
         } else if (((playerPositionY - swordZombiePositionY >= -1) && (playerPositionY - swordZombiePositionY <= 1)) && playerPositionX < swordZombiePositionX) {
-            actionToDraw(MOVE_LEFT);
 
-            this.setY(swordZombiePositionY);
-            this.setX(swordZombiePositionX - 2);
+             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+                 goAttack(LOOK_LEFT);
+             }
+             else {
+                 actionToDraw(MOVE_LEFT);
+
+                 this.setY(swordZombiePositionY);
+                 this.setX(swordZombiePositionX - 2);
+             }
         } else if (((playerPositionX - swordZombiePositionX >= -1) && (playerPositionX - swordZombiePositionX <= 1)) && playerPositionY > swordZombiePositionY) {
-            actionToDraw(MOVE_UP);
 
 
-            this.setY(swordZombiePositionY + 2);
-            this.setX(swordZombiePositionX);
+             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+                 goAttack(LOOK_UP);
+             }
+             else {
+                 actionToDraw(MOVE_UP);
+
+
+                 this.setY(swordZombiePositionY + 2);
+                 this.setX(swordZombiePositionX);
+             }
         } else if (((playerPositionX - swordZombiePositionX >= -1) && (playerPositionX - swordZombiePositionX <= 1)) && playerPositionY < swordZombiePositionY) {
-            actionToDraw(MOVE_DOWN);
+             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+                 goAttack(LOOK_DOWN);
+             }
+             else {
+                 actionToDraw(MOVE_DOWN);
 
 
-            this.setY(swordZombiePositionY - 2);
-            this.setX(swordZombiePositionX);
+                 this.setY(swordZombiePositionY - 2);
+                 this.setX(swordZombiePositionX);
+             }
         } else if (playerPositionY > swordZombiePositionY && playerPositionX > swordZombiePositionX) {
-            actionToDraw(MOVE_RIGHT);
+             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+                 goAttack(LOOK_RIGHT);
+             }
+             else {
 
-            this.setY(swordZombiePositionY + 2);
-            this.setX(swordZombiePositionX + 2);
+                 actionToDraw(LOOK_RIGHT);
+
+                 this.setY(swordZombiePositionY + 2);
+                 this.setX(swordZombiePositionX + 2);
+             }
 
         } else if (playerPositionY > swordZombiePositionY && playerPositionX < swordZombiePositionX) {
-            actionToDraw(MOVE_LEFT);
-            this.setY(swordZombiePositionY + 2);
-            this.setX(swordZombiePositionX - 2);
-        } else if (playerPositionY < swordZombiePositionY && playerPositionX > swordZombiePositionX) {
-            actionToDraw(MOVE_RIGHT);
 
-            this.setY(swordZombiePositionY - 2);
-            this.setX(swordZombiePositionX + 2);
+             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+                 goAttack(LOOK_LEFT);
+             }
+             else {
+                 actionToDraw(MOVE_LEFT);
+                 this.setY(swordZombiePositionY + 2);
+                 this.setX(swordZombiePositionX - 2);
+             }
+        } else if (playerPositionY < swordZombiePositionY && playerPositionX > swordZombiePositionX) {
+
+             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+                 goAttack(LOOK_RIGHT);
+             }
+             else {
+                 actionToDraw(MOVE_RIGHT);
+
+                 this.setY(swordZombiePositionY - 2);
+                 this.setX(swordZombiePositionX + 2);
+             }
         } else if (playerPositionY < swordZombiePositionY && playerPositionX < swordZombiePositionX) {
-            actionToDraw(MOVE_LEFT);
-            this.setY(swordZombiePositionY - 2);
-            this.setX(swordZombiePositionX - 2);
+             if(((playerPositionY - swordZombiePositionY <= 25) && (playerPositionX - swordZombiePositionX <= 25)) && ((playerPositionY - swordZombiePositionY >= -25) && (playerPositionX - swordZombiePositionX >= -25))){
+                 goAttack(LOOK_LEFT);
+             }
+             else {
+                 actionToDraw(MOVE_LEFT);
+                 this.setY(swordZombiePositionY - 2);
+                 this.setX(swordZombiePositionX - 2);
+             }
         }
     }
 }

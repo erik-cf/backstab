@@ -190,7 +190,7 @@ public class GameScreen implements Screen {
         if(numSeconds%3!=0){
             enemyToBeCreated =true;
         }
-        else if(numSeconds%3==0 && enemyToBeCreated ==true){
+        else if(numSeconds%5==0 && enemyToBeCreated ==true){
             switch(whichEnemy){
                 case AvailableActions.CREATE_GOLEM:
                     enemyAL.add(new Golem(game));

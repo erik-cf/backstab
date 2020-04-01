@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mpec.backstab.game.Backstab;
@@ -15,6 +16,7 @@ public class Enemy extends Actor {
     protected Sprite enemySprite;
     protected Rectangle enemyRectangle;
     protected TextureAtlas enemyAtlas;
+    protected Circle enemyCircle;
     protected Animation<TextureRegion> enemyAnimation;
     protected int direction;
 
