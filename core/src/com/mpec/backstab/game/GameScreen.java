@@ -121,7 +121,10 @@ public class GameScreen implements Screen {
             enemy.getEnemyAtlas().dispose();
         }
         game.mapGenerator.dispose();
-
+        game.mainCharacter.getAction().getTexture().dispose();
+        game.mainCharacter.getWalkPlayer().dispose();
+        game.mainCharacter.getPlayerAtlas().dispose();
+        game.mainCharacter.getWalkPlayer().dispose();
     }
 
     private Sprite checkCharacterAction(){

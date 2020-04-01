@@ -147,4 +147,48 @@ public class CharacterAnimation implements AvailableActions {
     public void setDirection(int direction) {
         this.direction = direction;
     }
+
+    public Sound getSlashPlayer() {
+        return slashPlayer;
+    }
+
+    public void setSlashPlayer(Sound slashPlayer) {
+        this.slashPlayer = slashPlayer;
+    }
+
+    public Sound getWalkPlayer() {
+        return walkPlayer;
+    }
+
+    public void setWalkPlayer(Sound walkPlayer) {
+        this.walkPlayer = walkPlayer;
+    }
+
+    public boolean isPlaySoundWalk() {
+        return playSoundWalk;
+    }
+
+    public void setPlaySoundWalk(boolean playSoundWalk) {
+        this.playSoundWalk = playSoundWalk;
+    }
+
+    public int getContadorWalk() {
+        return contadorWalk;
+    }
+
+    public void setContadorWalk(int contadorWalk) {
+        this.contadorWalk = contadorWalk;
+    }
+
+    public int getVelocityWalk() {
+        return velocityWalk;
+    }
+
+    public void setVelocityWalk(int velocityWalk) {
+        this.velocityWalk = velocityWalk;
+    }
+
+    public Backstab getGame() {
+        return game;
+    }
 }
