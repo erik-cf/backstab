@@ -1,6 +1,8 @@
 package com.mpec.backstab.main_character;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,6 +13,7 @@ import com.mpec.backstab.game.Backstab;
 
 public class CharacterAnimation implements AvailableActions {
 
+    public Sound slashPlayer;
     public TextureAtlas playerAtlas;
     public Animation<TextureRegion> animation;
     public Sprite action;
@@ -21,6 +24,7 @@ public class CharacterAnimation implements AvailableActions {
     public CharacterAnimation(Backstab game){
         this.game = game;
         playerAtlas = new TextureAtlas(Gdx.files.internal("Player/tilesetCaracter.txt"));
+        slashPlayer= Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
 
         direction = LOOK_DOWN;
 
@@ -72,7 +76,9 @@ public class CharacterAnimation implements AvailableActions {
         action.setPosition(x, y);
     }
 
-    public void goAttack(){
+    public void goAttack(int direction){
+
+        slashPlayer.play(1);
         switch(direction){
             case LOOK_UP:
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_bow_up), Animation.PlayMode.LOOP);

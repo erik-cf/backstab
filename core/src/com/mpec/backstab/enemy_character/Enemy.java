@@ -1,6 +1,7 @@
 package com.mpec.backstab.enemy_character;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -13,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mpec.backstab.game.Backstab;
 
 public class Enemy extends Actor {
-
+    protected Sound slashEnemy;
     protected Sprite enemySprite;
     protected Rectangle enemyRectangle;
     protected TextureAtlas enemyAtlas;
@@ -34,6 +35,7 @@ public class Enemy extends Actor {
     public Enemy(Backstab game){
         this.game = game;
         this.healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
+        this.slashEnemy=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
     }
 
     public Enemy(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed) {
@@ -44,6 +46,7 @@ public class Enemy extends Actor {
         this.hp = hp;
         this.movement_speed = movement_speed;
         this.healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
+        slashEnemy=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
     }
 
     @Override
@@ -127,7 +130,47 @@ public class Enemy extends Actor {
         this.direction = direction;
     }
 
+    public Sound getSlashEnemy() {
+        return slashEnemy;
+    }
 
+    public void setSlashEnemy(Sound slashEnemy) {
+        this.slashEnemy = slashEnemy;
+    }
 
+    public TextureAtlas getEnemyAtlas() {
+        return enemyAtlas;
+    }
 
+    public void setEnemyAtlas(TextureAtlas enemyAtlas) {
+        this.enemyAtlas = enemyAtlas;
+    }
+
+    public Texture getHealthRedBar() {
+        return healthRedBar;
+    }
+
+    public void setHealthRedBar(Texture healthRedBar) {
+        this.healthRedBar = healthRedBar;
+    }
+
+    public Circle getEnemyCircle() {
+        return enemyCircle;
+    }
+
+    public void setEnemyCircle(Circle enemyCircle) {
+        this.enemyCircle = enemyCircle;
+    }
+
+    public Animation<TextureRegion> getEnemyAnimation() {
+        return enemyAnimation;
+    }
+
+    public void setEnemyAnimation(Animation<TextureRegion> enemyAnimation) {
+        this.enemyAnimation = enemyAnimation;
+    }
+
+    public Backstab getGame() {
+        return game;
+    }
 }

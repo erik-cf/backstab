@@ -114,6 +114,15 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         game.batch.dispose();
+        for(Enemy enemy: enemyAL){
+            enemy.getSlashEnemy().dispose();
+            enemy.getHealthRedBar().dispose();
+            enemy.getEnemySprite().getTexture().dispose();
+            enemy.getEnemyAtlas().dispose();
+
+
+        }
+
     }
 
     private Sprite checkCharacterAction(){
@@ -173,18 +182,6 @@ public class GameScreen implements Screen {
 
     }
 
-    /*private void createGolem(int numSeconds){
-        if(numSeconds%3!=0){
-            enemyToBeCreated =true;
-        }
-        else if(numSeconds%3==0 && enemyToBeCreated ==true){
-            Golem golem1=new Golem(game);
-            golem1.getEnemyTexture().setX((float)Math.random()*800);
-            golem1.getEnemyTexture().setY((float)Math.random()*800);
-            enemyAL.add(golem1);
-            enemyToBeCreated =false;
-        }
-    }*/
 
     private void createEnemy(int whichEnemy){
         if(numSeconds%3!=0){

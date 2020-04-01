@@ -12,6 +12,9 @@ import com.mpec.backstab.game.Backstab;
 
 public class SwordZombie extends Enemy implements AvailableActions {
 
+    boolean playSoundSlash=true;
+    int contadorSlash=0;
+
     public SwordZombie(Backstab game) {
         super(game);
         enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/zombie/zombie_two_enemies.txt"));
@@ -61,20 +64,38 @@ public class SwordZombie extends Enemy implements AvailableActions {
     }
 
     private void goAttack(int direction) {
+
+        if(playSoundSlash==true ) {
+            slashEnemy.play(1);
+            playSoundSlash=false;
+
+        }
+        else if (contadorSlash%10==0){
+            playSoundSlash=true;
+        }
+
         switch (direction) {
             case LOOK_UP:
                 enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_up_swzomb), Animation.PlayMode.LOOP);
+                System.out.println(enemyAnimation.isAnimationFinished(game.stateTime));
+
                 break;
             case LOOK_RIGHT:
                 enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_right_swzomb), Animation.PlayMode.LOOP);
+
                 break;
             case LOOK_DOWN:
                 enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_down_swzomb), Animation.PlayMode.LOOP);
+
                 break;
             case LOOK_LEFT:
                 enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_left_swzomb), Animation.PlayMode.LOOP);
+
                 break;
         }
+        contadorSlash++;
+        System.out.println(contadorSlash);
+
         enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
     }
 
