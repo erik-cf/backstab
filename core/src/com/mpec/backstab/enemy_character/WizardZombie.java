@@ -22,6 +22,7 @@ public class WizardZombie extends Enemy implements AvailableActions {
         goIdle();
         this.setX((float)Math.random()*800);
         this.setY((float)Math.random()*800);
+        setAttack_speed(10);
     }
 
     private void actionToDraw(int action) {
@@ -66,7 +67,7 @@ public class WizardZombie extends Enemy implements AvailableActions {
             playSoundSlash=false;
 
         }
-        else if (contadorSlash%10==0){
+        else if (contadorSlash%(int)(getAttack_speed())==0){
             playSoundSlash=true;
         }
         switch(direction){

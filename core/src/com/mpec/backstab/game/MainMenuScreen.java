@@ -2,6 +2,7 @@ package com.mpec.backstab.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -20,9 +21,11 @@ public class MainMenuScreen implements Screen {
     TextureAtlas buttonAtlas;
     BitmapFont font;
     Stage stage;
+    Music introMusic;
 
     public MainMenuScreen(Backstab game){
         stage = new Stage();
+        introMusic= Gdx.audio.newMusic(Gdx.files.internal("Sounds/Menu/menuIntro.wav"));
         Gdx.input.setInputProcessor(stage);
         this.game = game;
         buttonAtlas = new TextureAtlas(Gdx.files.internal("Buttons/start-button.txt"));
@@ -39,6 +42,8 @@ public class MainMenuScreen implements Screen {
         startButton.setY(100f);
         startButton.setWidth(510f);
         startButton.setHeight(78f);
+        introMusic.play();
+
         stage.addActor(startButton);
         listeners();
     }
@@ -93,6 +98,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 try {
+                    introMusic.stop();
                     game.setScreen(new GameScreen(game));
                 } catch (Exception e) {
                     e.printStackTrace();

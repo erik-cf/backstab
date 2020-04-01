@@ -33,6 +33,7 @@ public class CharacterAnimation implements AvailableActions {
 
         direction = LOOK_DOWN;
 
+
         action = new Sprite();
         action.setPosition(Gdx.graphics.getWidth()/2-action.getWidth()/2, Gdx.graphics.getHeight()/2-action.getHeight()/2);
         goIdle();
