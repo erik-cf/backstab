@@ -119,9 +119,8 @@ public class GameScreen implements Screen {
             enemy.getHealthRedBar().dispose();
             enemy.getEnemySprite().getTexture().dispose();
             enemy.getEnemyAtlas().dispose();
-
-
         }
+        game.mapGenerator.dispose();
 
     }
 

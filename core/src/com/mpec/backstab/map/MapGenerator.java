@@ -96,6 +96,18 @@ public class MapGenerator {
         }*/
     }
 
+    public void dispose(){
+        for(int i = (WORLD_HEIGHT / 16) - 1; i >= 0; i--){
+            for(int j = 0; j < (WORLD_WIDTH / 16); j++){
+                if(groundMap[i][j] != null) {
+                    groundMap[i][j].getTexture().dispose();
+                }else{
+                    objectsMap[i][j].getTexture().dispose();
+                }
+            }
+        }
+    }
+
     public AtlasRegion[][] getGroundMap(){
         return groundMap;
     }
