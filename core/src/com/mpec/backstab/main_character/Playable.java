@@ -1,38 +1,48 @@
 package com.mpec.backstab.main_character;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mpec.backstab.game.AvailableActions;
 import com.mpec.backstab.game.Backstab;
 
-public class CharacterAnimation implements AvailableActions {
+public class Playable extends Actor implements AvailableActions {
 
-    public Sound slashPlayer;
+    protected double attack;
+    protected double defense;
+    protected double attack_speed;
+    protected double hp;
+    protected double movement_speed = 10;
+    protected double range;
+    public Texture healthRedBar;
+
     public TextureAtlas playerAtlas;
     public Animation<TextureRegion> animation;
-    public Sprite action;
+
+    public Sound slashPlayer;
     public Sound walkPlayer;
+
+    public Sprite action;
     int direction;
-    boolean playSoundWalk=true;
+    boolean playSoundWalk = true;
     private int contadorWalk=0;
     private int velocityWalk=10;
-
     final Backstab game;
 
-    public CharacterAnimation(Backstab game){
+    public Playable(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed){
         this.game = game;
         playerAtlas = new TextureAtlas(Gdx.files.internal("Player/tilesetCaracter.txt"));
         slashPlayer= Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
         walkPlayer=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/footstepGrass.wav"));
 
         direction = LOOK_DOWN;
-
 
         action = new Sprite();
         action.setPosition(Gdx.graphics.getWidth()/2-action.getWidth()/2, Gdx.graphics.getHeight()/2-action.getHeight()/2);
@@ -94,7 +104,6 @@ public class CharacterAnimation implements AvailableActions {
     }
 
     public void goAttack(int direction){
-
         slashPlayer.play(1);
         switch(direction){
             case LOOK_UP:
@@ -114,6 +123,11 @@ public class CharacterAnimation implements AvailableActions {
         float y = action.getY();
         action = new Sprite(animation.getKeyFrame(game.stateTime, true));
         action.setPosition(x, y);
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        batch.draw(action, getX(), getY());
     }
 
     public TextureAtlas getPlayerAtlas() {
@@ -148,47 +162,55 @@ public class CharacterAnimation implements AvailableActions {
         this.direction = direction;
     }
 
-    public Sound getSlashPlayer() {
-        return slashPlayer;
-    }
-
-    public void setSlashPlayer(Sound slashPlayer) {
-        this.slashPlayer = slashPlayer;
-    }
-
     public Sound getWalkPlayer() {
         return walkPlayer;
     }
 
-    public void setWalkPlayer(Sound walkPlayer) {
-        this.walkPlayer = walkPlayer;
+    public double getAttack() {
+        return attack;
     }
 
-    public boolean isPlaySoundWalk() {
-        return playSoundWalk;
+    public void setAttack(double attack) {
+        this.attack = attack;
     }
 
-    public void setPlaySoundWalk(boolean playSoundWalk) {
-        this.playSoundWalk = playSoundWalk;
+    public double getDefense() {
+        return defense;
     }
 
-    public int getContadorWalk() {
-        return contadorWalk;
+    public void setDefense(double defense) {
+        this.defense = defense;
     }
 
-    public void setContadorWalk(int contadorWalk) {
-        this.contadorWalk = contadorWalk;
+    public double getAttack_speed() {
+        return attack_speed;
     }
 
-    public int getVelocityWalk() {
-        return velocityWalk;
+    public void setAttack_speed(double attack_speed) {
+        this.attack_speed = attack_speed;
     }
 
-    public void setVelocityWalk(int velocityWalk) {
-        this.velocityWalk = velocityWalk;
+    public double getHp() {
+        return hp;
     }
 
-    public Backstab getGame() {
-        return game;
+    public void setHp(double hp) {
+        this.hp = hp;
+    }
+
+    public double getMovement_speed() {
+        return movement_speed;
+    }
+
+    public void setMovement_speed(double movement_speed) {
+        this.movement_speed = movement_speed;
+    }
+
+    public double getRange() {
+        return range;
+    }
+
+    public void setRange(double range) {
+        this.range = range;
     }
 }

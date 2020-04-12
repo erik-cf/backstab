@@ -57,13 +57,14 @@ public class MainMenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        game.camera.update();
         game.stateTime = game.stateTime + 1 + Gdx.graphics.getDeltaTime();
 
-        game.mainCharacter.goIdle();
+        game.timmy.goIdle();
 
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
-        game.mainCharacter.action.draw(game.batch);
+        game.timmy.action.draw(game.batch);
         startButton.draw(game.batch, 1);
         game.batch.end();
     }
@@ -92,10 +93,10 @@ public class MainMenuScreen implements Screen {
     public void dispose() {
         game.batch.dispose();
         game.mapGenerator.dispose();
-        game.mainCharacter.getAction().getTexture().dispose();
-        game.mainCharacter.getWalkPlayer().dispose();
-        game.mainCharacter.getPlayerAtlas().dispose();
-        game.mainCharacter.getWalkPlayer().dispose();
+        game.timmy.getAction().getTexture().dispose();
+        game.timmy.getWalkPlayer().dispose();
+        game.timmy.getPlayerAtlas().dispose();
+        game.timmy.getWalkPlayer().dispose();
     }
 
     private void listeners(){

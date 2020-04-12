@@ -76,7 +76,7 @@ public class EndMenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.stateTime = game.stateTime + 1 + Gdx.graphics.getDeltaTime();
 
-        game.mainCharacter.goIdle();
+        game.timmy.goIdle();
 
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
@@ -112,10 +112,10 @@ public class EndMenuScreen implements Screen {
     public void dispose() {
         game.batch.dispose();
         game.mapGenerator.dispose();
-        game.mainCharacter.getAction().getTexture().dispose();
-        game.mainCharacter.getWalkPlayer().dispose();
-        game.mainCharacter.getPlayerAtlas().dispose();
-        game.mainCharacter.getWalkPlayer().dispose();
+        game.timmy.getAction().getTexture().dispose();
+        game.timmy.getWalkPlayer().dispose();
+        game.timmy.getPlayerAtlas().dispose();
+        game.timmy.getWalkPlayer().dispose();
     }
 
     private void listeners(){

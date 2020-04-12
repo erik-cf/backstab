@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mpec.backstab.enemy_character.Enemy;
 import com.mpec.backstab.enemy_character.Golem;
 import com.mpec.backstab.enemy_character.SwordZombie;
@@ -29,12 +30,18 @@ public class GameScreen implements Screen {
     Date endDate;
     int numSeconds;
 
+    float movingX;
+    float movingY;
+
 
     public GameScreen(Backstab game){
         this.game = game;
         touchpad=new TouchPadTest();
-        stage = new Stage();
-        stage.addActor(touchpad.getTouchpad());
+        float aspectRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
+        FitViewport viewport = new FitViewport(1000f * aspectRatio, 1000f, game.camera);
+
+        stage = new Stage(viewport, game.batch);
+        stage.addActor(touchpad);
         Gdx.input.setInputProcessor(stage);
 
     }
@@ -51,11 +58,15 @@ public class GameScreen implements Screen {
         game.camera.update();
         game.stateTime = game.stateTime + 1 + Gdx.graphics.getDeltaTime();
         playerSprite = checkCharacterAction();
-
+        touchpad.setBounds(game.camera.position.x - touchpad.getWidth()/2, game.camera.position.y - stage.getHeight() / 2 + 15, 150, 150);
         endDate= new Date();
         numSeconds = (int)((endDate.getTime() - startDate.getTime()) / 1000);
-        game.mainCharacterRectangle.setX((float) (game.mainCharacterRectangle.getX() + touchpad.getTouchpad().getKnobPercentX() * game.mainCharacter.getMovement_speed()));
-        game.mainCharacterRectangle.setY((float) (game.mainCharacterRectangle.getY() + touchpad.getTouchpad().getKnobPercentY() * game.mainCharacter.getMovement_speed()));
+        movingX = (float)(game.mainCharacterRectangle.getX() + touchpad.getKnobPercentX() * game.timmy.getMovement_speed());
+        movingY = (float) (game.mainCharacterRectangle.getY() + touchpad.getKnobPercentY() * game.timmy.getMovement_speed());
+        game.camera.position.x = game.mainCharacterRectangle.getX();
+        game.camera.position.y = game.mainCharacterRectangle.getY();
+        game.mainCharacterRectangle.setX(movingX);
+        game.mainCharacterRectangle.setY(movingY);
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
             game.setScreen(new EndMenuScreen(game,numSeconds));
         }
@@ -76,20 +87,21 @@ public class GameScreen implements Screen {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
 
-        for (Enemy enemy : enemyAL) {
+        /*for (Enemy enemy : enemyAL) {
             enemy.draw(game.batch, 1);
             //game.batch.draw(enemy.getEnemyTexture(), enemy.getX(),enemy.getY());
-        }
+        }*/
 
         game.batch.draw(playerSprite, game.mainCharacterRectangle.x, game.mainCharacterRectangle.y);
-        game.batch.draw(game.mainCharacter.healthRedBar, game.mainCharacterRectangle.x - 23, game.mainCharacterRectangle.y - 25,
-                (int)(game.mainCharacter.healthRedBar.getWidth()*0.8), game.mainCharacter.healthRedBar.getHeight());
+        game.batch.draw(game.timmy.healthRedBar, game.mainCharacterRectangle.x - 23, game.mainCharacterRectangle.y - 25,
+                (int)(game.timmy.healthRedBar.getWidth()*0.8), game.timmy.healthRedBar.getHeight());
 
-        touchpad.getTouchpad().draw(game.batch,1);
         game.batch.end();
+        stage.draw();
     }
 
     @Override
@@ -122,51 +134,52 @@ public class GameScreen implements Screen {
             enemy.getEnemyAtlas().dispose();
         }
         game.mapGenerator.dispose();
-        game.mainCharacter.getAction().getTexture().dispose();
-        game.mainCharacter.getWalkPlayer().dispose();
-        game.mainCharacter.getPlayerAtlas().dispose();
-        game.mainCharacter.getWalkPlayer().dispose();
+        game.timmy.getAction().getTexture().dispose();
+        game.timmy.getWalkPlayer().dispose();
+        game.timmy.getPlayerAtlas().dispose();
+        game.timmy.getWalkPlayer().dispose();
+        stage.dispose();
     }
 
     private Sprite checkCharacterAction(){
         if(game.stateTime < 5){
-            game.mainCharacter.goIdle();
+            game.timmy.goIdle();
         }
-        if(touchpad.getTouchpad().isTouched()){
-            if(touchpad.getTouchpad().getKnobPercentX() > 0.4){
+        if(touchpad.isTouched()){
+            if(touchpad.getKnobPercentX() > 0.4){
 
-                game.mainCharacter.setDirection(AvailableActions.LOOK_RIGHT);
-                game.mainCharacter.goMove(AvailableActions.MOVE_RIGHT);
+                game.timmy.setDirection(AvailableActions.LOOK_RIGHT);
+                game.timmy.goMove(AvailableActions.MOVE_RIGHT);
 
-            }else if(touchpad.getTouchpad().getKnobPercentX() < -0.4){
+            }else if(touchpad.getKnobPercentX() < -0.4){
 
-                game.mainCharacter.setDirection(AvailableActions.LOOK_LEFT);
-                game.mainCharacter.goMove(AvailableActions.MOVE_LEFT);
+                game.timmy.setDirection(AvailableActions.LOOK_LEFT);
+                game.timmy.goMove(AvailableActions.MOVE_LEFT);
 
-            }else if(touchpad.getTouchpad().getKnobPercentY() > 0){
+            }else if(touchpad.getKnobPercentY() > 0){
 
-                game.mainCharacter.setDirection(AvailableActions.LOOK_UP);
-                game.mainCharacter.goMove(AvailableActions.MOVE_UP);
+                game.timmy.setDirection(AvailableActions.LOOK_UP);
+                game.timmy.goMove(AvailableActions.MOVE_UP);
 
-            }else if(touchpad.getTouchpad().getKnobPercentY() < 0){
+            }else if(touchpad.getKnobPercentY() < 0){
 
-                game.mainCharacter.setDirection(AvailableActions.LOOK_DOWN);
-                game.mainCharacter.goMove(AvailableActions.MOVE_DOWN);
+                game.timmy.setDirection(AvailableActions.LOOK_DOWN);
+                game.timmy.goMove(AvailableActions.MOVE_DOWN);
 
             }else{
-                game.mainCharacter.goIdle();
+                game.timmy.goIdle();
             }
         }else{
-            game.mainCharacter.goIdle();
+            game.timmy.goIdle();
         }
 
-        return game.mainCharacter.getAction();
+        return game.timmy.getAction();
     }
 
     private void checkMovement(){
         for(Rectangle r : MapGenerator.collision){
             if(game.mainCharacterRectangle.overlaps(r)){
-                switch(game.mainCharacter.getDirection()){
+                switch(game.timmy.getDirection()){
                     case AvailableActions.LOOK_LEFT:
                         game.mainCharacterRectangle.setX(game.mainCharacterRectangle.getX() + 5);
                         break;
@@ -191,17 +204,22 @@ public class GameScreen implements Screen {
             enemyToBeCreated =true;
         }
         else if(numSeconds%3==0 && enemyToBeCreated ==true){
+            Enemy enemy = null;
             switch(whichEnemy){
                 case AvailableActions.CREATE_GOLEM:
-                    enemyAL.add(new Golem(game, Golem.baseAttack * game.multiplier,Golem.baseDefense * game.multiplier, Golem.baseAttackSpeed * game.multiplier, Golem.baseHp * game.multiplier, Golem.baseMovementSpeed * game.multiplier, Golem.baseRange * game.multiplier));
+                    enemy = new Golem(game, Golem.baseAttack * game.multiplier,Golem.baseDefense * game.multiplier, Golem.baseAttackSpeed * game.multiplier, Golem.baseHp * game.multiplier, Golem.baseMovementSpeed * game.multiplier, Golem.baseRange * game.multiplier);
+                    enemyAL.add(enemy);
                     break;
                 case AvailableActions.CREATE_SWORD_ZOMBIE:
-                    enemyAL.add(new SwordZombie(game, SwordZombie.baseAttack * game.multiplier,SwordZombie.baseDefense * game.multiplier, SwordZombie.baseAttackSpeed * game.multiplier, SwordZombie.baseHp * game.multiplier, SwordZombie.baseMovementSpeed * game.multiplier, SwordZombie.baseRange * game.multiplier));
+                    enemy = new SwordZombie(game, SwordZombie.baseAttack * game.multiplier,SwordZombie.baseDefense * game.multiplier, SwordZombie.baseAttackSpeed * game.multiplier, SwordZombie.baseHp * game.multiplier, SwordZombie.baseMovementSpeed * game.multiplier, SwordZombie.baseRange * game.multiplier);
+                    enemyAL.add(enemy);
                     break;
                 case AvailableActions.CREATE_WIZARD_ZOMBIE:
-                    enemyAL.add(new WizardZombie(game, WizardZombie.baseAttack * game.multiplier,WizardZombie.baseDefense * game.multiplier, WizardZombie.baseAttackSpeed * game.multiplier, WizardZombie.baseHp * game.multiplier, WizardZombie.baseMovementSpeed * game.multiplier, WizardZombie.baseRange * game.multiplier));
+                    enemy = new WizardZombie(game, WizardZombie.baseAttack * game.multiplier,WizardZombie.baseDefense * game.multiplier, WizardZombie.baseAttackSpeed * game.multiplier, WizardZombie.baseHp * game.multiplier, WizardZombie.baseMovementSpeed * game.multiplier, WizardZombie.baseRange * game.multiplier);
+                    enemyAL.add(enemy);
                     break;
             }
+            stage.addActor(enemy);
             enemyToBeCreated = false;
         }
     }

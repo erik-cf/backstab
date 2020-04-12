@@ -74,12 +74,12 @@ public class Loader implements Screen {
                 }
                 str = "Loading Timmy data";
                 getter = ApiTools.InfoRequest("MainCharacter/Timmy").getJSONArray("mainCharacter").getJSONObject(0);
-                game.mainCharacter.setAttack(getter.getDouble("attack"));
-                game.mainCharacter.setDefense(getter.getDouble("defense"));
-                game.mainCharacter.setHp(getter.getDouble("hp"));
-                game.mainCharacter.setMovement_speed(getter.getDouble("movement_speed"));
-                game.mainCharacter.setAttack_speed(getter.getDouble("attack_speed"));
-                game.mainCharacter.setRange(getter.getDouble("range"));
+                game.timmy.setAttack(getter.getDouble("attack"));
+                game.timmy.setDefense(getter.getDouble("defense"));
+                game.timmy.setHp(getter.getDouble("hp"));
+                game.timmy.setMovement_speed(getter.getDouble("movement_speed"));
+                game.timmy.setAttack_speed(getter.getDouble("attack_speed"));
+                game.timmy.setRange(getter.getDouble("range"));
 
                 finish = true;
             } catch (Exception e) {

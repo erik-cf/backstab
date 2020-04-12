@@ -6,12 +6,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.mpec.backstab.api.ApiTools;
-import com.mpec.backstab.main_character.MainCharacter;
+import com.mpec.backstab.main_character.Timmy;
 import com.mpec.backstab.map.MapGenerator;
 
 import org.json.JSONObject;
-
-import java.util.Date;
 
 public class Backstab extends Game {
 
@@ -27,7 +25,7 @@ public class Backstab extends Game {
 	public OrthographicCamera camera;
 	SpriteBatch batch;
 	MapGenerator mapGenerator;
-	MainCharacter mainCharacter;
+	Timmy timmy;
 	Rectangle mainCharacterRectangle;
 
 	JSONObject getter;
@@ -42,10 +40,11 @@ public class Backstab extends Game {
 		mapGenerator = new MapGenerator();
 		float aspectRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 10f*aspectRatio, 10f);
+		camera.setToOrtho(false, 500f * aspectRatio, 500f);
+		//batch.setProjectionMatrix(camera.combined);
 
 		stateTime = 0;
-		mainCharacter = new MainCharacter(this);
+		timmy = new Timmy(this);
 		try {
 			getter = ApiTools.InfoRequest("gameparams").getJSONArray("gameParams").getJSONObject(0);
 			phaseTime = getter.getInt("phase_time");
@@ -57,8 +56,8 @@ public class Backstab extends Game {
 			e.printStackTrace();
 		}
 		mainCharacterRectangle = new Rectangle();
-		mainCharacterRectangle.setX(mainCharacter.getAction().getX());
-		mainCharacterRectangle.setY(mainCharacter.getAction().getY());
+		mainCharacterRectangle.setX(timmy.getAction().getX());
+		mainCharacterRectangle.setY(timmy.getAction().getY());
 		this.setScreen(new MainMenuScreen(this));
 	}
 
@@ -71,10 +70,10 @@ public class Backstab extends Game {
 	public void dispose () {
 		batch.dispose();
 		mapGenerator.dispose();
-		mainCharacter.getAction().getTexture().dispose();
-		mainCharacter.getWalkPlayer().dispose();
-		mainCharacter.getPlayerAtlas().dispose();
-		mainCharacter.getWalkPlayer().dispose();
+		timmy.getAction().getTexture().dispose();
+		timmy.getWalkPlayer().dispose();
+		timmy.getPlayerAtlas().dispose();
+		timmy.getWalkPlayer().dispose();
 	}
 
 
