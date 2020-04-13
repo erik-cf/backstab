@@ -22,6 +22,10 @@ public class Enemy extends Actor {
     protected Circle enemyCircle;
     protected Animation<TextureRegion> enemyAnimation;
     protected int direction;
+    public final double vidaTotal=100;
+    public double vidaActual;
+
+
 
     private double attack;
     private double defense;
@@ -46,12 +50,26 @@ public class Enemy extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+       if(vidaActual>0) {
 
-        batch.draw(enemySprite, getX(), getY());
-        batch.draw(healthRedBar,getX()-7,getY()-25,(int)(healthRedBar.getWidth()*0.5),healthRedBar.getHeight());
+
+           batch.draw(enemySprite, getX(), getY());
+           batch.draw(healthRedBar, getX()+2, getY()+65, (int) (healthRedBar.getWidth() * (vidaActual/vidaTotal)), healthRedBar.getHeight());
+       }
+       else{
+
+       }
     }
 
 
+
+    public double getVidaActual() {
+        return vidaActual;
+    }
+
+    public void setVidaActual(double vidaActual) {
+        this.vidaActual = vidaActual;
+    }
 
     public double getAttack() {
         return attack;

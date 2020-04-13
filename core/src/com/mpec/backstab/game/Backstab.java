@@ -25,7 +25,7 @@ public class Backstab extends Game {
 	public OrthographicCamera camera;
 	SpriteBatch batch;
 	MapGenerator mapGenerator;
-	Timmy timmy;
+	public Timmy timmy;
 	Rectangle mainCharacterRectangle;
 
 	JSONObject getter;

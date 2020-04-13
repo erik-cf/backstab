@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.mpec.backstab.game.AvailableActions;
 import com.mpec.backstab.game.Backstab;
+import com.mpec.backstab.game.GameScreen;
+
+import java.util.Date;
 
 public class WizardZombie extends Enemy implements AvailableActions {
 
@@ -18,8 +21,23 @@ public class WizardZombie extends Enemy implements AvailableActions {
     public static double baseAttackSpeed;
     public static double baseRange;
 
+
+
+    private Date tiempo= new Date();
+    Date endDate;
+    float enemyPositionX;
+    float enemyPositionY;
+    private boolean ataqueRealizado=false;
+    int range=25;
+    int numSeconds;
+    public int vidaActualEnemy=100;
+
     boolean playSoundSlash=true;
     int contadorSlash=0;
+    double atackSpeed=2;
+    double atackDamage=10;
+
+
 
     public WizardZombie(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range){
         super(game, attack, defense, attack_speed, hp, movement_speed, range);
@@ -27,6 +45,8 @@ public class WizardZombie extends Enemy implements AvailableActions {
         direction = LOOK_DOWN;
         enemyRectangle = new Rectangle();
         goIdle();
+        setVidaActual(vidaActualEnemy);
+
         this.setX((float)Math.random()*800);
         this.setY((float)Math.random()*800);
         setAttack_speed(10);
@@ -69,14 +89,9 @@ public class WizardZombie extends Enemy implements AvailableActions {
     }
 
     private void goAttack(int direction){
-        if(playSoundSlash==true ) {
-            slashEnemy.play(1);
-            playSoundSlash=false;
+           game.timmy.setVidaActual(game.timmy.getVidaActual()-atackDamage);
+           slashEnemy.play(1);
 
-        }
-        else if (contadorSlash%(int)(getAttack_speed())==0){
-            playSoundSlash=true;
-        }
         switch(direction){
             case LOOK_UP:
                 enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_up_mgzomb), Animation.PlayMode.LOOP);
@@ -116,14 +131,25 @@ public class WizardZombie extends Enemy implements AvailableActions {
 
     public void followPlayer(float playerPositionX, float playerPositionY) {
 
-        float enemyPositionX = (float) this.getX();
-        float enemyPositionY = (float) this.getY();
-        int range=25;
+        enemyPositionX = (float) this.getX();
+        enemyPositionY = (float) this.getY();
+        endDate=new Date();
+        numSeconds = (int)((endDate.getTime() - tiempo.getTime()) / 1000);
+
+
         if (((playerPositionY - enemyPositionY >= -1) && (playerPositionY - enemyPositionY <= 1)) && playerPositionX > enemyPositionX) {
 
 
-            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                goAttack(LOOK_RIGHT);
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_RIGHT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
+
             }
             else {
                 actionToDraw(MOVE_RIGHT);
@@ -133,8 +159,14 @@ public class WizardZombie extends Enemy implements AvailableActions {
                 this.setX(enemyPositionX + (int)getMovement_speed());
             }
         } else if (((playerPositionY - enemyPositionY >= -1) && (playerPositionY - enemyPositionY <= 1)) && playerPositionX < enemyPositionX) {
-            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                goAttack(LOOK_LEFT);
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_LEFT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
             }
             else {
                 actionToDraw(MOVE_LEFT);
@@ -144,8 +176,15 @@ public class WizardZombie extends Enemy implements AvailableActions {
                 this.setX(enemyPositionX - (int)getMovement_speed());
             }
         } else if (((playerPositionX - enemyPositionX >= -1) && (playerPositionX - enemyPositionX <= 1)) && playerPositionY > enemyPositionY) {
-            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                goAttack(LOOK_UP);
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_UP);
+                    ataqueRealizado=true;
+
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
 
             }
             else {
@@ -157,8 +196,14 @@ public class WizardZombie extends Enemy implements AvailableActions {
             }
         } else if (((playerPositionX - enemyPositionX >= -1) && (playerPositionX - enemyPositionX <= 1)) && playerPositionY < enemyPositionY) {
 
-            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                goAttack(LOOK_DOWN);
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_DOWN);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
             }
             else {
                 actionToDraw(MOVE_DOWN);
@@ -168,8 +213,14 @@ public class WizardZombie extends Enemy implements AvailableActions {
                 this.setX(enemyPositionX);
             }
         } else if (playerPositionY > enemyPositionY && playerPositionX > enemyPositionX) {
-            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                goAttack(LOOK_RIGHT);
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_RIGHT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
             }
             else {
                 actionToDraw(MOVE_RIGHT);
@@ -180,8 +231,14 @@ public class WizardZombie extends Enemy implements AvailableActions {
             }
 
         } else if (playerPositionY > enemyPositionY && playerPositionX < enemyPositionX) {
-            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                goAttack(LOOK_LEFT);
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_LEFT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
             }
             else {
 
@@ -190,8 +247,14 @@ public class WizardZombie extends Enemy implements AvailableActions {
                 this.setX(enemyPositionX - (int)getMovement_speed());
             }
         } else if (playerPositionY < enemyPositionY && playerPositionX > enemyPositionX) {
-            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                goAttack(LOOK_RIGHT);
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_RIGHT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
             }
             else {
                 actionToDraw(MOVE_RIGHT);
@@ -200,8 +263,14 @@ public class WizardZombie extends Enemy implements AvailableActions {
                 this.setX(enemyPositionX + (int)getMovement_speed());
             }
         } else if (playerPositionY < enemyPositionY && playerPositionX < enemyPositionX) {
-            if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                goAttack(LOOK_LEFT);
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_LEFT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
             }
             else {
                 actionToDraw(MOVE_LEFT);

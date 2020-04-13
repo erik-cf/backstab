@@ -35,6 +35,7 @@ public class Playable extends Actor implements AvailableActions {
     private int contadorWalk=0;
     private int velocityWalk=10;
     final Backstab game;
+    private double vidaActual;
 
     public Playable(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed){
         this.game = game;
@@ -212,5 +213,13 @@ public class Playable extends Actor implements AvailableActions {
 
     public void setRange(double range) {
         this.range = range;
+    }
+
+    public void setVidaActual(double vidaActual) {
+        this.vidaActual = vidaActual;
+    }
+
+    public double getVidaActual() {
+        return vidaActual;
     }
 }

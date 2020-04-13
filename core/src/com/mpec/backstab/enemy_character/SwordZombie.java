@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.mpec.backstab.game.AvailableActions;
 import com.mpec.backstab.game.Backstab;
 
+import java.util.Date;
+
 public class SwordZombie extends Enemy implements AvailableActions {
 
     public static double baseAttack;
@@ -21,6 +23,17 @@ public class SwordZombie extends Enemy implements AvailableActions {
 
     boolean playSoundSlash=true;
     int contadorSlash=0;
+    int atackDamage=15;
+    private Date tiempo= new Date();
+    Date endDate;
+    float enemyPositionX;
+    float enemyPositionY;
+    private boolean ataqueRealizado=false;
+    int range=25;
+    int numSeconds;
+    public int vidaActualEnemy=100;
+     double atackSpeed=2;
+
 
     public SwordZombie(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range) {
         super(game, attack, defense, attack_speed, hp, movement_speed, range);
@@ -29,6 +42,7 @@ public class SwordZombie extends Enemy implements AvailableActions {
         enemyCircle= new Circle();
         direction = LOOK_DOWN;
         goIdle();
+        setVidaActual(vidaActualEnemy);
         this.setX((float)Math.random()*800);
         this.setY((float)Math.random()*800);
         setAttack_speed(10);
@@ -72,7 +86,7 @@ public class SwordZombie extends Enemy implements AvailableActions {
     }
 
     private void goAttack(int direction) {
-
+        game.timmy.setVidaActual(game.timmy.getVidaActual()-atackDamage);
         if(playSoundSlash==true ) {
             slashEnemy.play(1);
             playSoundSlash=false;
@@ -127,97 +141,152 @@ public class SwordZombie extends Enemy implements AvailableActions {
 
     public void followPlayer(float playerPositionX, float playerPositionY) {
 
-        float enemyPositionX = this.getX();
-        float enemyPositionY = this.getY();
+        enemyPositionX = (float) this.getX();
+        enemyPositionY = (float) this.getY();
+        endDate=new Date();
+        numSeconds = (int)((endDate.getTime() - tiempo.getTime()) / 1000);
 
-         if (((playerPositionY - enemyPositionY >= -1) && (playerPositionY - enemyPositionY <= 1)) && playerPositionX > enemyPositionX) {
 
-             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                goAttack(LOOK_RIGHT);
-             }
-             else {
-                 actionToDraw(MOVE_RIGHT);
+        if (((playerPositionY - enemyPositionY >= -1) && (playerPositionY - enemyPositionY <= 1)) && playerPositionX > enemyPositionX) {
 
-                 this.setY(enemyPositionY);
-                 this.setX(enemyPositionX + (int)getMovement_speed());
-             }
+
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_RIGHT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
+
+            }
+            else {
+                actionToDraw(MOVE_RIGHT);
+
+
+                this.setY(enemyPositionY);
+                this.setX(enemyPositionX + (int)getMovement_speed());
+            }
         } else if (((playerPositionY - enemyPositionY >= -1) && (playerPositionY - enemyPositionY <= 1)) && playerPositionX < enemyPositionX) {
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_LEFT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
+            }
+            else {
+                actionToDraw(MOVE_LEFT);
 
-             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                 goAttack(LOOK_LEFT);
-             }
-             else {
-                 actionToDraw(MOVE_LEFT);
 
-                 this.setY(enemyPositionY);
-                 this.setX(enemyPositionX - (int)getMovement_speed());
-             }
+                this.setY(enemyPositionY);
+                this.setX(enemyPositionX - (int)getMovement_speed());
+            }
         } else if (((playerPositionX - enemyPositionX >= -1) && (playerPositionX - enemyPositionX <= 1)) && playerPositionY > enemyPositionY) {
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_UP);
+                    ataqueRealizado=true;
+
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
+
+            }
+            else {
+                actionToDraw(MOVE_UP);
 
 
-             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                 goAttack(LOOK_UP);
-             }
-             else {
-                 actionToDraw(MOVE_UP);
-
-
-                 this.setY(enemyPositionY + (int)getMovement_speed());
-                 this.setX(enemyPositionX);
-             }
+                this.setY(enemyPositionY + (int)getMovement_speed());
+                this.setX(enemyPositionX);
+            }
         } else if (((playerPositionX - enemyPositionX >= -1) && (playerPositionX - enemyPositionX <= 1)) && playerPositionY < enemyPositionY) {
-             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                 goAttack(LOOK_DOWN);
-             }
-             else {
-                 actionToDraw(MOVE_DOWN);
+
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_DOWN);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
+            }
+            else {
+                actionToDraw(MOVE_DOWN);
 
 
-                 this.setY(enemyPositionY - (int)getMovement_speed());
-                 this.setX(enemyPositionX);
-             }
+                this.setY(enemyPositionY - (int)getMovement_speed());
+                this.setX(enemyPositionX);
+            }
         } else if (playerPositionY > enemyPositionY && playerPositionX > enemyPositionX) {
-             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                 goAttack(LOOK_RIGHT);
-             }
-             else {
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_RIGHT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
+            }
+            else {
+                actionToDraw(MOVE_RIGHT);
 
-                 actionToDraw(LOOK_RIGHT);
 
-                 this.setY(enemyPositionY + (int)getMovement_speed());
-                 this.setX(enemyPositionX + (int)getMovement_speed());
-             }
+                this.setY(enemyPositionY + (int)getMovement_speed());
+                this.setX(enemyPositionX + (int)getMovement_speed());
+            }
 
         } else if (playerPositionY > enemyPositionY && playerPositionX < enemyPositionX) {
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_LEFT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
+            }
+            else {
 
-             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                 goAttack(LOOK_LEFT);
-             }
-             else {
-                 actionToDraw(MOVE_LEFT);
-                 this.setY(enemyPositionY + (int)getMovement_speed());
-                 this.setX(enemyPositionX - (int)getMovement_speed());
-             }
+                actionToDraw(MOVE_LEFT);
+                this.setY(enemyPositionY + (int)getMovement_speed());
+                this.setX(enemyPositionX - (int)getMovement_speed());
+            }
         } else if (playerPositionY < enemyPositionY && playerPositionX > enemyPositionX) {
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_RIGHT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
+            }
+            else {
+                actionToDraw(MOVE_RIGHT);
 
-             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                 goAttack(LOOK_RIGHT);
-             }
-             else {
-                 actionToDraw(MOVE_RIGHT);
-
-                 this.setY(enemyPositionY - (int)getMovement_speed());
-                 this.setX(enemyPositionX + (int)getMovement_speed());
-             }
+                this.setY(enemyPositionY - (int)getMovement_speed());
+                this.setX(enemyPositionX + (int)getMovement_speed());
+            }
         } else if (playerPositionY < enemyPositionY && playerPositionX < enemyPositionX) {
-             if(((playerPositionY - enemyPositionY <= 25) && (playerPositionX - enemyPositionX <= 25)) && ((playerPositionY - enemyPositionY >= -25) && (playerPositionX - enemyPositionX >= -25))){
-                 goAttack(LOOK_LEFT);
-             }
-             else {
-                 actionToDraw(MOVE_LEFT);
-                 this.setY(enemyPositionY - (int)getMovement_speed());
-                 this.setX(enemyPositionX - (int)getMovement_speed());
-             }
+            if(((playerPositionY - enemyPositionY <= range) && (playerPositionX - enemyPositionX <= range)) && ((playerPositionY - enemyPositionY >= -range) && (playerPositionX - enemyPositionX >= -range))){
+                if(numSeconds%atackSpeed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_LEFT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%atackSpeed!=0){
+                    ataqueRealizado=false;
+                }
+            }
+            else {
+                actionToDraw(MOVE_LEFT);
+                this.setY(enemyPositionY - (int)getMovement_speed());
+                this.setX(enemyPositionX - (int)getMovement_speed());
+            }
         }
     }
 }

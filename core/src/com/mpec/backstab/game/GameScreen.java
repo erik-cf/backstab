@@ -33,13 +33,15 @@ public class GameScreen implements Screen {
     float movingX;
     float movingY;
 
+    double vidaTotalPlayer=100;
+
 
     public GameScreen(Backstab game){
         this.game = game;
         touchpad=new TouchPadTest();
         float aspectRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
         FitViewport viewport = new FitViewport(1000f * aspectRatio, 1000f, game.camera);
-
+        game.timmy.setVidaActual(100);
         stage = new Stage(viewport, game.batch);
         stage.addActor(touchpad);
         Gdx.input.setInputProcessor(stage);
@@ -67,7 +69,7 @@ public class GameScreen implements Screen {
         game.camera.position.y = game.mainCharacterRectangle.getY();
         game.mainCharacterRectangle.setX(movingX);
         game.mainCharacterRectangle.setY(movingY);
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+        if(game.timmy.getVidaActual()<=0){
             game.setScreen(new EndMenuScreen(game,numSeconds));
         }
         checkMovement();
@@ -83,7 +85,7 @@ public class GameScreen implements Screen {
         }
 
         try {
-            whichEnemy((int)(Math.random() * 3));
+            whichEnemy((int)(Math.random()*3));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,8 +99,8 @@ public class GameScreen implements Screen {
         }*/
 
         game.batch.draw(playerSprite, game.mainCharacterRectangle.x, game.mainCharacterRectangle.y);
-        game.batch.draw(game.timmy.healthRedBar, game.mainCharacterRectangle.x - 23, game.mainCharacterRectangle.y - 25,
-                (int)(game.timmy.healthRedBar.getWidth()*0.8), game.timmy.healthRedBar.getHeight());
+        game.batch.draw(game.timmy.healthRedBar, game.mainCharacterRectangle.x+3 , game.mainCharacterRectangle.y +60,
+                (int)(game.timmy.healthRedBar.getWidth()*(game.timmy.getVidaActual()/vidaTotalPlayer)), game.timmy.healthRedBar.getHeight());
 
         game.batch.end();
         stage.draw();
