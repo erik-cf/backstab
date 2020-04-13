@@ -73,7 +73,6 @@ public class Backstab extends Game {
 		timmy.getAction().getTexture().dispose();
 		timmy.getWalkPlayer().dispose();
 		timmy.getPlayerAtlas().dispose();
-		timmy.getWalkPlayer().dispose();
 	}
 
 

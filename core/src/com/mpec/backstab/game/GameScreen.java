@@ -45,7 +45,6 @@ public class GameScreen implements Screen {
         stage = new Stage(viewport, game.batch);
         stage.addActor(touchpad);
         Gdx.input.setInputProcessor(stage);
-
     }
 
     @Override
@@ -65,8 +64,22 @@ public class GameScreen implements Screen {
         numSeconds = (int)((endDate.getTime() - startDate.getTime()) / 1000);
         movingX = (float)(game.mainCharacterRectangle.getX() + touchpad.getKnobPercentX() * game.timmy.getMovement_speed());
         movingY = (float) (game.mainCharacterRectangle.getY() + touchpad.getKnobPercentY() * game.timmy.getMovement_speed());
-        game.camera.position.x = game.mainCharacterRectangle.getX();
-        game.camera.position.y = game.mainCharacterRectangle.getY();
+
+        moveCamera();
+        if(game.mainCharacterRectangle.getX() < 0){
+            movingX = 0;
+        }
+        if(game.mainCharacterRectangle.getX() + game.timmy.getAction().getWidth() > MapGenerator.WORLD_WIDTH){
+            movingX = MapGenerator.WORLD_WIDTH - game.timmy.getAction().getWidth();
+        }
+
+        if(game.mainCharacterRectangle.getY() < 0){
+            movingY = 0;
+        }
+
+        if(game.mainCharacterRectangle.getY() + game.timmy.getAction().getHeight() > MapGenerator.WORLD_HEIGHT){
+            movingY = MapGenerator.WORLD_HEIGHT - game.timmy.getAction().getHeight();
+        }
         game.mainCharacterRectangle.setX(movingX);
         game.mainCharacterRectangle.setY(movingY);
         if(game.timmy.getVidaActual()<=0){
@@ -239,6 +252,16 @@ public class GameScreen implements Screen {
                 break;
             default:
                 throw new Exception("Error! Number out of range (0-2)!");
+        }
+    }
+
+    private void moveCamera(){
+        if((game.mainCharacterRectangle.getX() + (game.camera.viewportWidth / 2)) < MapGenerator.WORLD_WIDTH && (game.mainCharacterRectangle.getX() - (game.camera.viewportWidth / 2)) > 0){
+            game.camera.position.x = game.mainCharacterRectangle.getX();
+        }
+
+        if(!(game.mainCharacterRectangle.getY() + (game.camera.viewportHeight / 2) >= MapGenerator.WORLD_HEIGHT ) && !(game.mainCharacterRectangle.getY() - (game.camera.viewportHeight / 2) <= 0)){
+            game.camera.position.y = game.mainCharacterRectangle.getY();
         }
     }
 
