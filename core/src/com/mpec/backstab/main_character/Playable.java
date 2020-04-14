@@ -9,9 +9,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mpec.backstab.game.AvailableActions;
 import com.mpec.backstab.game.Backstab;
+import com.mpec.backstab.map.MapGenerator;
 
 public class Playable extends Actor implements AvailableActions {
 
@@ -21,6 +23,8 @@ public class Playable extends Actor implements AvailableActions {
     protected double hp;
     protected double movement_speed = 10;
     protected double range;
+
+    protected Rectangle playableRectangle;
     public Texture healthRedBar;
 
     public TextureAtlas playerAtlas;
@@ -35,18 +39,31 @@ public class Playable extends Actor implements AvailableActions {
     private int contadorWalk=0;
     private int velocityWalk=10;
     final Backstab game;
-    private double vidaActual;
+    protected double vidaActual;
 
     public Playable(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed){
         this.game = game;
+        this.attack = attack;
+        this.defense = defense;
+        this.attack_speed = attack_speed;
+        this.hp = hp;
+        this.movement_speed = movement_speed;
+
+        this.vidaActual = hp;
+
+        action = new Sprite();
+        this.setPosition((float)(Math.random() * MapGenerator.WORLD_WIDTH), (float)(Math.random() * MapGenerator.WORLD_HEIGHT));
         playerAtlas = new TextureAtlas(Gdx.files.internal("Player/tilesetCaracter.txt"));
         slashPlayer= Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
         walkPlayer=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/footstepGrass.wav"));
 
         direction = LOOK_DOWN;
+        playableRectangle = new Rectangle();
+        playableRectangle.setX(action.getX());
+        playableRectangle.setY(action.getY());
 
-        action = new Sprite();
-        action.setPosition(Gdx.graphics.getWidth()/2-action.getWidth()/2, Gdx.graphics.getHeight()/2-action.getHeight()/2);
+
+        healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
         goIdle();
     }
 
@@ -77,10 +94,8 @@ public class Playable extends Actor implements AvailableActions {
                 break;
         }
         contadorWalk++;
-        float x = this.action.getX();
-        float y = this.action.getY();
         this.action = new Sprite(animation.getKeyFrame(game.stateTime, true));
-        this.action.setPosition(x, y);
+
     }
 
     public void goIdle(){
@@ -98,10 +113,8 @@ public class Playable extends Actor implements AvailableActions {
                 animation = new Animation<TextureRegion>(10f, playerAtlas.findRegions(name_idle_left), Animation.PlayMode.LOOP);
                 break;
         }
-        float x = action.getX();
-        float y = action.getY();
         action = new Sprite(animation.getKeyFrame(game.stateTime, true));
-        action.setPosition(x, y);
+
     }
 
     public void goAttack(int direction){
@@ -120,15 +133,18 @@ public class Playable extends Actor implements AvailableActions {
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_bow_left), Animation.PlayMode.LOOP);
                 break;
         }
-        float x = action.getX();
-        float y = action.getY();
+
         action = new Sprite(animation.getKeyFrame(game.stateTime, true));
-        action.setPosition(x, y);
+
+
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
+        playableRectangle.setPosition(getX(), getY());
         batch.draw(action, getX(), getY());
+        batch.draw(healthRedBar, getX()+3, getY()+60);
     }
 
     public TextureAtlas getPlayerAtlas() {
@@ -221,5 +237,9 @@ public class Playable extends Actor implements AvailableActions {
 
     public double getVidaActual() {
         return vidaActual;
+    }
+
+    public Rectangle getPlayableRectangle() {
+        return playableRectangle;
     }
 }

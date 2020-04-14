@@ -22,7 +22,6 @@ public class GameScreen implements Screen {
 
     final Backstab game;
     Stage stage;
-    Sprite playerSprite;
     TouchPadTest touchpad;
     ArrayList<Enemy> enemyAL = new ArrayList<Enemy>();
     Date startDate= new Date();
@@ -33,18 +32,15 @@ public class GameScreen implements Screen {
     float movingX;
     float movingY;
 
-    double vidaTotalPlayer=100;
-
 
     public GameScreen(Backstab game){
         this.game = game;
-        touchpad=new TouchPadTest();
-        float aspectRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
-        FitViewport viewport = new FitViewport(1000f * aspectRatio, 1000f, game.camera);
-        game.timmy.setVidaActual(100);
-        stage = new Stage(viewport, game.batch);
-        stage.addActor(touchpad);
+        stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
+        touchpad=new TouchPadTest();
+        stage.addActor(game.timmy);
+        stage.addActor(touchpad);
+
     }
 
     @Override
@@ -57,42 +53,47 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.camera.update();
+
         game.stateTime = game.stateTime + 1 + Gdx.graphics.getDeltaTime();
-        playerSprite = checkCharacterAction();
-        touchpad.setBounds(game.camera.position.x - touchpad.getWidth()/2, game.camera.position.y - stage.getHeight() / 2 + 15, 150, 150);
+        checkCharacterAction();
+        touchpad.setBounds(game.camera.position.x - touchpad.getWidth() / 2, game.camera.position.y - stage.getHeight() / 2 + 15, 150, 150);
         endDate= new Date();
         numSeconds = (int)((endDate.getTime() - startDate.getTime()) / 1000);
-        movingX = (float)(game.mainCharacterRectangle.getX() + touchpad.getKnobPercentX() * game.timmy.getMovement_speed());
-        movingY = (float) (game.mainCharacterRectangle.getY() + touchpad.getKnobPercentY() * game.timmy.getMovement_speed());
-
-        moveCamera();
-        if(game.mainCharacterRectangle.getX() < 0){
+        movingX = (float)(game.timmy.getX() + touchpad.getKnobPercentX() * game.timmy.getMovement_speed());
+        movingY = (float) (game.timmy.getY() + touchpad.getKnobPercentY() * game.timmy.getMovement_speed());
+        System.out.println(game.timmy.getPlayableRectangle().getX());
+        System.out.println(game.timmy.getAction().getX());
+        System.out.println(game.camera.position.x);
+        System.out.println(game.timmy.getHp());
+        game.moveCamera();
+        if(game.timmy.getX() < 0){
             movingX = 0;
         }
-        if(game.mainCharacterRectangle.getX() + game.timmy.getAction().getWidth() > MapGenerator.WORLD_WIDTH){
+        if(game.timmy.getX() + game.timmy.getAction().getWidth() > MapGenerator.WORLD_WIDTH){
             movingX = MapGenerator.WORLD_WIDTH - game.timmy.getAction().getWidth();
         }
 
-        if(game.mainCharacterRectangle.getY() < 0){
+        if(game.timmy.getY() < 0){
             movingY = 0;
         }
 
-        if(game.mainCharacterRectangle.getY() + game.timmy.getAction().getHeight() > MapGenerator.WORLD_HEIGHT){
+        if(game.timmy.getY() + game.timmy.getAction().getHeight() > MapGenerator.WORLD_HEIGHT){
             movingY = MapGenerator.WORLD_HEIGHT - game.timmy.getAction().getHeight();
         }
-        game.mainCharacterRectangle.setX(movingX);
-        game.mainCharacterRectangle.setY(movingY);
+
+        game.timmy.setX(movingX);
+        game.timmy.setY(movingY);
         if(game.timmy.getVidaActual()<=0){
             game.setScreen(new EndMenuScreen(game,numSeconds));
         }
         checkMovement();
         for (Enemy enemy : enemyAL) {
             if(enemy.getClass().equals(Golem.class)){
-                ((Golem)enemy).followPlayer(game.mainCharacterRectangle.getX(), game.mainCharacterRectangle.getY());
+                ((Golem)enemy).followPlayer(game.timmy.getPlayableRectangle().getX(), game.timmy.getPlayableRectangle().getY());
             }else if(enemy.getClass().equals(WizardZombie.class)){
-                ((WizardZombie)enemy).followPlayer(game.mainCharacterRectangle.getX(), game.mainCharacterRectangle.getY());
+                ((WizardZombie)enemy).followPlayer(game.timmy.getPlayableRectangle().getX(), game.timmy.getPlayableRectangle().getY());
             }else if(enemy.getClass().equals(SwordZombie.class)){
-                ((SwordZombie)enemy).followPlayer(game.mainCharacterRectangle.getX(), game.mainCharacterRectangle.getY());
+                ((SwordZombie)enemy).followPlayer(game.timmy.getPlayableRectangle().getX(), game.timmy.getPlayableRectangle().getY());
             }
 
         }
@@ -105,17 +106,8 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
-
-        /*for (Enemy enemy : enemyAL) {
-            enemy.draw(game.batch, 1);
-            //game.batch.draw(enemy.getEnemyTexture(), enemy.getX(),enemy.getY());
-        }*/
-
-        game.batch.draw(playerSprite, game.mainCharacterRectangle.x, game.mainCharacterRectangle.y);
-        game.batch.draw(game.timmy.healthRedBar, game.mainCharacterRectangle.x+3 , game.mainCharacterRectangle.y +60,
-                (int)(game.timmy.healthRedBar.getWidth()*(game.timmy.getVidaActual()/vidaTotalPlayer)), game.timmy.healthRedBar.getHeight());
-
         game.batch.end();
+
         stage.draw();
     }
 
@@ -142,7 +134,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         game.batch.dispose();
-        for(Enemy enemy: enemyAL){
+        for(Enemy enemy : enemyAL){
             enemy.getSlashEnemy().dispose();
             enemy.getHealthRedBar().dispose();
             enemy.getEnemySprite().getTexture().dispose();
@@ -156,7 +148,7 @@ public class GameScreen implements Screen {
         stage.dispose();
     }
 
-    private Sprite checkCharacterAction(){
+    private void checkCharacterAction(){
         if(game.stateTime < 5){
             game.timmy.goIdle();
         }
@@ -187,25 +179,23 @@ public class GameScreen implements Screen {
         }else{
             game.timmy.goIdle();
         }
-
-        return game.timmy.getAction();
     }
 
     private void checkMovement(){
         for(Rectangle r : MapGenerator.collision){
-            if(game.mainCharacterRectangle.overlaps(r)){
+            if(game.timmy.getPlayableRectangle().overlaps(r)){
                 switch(game.timmy.getDirection()){
                     case AvailableActions.LOOK_LEFT:
-                        game.mainCharacterRectangle.setX(game.mainCharacterRectangle.getX() + 5);
+                        game.timmy.setX(game.timmy.getPlayableRectangle().getX() + 1);
                         break;
                     case AvailableActions.LOOK_RIGHT:
-                        game.mainCharacterRectangle.setX(game.mainCharacterRectangle.getX() - 5);
+                        game.timmy.setX(game.timmy.getPlayableRectangle().getX() - 1);
                         break;
                     case AvailableActions.LOOK_UP:
-                        game.mainCharacterRectangle.setY(game.mainCharacterRectangle.getY() - 5);
+                        game.timmy.setY(game.timmy.getPlayableRectangle().getY() - 1);
                         break;
                     case AvailableActions.LOOK_DOWN:
-                        game.mainCharacterRectangle.setY(game.mainCharacterRectangle.getY() + 5);
+                        game.timmy.setY(game.timmy.getPlayableRectangle().getY() + 1);
                         break;
                 }
             }
@@ -254,16 +244,4 @@ public class GameScreen implements Screen {
                 throw new Exception("Error! Number out of range (0-2)!");
         }
     }
-
-    private void moveCamera(){
-        if((game.mainCharacterRectangle.getX() + (game.camera.viewportWidth / 2)) < MapGenerator.WORLD_WIDTH && (game.mainCharacterRectangle.getX() - (game.camera.viewportWidth / 2)) > 0){
-            game.camera.position.x = game.mainCharacterRectangle.getX();
-        }
-
-        if(!(game.mainCharacterRectangle.getY() + (game.camera.viewportHeight / 2) >= MapGenerator.WORLD_HEIGHT ) && !(game.mainCharacterRectangle.getY() - (game.camera.viewportHeight / 2) <= 0)){
-            game.camera.position.y = game.mainCharacterRectangle.getY();
-        }
-    }
-
-
 }

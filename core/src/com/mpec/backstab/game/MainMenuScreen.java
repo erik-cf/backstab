@@ -20,11 +20,12 @@ public class MainMenuScreen implements Screen {
     Skin skin;
     TextureAtlas buttonAtlas;
     BitmapFont font;
-    Stage stage;
     Music introMusic;
+    Stage stage;
 
     public MainMenuScreen(Backstab game){
-        stage = new Stage();
+        stage = new Stage(game.viewport, game.batch);
+        game.moveCamera();
         introMusic= Gdx.audio.newMusic(Gdx.files.internal("Sounds/Menu/menuIntro.wav"));
         Gdx.input.setInputProcessor(stage);
         this.game = game;
@@ -38,13 +39,14 @@ public class MainMenuScreen implements Screen {
         startButtonStyle.up = skin.getDrawable("untouched");
         startButton = new TextButton("", startButtonStyle);
         startButton.setBackground(skin.getDrawable("untouched"));
-        startButton.setX(Gdx.graphics.getWidth() / 2 - startButton.getWidth() / 2);
-        startButton.setY(100f);
+        startButton.setX(game.camera.position.x - startButton.getWidth() / 2);
+        startButton.setY((game.camera.position.y - stage.getHeight() / 2) + 100f);
         startButton.setWidth(510f);
         startButton.setHeight(78f);
         introMusic.play();
         game.mapGenerator.createMap();
         stage.addActor(startButton);
+        stage.addActor(game.timmy);
         listeners();
     }
 
@@ -58,15 +60,14 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.camera.update();
-        game.stateTime = game.stateTime + 1 + Gdx.graphics.getDeltaTime();
 
-        game.timmy.goIdle();
+        game.stateTime = game.stateTime + 1 + Gdx.graphics.getDeltaTime();
 
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
-        game.timmy.action.draw(game.batch);
-        startButton.draw(game.batch, 1);
         game.batch.end();
+
+        stage.draw();
     }
 
     @Override
@@ -97,6 +98,7 @@ public class MainMenuScreen implements Screen {
         game.timmy.getWalkPlayer().dispose();
         game.timmy.getPlayerAtlas().dispose();
         game.timmy.getWalkPlayer().dispose();
+        stage.dispose();
     }
 
     private void listeners(){

@@ -51,13 +51,8 @@ public class Enemy extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
        if(vidaActual>0) {
-
-
            batch.draw(enemySprite, getX(), getY());
            batch.draw(healthRedBar, getX()+2, getY()+65, (int) (healthRedBar.getWidth() * (vidaActual/vidaTotal)), healthRedBar.getHeight());
-       }
-       else{
-
        }
     }
 

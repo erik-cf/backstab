@@ -5,6 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mpec.backstab.api.ApiTools;
 import com.mpec.backstab.main_character.Timmy;
 import com.mpec.backstab.map.MapGenerator;
@@ -26,10 +29,10 @@ public class Backstab extends Game {
 	SpriteBatch batch;
 	MapGenerator mapGenerator;
 	public Timmy timmy;
-	Rectangle mainCharacterRectangle;
 
 	JSONObject getter;
 
+	FitViewport viewport;
 	public float stateTime;
 
 	@Override
@@ -40,9 +43,7 @@ public class Backstab extends Game {
 		mapGenerator = new MapGenerator();
 		float aspectRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 500f * aspectRatio, 500f);
-		//batch.setProjectionMatrix(camera.combined);
-
+		viewport = new FitViewport(700f * aspectRatio, 700f, camera);
 		stateTime = 0;
 		timmy = new Timmy(this);
 		try {
@@ -55,9 +56,8 @@ public class Backstab extends Game {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mainCharacterRectangle = new Rectangle();
-		mainCharacterRectangle.setX(timmy.getAction().getX());
-		mainCharacterRectangle.setY(timmy.getAction().getY());
+		moveCamera();
+		camera.update();
 		this.setScreen(new MainMenuScreen(this));
 	}
 
@@ -75,5 +75,34 @@ public class Backstab extends Game {
 		timmy.getPlayerAtlas().dispose();
 	}
 
+	public void moveCamera(){
+		if((timmy.getX() + (camera.viewportWidth / 2)) < MapGenerator.WORLD_WIDTH && (timmy.getX() - (camera.viewportWidth / 2)) > 0){
+			camera.position.x = timmy.getX();
+		}
+
+		if((timmy.getX() + (camera.viewportWidth / 2)) >= MapGenerator.WORLD_WIDTH){
+			camera.position.x = MapGenerator.WORLD_WIDTH - camera.viewportWidth / 2;
+		}
+
+		if((timmy.getX() - (camera.viewportWidth / 2)) <= 0){
+			camera.position.x =  camera.viewportWidth / 2;
+		}
+
+		if((timmy.getY() + (camera.viewportHeight / 2) < MapGenerator.WORLD_HEIGHT) && (timmy.getY() - (camera.viewportHeight / 2) > 0)){
+			camera.position.y = timmy.getY();
+		}
+
+		if((timmy.getY() + (camera.viewportHeight / 2) >= MapGenerator.WORLD_HEIGHT)){
+			camera.position.y = MapGenerator.WORLD_HEIGHT - camera.viewportHeight / 2;
+		}
+
+		if((timmy.getY() - (camera.viewportHeight / 2) <= 0)){
+			camera.position.y = camera.viewportHeight / 2;
+		}
+	}
+
+	public void setInitialCameraView(){
+
+	}
 
 }

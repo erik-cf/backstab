@@ -27,12 +27,13 @@ public class EndMenuScreen implements Screen {
     BitmapFont gameTimeFont;
     BitmapFont totalKillsFont;
     BitmapFont totalObjectsFont;
-    Stage stage;
     Music introMusic;
     int totalTiempo;
 
+    Stage stage;
+
     public EndMenuScreen(Backstab game,int totalTiempo){
-        stage = new Stage();
+        stage = new Stage(game.viewport, game.batch);
         introMusic= Gdx.audio.newMusic(Gdx.files.internal("Sounds/Menu/menuIntro.wav"));
         Gdx.input.setInputProcessor(stage);
         this.game = game;
@@ -53,15 +54,17 @@ public class EndMenuScreen implements Screen {
         endButtonStyle.up = skin.getDrawable("untouched");
         endButton = new TextButton("", endButtonStyle);
         endButton.setBackground(skin.getDrawable("untouched"));
-        endButton.setX(Gdx.graphics.getWidth() / 2 - endButton.getWidth() / 2);
-        endButton.setY(100f);
+
         endButton.setWidth(510f);
         endButton.setHeight(78f);
+        endButton.setX(game.camera.position.x - (endButton.getWidth() / 2));
+        endButton.setY((game.camera.position.y - stage.getHeight() / 2) + 100f);
         introMusic.play();
         this.totalTiempo=totalTiempo;
 
 
         stage.addActor(endButton);
+
         listeners();
     }
 
@@ -80,11 +83,11 @@ public class EndMenuScreen implements Screen {
 
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
-        game.batch.draw(endGameMenu, Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2, Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2);
+        game.batch.draw(endGameMenu, game.camera.position.x - (endGameMenu.getWidth() / 2), game.camera.position.y - (endGameMenu.getHeight() / 2));
         endButton.draw(game.batch, 1);
-        gameTimeFont.draw(game.batch,"Tiempo de partida: "+totalTiempo+" segundos",(Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2)+100, (Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2)+250);
-        totalKillsFont.draw(game.batch,"Enemigos Matados: Over 9000",(Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2)+100, (Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2)+225);
-        totalObjectsFont.draw(game.batch,"Objetos recogidos: 1",(Gdx.graphics.getWidth() / 2 - endGameMenu.getWidth() / 2)+100, (Gdx.graphics.getHeight() / 2 - endGameMenu.getHeight() / 2)+200);
+        gameTimeFont.draw(game.batch,"Tiempo de partida: "+totalTiempo+" segundos",game.camera.position.x - (endGameMenu.getWidth() / 2)+100, game.camera.position.y - (endGameMenu.getHeight() / 2)+250);
+        totalKillsFont.draw(game.batch,"Enemigos Matados: Over 9000",game.camera.position.x - (endGameMenu.getWidth() / 2)+100, game.camera.position.y - (endGameMenu.getHeight() / 2)+225);
+        totalObjectsFont.draw(game.batch,"Objetos recogidos: 1",game.camera.position.x - (endGameMenu.getWidth() / 2)+100, game.camera.position.y - (endGameMenu.getHeight() / 2)+200);
         game.batch.end();
     }
 

@@ -80,6 +80,7 @@ public class Loader implements Screen {
                 game.timmy.setMovement_speed(getter.getDouble("movement_speed"));
                 game.timmy.setAttack_speed(getter.getDouble("attack_speed"));
                 game.timmy.setRange(getter.getDouble("range"));
+                game.timmy.setVidaActual(game.timmy.getHp());
 
                 finish = true;
             } catch (Exception e) {
