@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mpec.backstab.enemy_character.Enemy;
 import com.mpec.backstab.enemy_character.Golem;
@@ -23,7 +24,7 @@ public class GameScreen implements Screen {
     final Backstab game;
     Stage stage;
     TouchPadTest touchpad;
-    ArrayList<Enemy> enemyAL = new ArrayList<Enemy>();
+    Array<Enemy> enemyAL;
     Date startDate= new Date();
     boolean enemyToBeCreated =false;
     Date endDate;
@@ -40,7 +41,7 @@ public class GameScreen implements Screen {
         touchpad=new TouchPadTest();
         stage.addActor(game.timmy);
         stage.addActor(touchpad);
-
+        enemyAL = new Array<Enemy>();
     }
 
     @Override
@@ -87,7 +88,7 @@ public class GameScreen implements Screen {
             game.setScreen(new EndMenuScreen(game,numSeconds));
         }
         checkMovement();
-        for (Enemy enemy : enemyAL) {
+        /*for (Enemy enemy : enemyAL) {
             if(enemy.getClass().equals(Golem.class)){
                 ((Golem)enemy).followPlayer(game.timmy.getPlayableRectangle().getX(), game.timmy.getPlayableRectangle().getY());
             }else if(enemy.getClass().equals(WizardZombie.class)){
@@ -96,7 +97,7 @@ public class GameScreen implements Screen {
                 ((SwordZombie)enemy).followPlayer(game.timmy.getPlayableRectangle().getX(), game.timmy.getPlayableRectangle().getY());
             }
 
-        }
+        }*/
 
         try {
             whichEnemy((int)(Math.random()*3));
@@ -107,8 +108,9 @@ public class GameScreen implements Screen {
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
         game.batch.end();
-
+        stage.act();
         stage.draw();
+
     }
 
     @Override

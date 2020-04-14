@@ -48,6 +48,7 @@ public class MainMenuScreen implements Screen {
         stage.addActor(startButton);
         stage.addActor(game.timmy);
         listeners();
+        game.timmy.setVidaActual(game.timmy.getHp());
     }
 
     @Override

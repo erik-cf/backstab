@@ -72,7 +72,7 @@ public class MapGenerator {
     }
 
     public void createMap(){
-
+        collision.clear();
         for(int i = (WORLD_HEIGHT / 16) - 1; i >= 0; i--){
             for(int j = 0; j < (WORLD_WIDTH / 16); j++){
                 if(!paintedNumbers.contains(i + "," + j)) {

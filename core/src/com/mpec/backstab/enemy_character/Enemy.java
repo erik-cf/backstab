@@ -11,9 +11,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mpec.backstab.game.AvailableActions;
 import com.mpec.backstab.game.Backstab;
+import com.mpec.backstab.map.MapGenerator;
 
-public class Enemy extends Actor {
+import java.util.Date;
+
+public class Enemy extends Actor implements AvailableActions {
     protected Sound slashEnemy;
     protected Sprite enemySprite;
     protected Rectangle enemyRectangle;
@@ -25,15 +29,21 @@ public class Enemy extends Actor {
 
     public double vidaActual;
 
+    boolean playSoundSlash=true;
+    int contadorSlash=0;
+    
+    protected double attack;
+    protected double defense;
+    protected double attack_speed;
+    protected double hp;
+    protected double movement_speed;
+    protected double range;
 
+    private boolean ataqueRealizado=false;
+    int numSeconds;
 
-    private double attack;
-    private double defense;
-    private double attack_speed;
-    private double hp;
-    private double movement_speed;
-    private double range;
-
+    private Date tiempo= new Date();
+    
     final Backstab game;
 
     public Enemy(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range) {
@@ -45,8 +55,12 @@ public class Enemy extends Actor {
         this.movement_speed = movement_speed;
         this.range = range;
         this.vidaActual = hp;
+        direction = LOOK_DOWN;
+        enemyRectangle =new Rectangle();
         this.healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
         slashEnemy=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
+        this.setX((float)Math.random()* MapGenerator.WORLD_WIDTH);
+        this.setY((float)Math.random()* MapGenerator.WORLD_HEIGHT);
     }
 
     @Override
@@ -58,8 +72,317 @@ public class Enemy extends Actor {
        }
     }
 
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        System.out.println("Ha entrado al act");
+        if(this.getClass().equals(Golem.class)){
+            followPlayerGolem();
+        }else {
+            followPlayer();
+        }
+    }
+
+    protected void actionToDraw(int action) {
+        switch (action) {
+            case MOVE_UP:
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
+                direction = LOOK_UP;
+                break;
+            case MOVE_DOWN:
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
+                direction = LOOK_DOWN;
+                break;
+            case MOVE_RIGHT:
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
+                direction = LOOK_RIGHT;
+                break;
+            case MOVE_LEFT:
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_left), Animation.PlayMode.LOOP);
+                direction = LOOK_LEFT;
+                break;
+
+        }
+        enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
+    }
+
+    protected void goIdle() {
+        switch (direction) {
+            case LOOK_UP:
+                enemyAnimation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_RIGHT:
+                enemyAnimation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_DOWN:
+                enemyAnimation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_LEFT:
+                enemyAnimation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_left), Animation.PlayMode.LOOP);
+                break;
+        }
+        enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
+    }
+
+    protected void goAttack(int direction) {
+        game.timmy.setVidaActual(game.timmy.getVidaActual() - (attack - game.timmy.getDefense()));
+        if(playSoundSlash==true ) {
+            slashEnemy.play(1);
+            playSoundSlash=false;
+
+        }
+        else if (contadorSlash%(int)(getAttack_speed())==0){
+            playSoundSlash=true;
+        }
+
+        switch (direction) {
+            case LOOK_UP:
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_up), Animation.PlayMode.LOOP);
 
 
+                break;
+            case LOOK_RIGHT:
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_right), Animation.PlayMode.LOOP);
+
+                break;
+            case LOOK_DOWN:
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_down), Animation.PlayMode.LOOP);
+
+                break;
+            case LOOK_LEFT:
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_attack_left), Animation.PlayMode.LOOP);
+
+                break;
+        }
+        contadorSlash++;
+        enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
+    }
+
+    protected void goDie(){
+        switch(direction){
+            case LOOK_UP:
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_die_up), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_RIGHT:
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_die_right), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_DOWN:
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_die_down), Animation.PlayMode.LOOP);
+                break;
+            case LOOK_LEFT:
+                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_die_left), Animation.PlayMode.LOOP);
+                break;
+        }
+        enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
+    }
+
+    public void followPlayer() {
+        numSeconds = (int)((new Date().getTime() - tiempo.getTime()) / 1000);
+        
+        if (((game.timmy.getY() - getY() >= -1) && (game.timmy.getY() - getY() <= 1)) && game.timmy.getX() > getX()) {
+
+
+            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= 25)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+
+                if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_RIGHT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%attack_speed!=0){
+                    ataqueRealizado=false;
+                }
+
+            }
+            else {
+                actionToDraw(MOVE_RIGHT);
+                this.setX(getX() + (int)getMovement_speed());
+            }
+        } else if (((game.timmy.getY() - getY() >= -1) && (game.timmy.getY() - getY() <= 1)) && game.timmy.getX() < getX()) {
+            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+                if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_LEFT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%attack_speed!=0){
+                    ataqueRealizado=false;
+                }
+            }
+            else {
+                actionToDraw(MOVE_LEFT);
+                
+                this.setX(getX() - (int)getMovement_speed());
+            }
+        } else if (((game.timmy.getX() - getX() >= -1) && (game.timmy.getX() - getX() <= 1)) && game.timmy.getY() > getY()) {
+            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+                if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_UP);
+                    ataqueRealizado=true;
+
+                }
+                else if(numSeconds%attack_speed!=0){
+                    ataqueRealizado=false;
+                }
+
+            }
+            else {
+                actionToDraw(MOVE_UP);
+
+
+                this.setY(getY() + (int)getMovement_speed());
+                this.setX(getX());
+            }
+        } else if (((game.timmy.getX() - getX() >= -1) && (game.timmy.getX() - getX() <= 1)) && game.timmy.getY() < getY()) {
+
+            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+                if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_DOWN);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%attack_speed!=0){
+                    ataqueRealizado=false;
+                }
+            }
+            else {
+                actionToDraw(MOVE_DOWN);
+                this.setY(getY() - (int)getMovement_speed());
+            }
+        } else if (game.timmy.getY() > getY() && game.timmy.getX() > getX()) {
+            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+                if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_RIGHT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%attack_speed!=0){
+                    ataqueRealizado=false;
+                }
+            }
+            else {
+                actionToDraw(MOVE_RIGHT);
+
+
+                this.setY(getY() + (int)getMovement_speed());
+                this.setX(getX() + (int)getMovement_speed());
+            }
+
+        } else if (game.timmy.getY() > getY() && game.timmy.getX() < getX()) {
+            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+                if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_LEFT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%attack_speed!=0){
+                    ataqueRealizado=false;
+                }
+            }
+            else {
+
+                actionToDraw(MOVE_LEFT);
+                this.setY(getY() + (int)getMovement_speed());
+                this.setX(getX() - (int)getMovement_speed());
+            }
+        } else if (game.timmy.getY() < getY() && game.timmy.getX() > getX()) {
+            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+                if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_RIGHT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%attack_speed!=0){
+                    ataqueRealizado=false;
+                }
+            }
+            else {
+                actionToDraw(MOVE_RIGHT);
+
+                this.setY(getY() - (int)getMovement_speed());
+                this.setX(getX() + (int)getMovement_speed());
+            }
+        } else if (game.timmy.getY() < getY() && game.timmy.getX() < getX()) {
+            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+                if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
+                    goAttack(LOOK_LEFT);
+                    ataqueRealizado=true;
+                }
+                else if(numSeconds%attack_speed!=0){
+                    ataqueRealizado=false;
+                }
+            }
+            else {
+                actionToDraw(MOVE_LEFT);
+                this.setY(getY() - (int)getMovement_speed());
+                this.setX(getX() - (int)getMovement_speed());
+            }
+        }
+    }
+
+    public void followPlayerGolem() {
+        numSeconds = (int)((new Date().getTime() - tiempo.getTime()) / 1000);
+
+
+        if (((game.timmy.getY() - getY() >= -1) && (game.timmy.getY() - getY() <= 1)) && game.timmy.getX() > getX()) {
+
+
+            actionToDraw(MOVE_RIGHT);
+
+
+            this.setY(getY());
+            this.setX(getX() + (int)getMovement_speed());
+        } else if (((game.timmy.getY() - getY() >= -1) && (game.timmy.getY() - getY() <= 1)) && game.timmy.getX() < getX()) {
+
+            actionToDraw(MOVE_LEFT);
+
+
+            this.setY(getY());
+            this.setX(getX() - (int)getMovement_speed());
+
+        } else if (((game.timmy.getX() - getX() >= -1) && (game.timmy.getX() - getX() <= 1)) && game.timmy.getY() > getY()) {
+
+            actionToDraw(MOVE_UP);
+
+
+            this.setY(getY() + (int)getMovement_speed());
+            this.setX(getX());
+
+        } else if (((game.timmy.getX() - getX() >= -1) && (game.timmy.getX() - getX() <= 1)) && game.timmy.getY() < getY()) {
+
+
+            actionToDraw(MOVE_DOWN);
+
+
+            this.setY(getY() - (int)getMovement_speed());
+            this.setX(getX());
+
+        } else if (game.timmy.getY() > getY() && game.timmy.getX() > getX()) {
+
+            actionToDraw(MOVE_RIGHT);
+
+
+            this.setY(getY() + (int)getMovement_speed());
+            this.setX(getX() + (int)getMovement_speed());
+
+
+        } else if (game.timmy.getY() > getY() && game.timmy.getX() < getX()) {
+
+
+            actionToDraw(MOVE_LEFT);
+            this.setY(getY() + (int)getMovement_speed());
+            this.setX(getX() - (int)getMovement_speed());
+
+        } else if (game.timmy.getY() < getY() && game.timmy.getX() > getX()) {
+
+            actionToDraw(MOVE_RIGHT);
+
+            this.setY(getY() - (int)getMovement_speed());
+            this.setX(getX() + (int)getMovement_speed());
+
+        } else if (game.timmy.getY() < getY() && game.timmy.getX() < getX()) {
+
+            actionToDraw(MOVE_LEFT);
+            this.setY(getY() - (int)getMovement_speed());
+            this.setX(getX() - (int)getMovement_speed());
+
+        }
+    }
+    
     public double getVidaActual() {
         return vidaActual;
     }

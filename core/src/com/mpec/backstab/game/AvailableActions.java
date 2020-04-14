@@ -25,6 +25,11 @@ public interface AvailableActions {
     String name_bow_down = "bow_down";
     String name_bow_right = "bow_right";
 
+    String name_attack_up = "attack_up";
+    String name_attack_left = "attack_left";
+    String name_attack_right = "attack_right";
+    String name_attack_down = "attack_down";
+
     String name_sword_up = "sword_up";
     String name_sword_left = "sword_left";
     String name_sword_down = "sword_down";
@@ -37,10 +42,10 @@ public interface AvailableActions {
     String name_die_down_mgzomb = "die_down_mgzomb";
     String name_die_right_mgzomb = "die_right_mgzomb";
 
-    String name_die_up_swzomb = "die_up_mgzomb";
-    String name_die_left_swzomb = "die_left_mgzomb";
-    String name_die_down_swzomb = "die_down_mgzomb";
-    String name_die_right_swzomb = "die_right_mgzomb";
+    String name_die_up = "die_up";
+    String name_die_left = "die_left";
+    String name_die_down = "die_down";
+    String name_die_right = "die_right";
 
     String name_move_up_mgzomb = "move_up_mgzomb";
     String name_move_left_mgzomb = "move_left_mgzomb";
