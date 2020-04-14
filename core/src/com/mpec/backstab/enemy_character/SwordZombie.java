@@ -31,7 +31,7 @@ public class SwordZombie extends Enemy implements AvailableActions {
     private boolean ataqueRealizado=false;
     int range=25;
     int numSeconds;
-    public int vidaActualEnemy=100;
+
      double atackSpeed=2;
 
 
@@ -42,7 +42,7 @@ public class SwordZombie extends Enemy implements AvailableActions {
         enemyCircle= new Circle();
         direction = LOOK_DOWN;
         goIdle();
-        setVidaActual(vidaActualEnemy);
+        enemyRectangle.setSize(enemySprite.getWidth(), enemySprite.getHeight());
         this.setX((float)Math.random()*800);
         this.setY((float)Math.random()*800);
         setAttack_speed(10);
@@ -86,7 +86,7 @@ public class SwordZombie extends Enemy implements AvailableActions {
     }
 
     private void goAttack(int direction) {
-        game.timmy.setVidaActual(game.timmy.getVidaActual()-atackDamage);
+        game.timmy.setVidaActual(game.timmy.getVidaActual() - (atackDamage - game.timmy.getDefense()));
         if(playSoundSlash==true ) {
             slashEnemy.play(1);
             playSoundSlash=false;

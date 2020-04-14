@@ -30,7 +30,6 @@ public class WizardZombie extends Enemy implements AvailableActions {
     private boolean ataqueRealizado=false;
     int range=25;
     int numSeconds;
-    public int vidaActualEnemy=100;
 
     boolean playSoundSlash=true;
     int contadorSlash=0;
@@ -45,8 +44,8 @@ public class WizardZombie extends Enemy implements AvailableActions {
         direction = LOOK_DOWN;
         enemyRectangle = new Rectangle();
         goIdle();
-        setVidaActual(vidaActualEnemy);
 
+        enemyRectangle.setSize(enemySprite.getWidth(), enemySprite.getHeight());
         this.setX((float)Math.random()*800);
         this.setY((float)Math.random()*800);
         setAttack_speed(10);
@@ -89,7 +88,7 @@ public class WizardZombie extends Enemy implements AvailableActions {
     }
 
     private void goAttack(int direction){
-           game.timmy.setVidaActual(game.timmy.getVidaActual()-atackDamage);
+        game.timmy.setVidaActual(game.timmy.getVidaActual() - (atackDamage - game.timmy.getDefense()));
            slashEnemy.play(1);
 
         switch(direction){

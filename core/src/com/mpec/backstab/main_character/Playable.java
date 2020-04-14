@@ -144,7 +144,7 @@ public class Playable extends Actor implements AvailableActions {
         super.draw(batch, parentAlpha);
         playableRectangle.setPosition(getX(), getY());
         batch.draw(action, getX(), getY());
-        batch.draw(healthRedBar, getX()+3, getY()+60);
+        batch.draw(healthRedBar, getX()+3, getY()+60, (int)(healthRedBar.getWidth() * (hp/vidaActual)), healthRedBar.getHeight());
     }
 
     public TextureAtlas getPlayerAtlas() {

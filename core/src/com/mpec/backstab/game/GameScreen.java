@@ -225,6 +225,7 @@ public class GameScreen implements Screen {
                     break;
             }
             stage.addActor(enemy);
+            MapGenerator.collision.add(enemy.getEnemyRectangle());
             enemyToBeCreated = false;
         }
     }

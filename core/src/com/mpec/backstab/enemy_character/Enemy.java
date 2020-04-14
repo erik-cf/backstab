@@ -22,7 +22,7 @@ public class Enemy extends Actor {
     protected Circle enemyCircle;
     protected Animation<TextureRegion> enemyAnimation;
     protected int direction;
-    public final double vidaTotal=100;
+
     public double vidaActual;
 
 
@@ -44,6 +44,7 @@ public class Enemy extends Actor {
         this.hp = hp;
         this.movement_speed = movement_speed;
         this.range = range;
+        this.vidaActual = hp;
         this.healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
         slashEnemy=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
     }
@@ -51,8 +52,9 @@ public class Enemy extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
        if(vidaActual>0) {
+           enemyRectangle.setPosition(getX(), getY());
            batch.draw(enemySprite, getX(), getY());
-           batch.draw(healthRedBar, getX()+2, getY()+65, (int) (healthRedBar.getWidth() * (vidaActual/vidaTotal)), healthRedBar.getHeight());
+           batch.draw(healthRedBar, getX()+2, getY()+65, (int) (healthRedBar.getWidth() * (vidaActual/hp)), healthRedBar.getHeight());
        }
     }
 
