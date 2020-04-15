@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
     final Backstab game;
     Stage stage;
     TouchPadTest touchpad;
-    Array<Enemy> enemyAL;
+    public static Array<Enemy> enemyAL;
     Date startDate= new Date();
     boolean enemyToBeCreated =false;
     Date endDate;
@@ -114,7 +114,7 @@ public class GameScreen implements Screen {
 
         game.moveCamera();
 
-        Gdx.app.log("HashMapSize", String.valueOf(otherPlayers.size()));
+
 
 
         stage.act();
@@ -196,9 +196,10 @@ public class GameScreen implements Screen {
 
     private void checkCharacterAction(){
         if(game.stateTime < 5){
-            game.timmy.goIdle();
+            game.timmy.goAtackEnergyBall(true);
         }
         if(touchpad.isTouched()){
+            game.timmy.goAtackEnergyBall(false);
             if(touchpad.getKnobPercentX() > 0.4){
 
                 game.timmy.setDirection(AvailableActions.LOOK_RIGHT);
@@ -220,10 +221,10 @@ public class GameScreen implements Screen {
                 game.timmy.goMove(AvailableActions.MOVE_DOWN);
 
             }else{
-                game.timmy.goIdle();
+                game.timmy.goAtackEnergyBall(true);
             }
         }else{
-            game.timmy.goIdle();
+            game.timmy.goAtackEnergyBall(true);
         }
     }
 
