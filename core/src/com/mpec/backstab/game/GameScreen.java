@@ -10,9 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-
 import com.badlogic.gdx.utils.Array;
-
 
 import com.mpec.backstab.enemy_character.Enemy;
 import com.mpec.backstab.enemy_character.Golem;
@@ -51,7 +49,7 @@ public class GameScreen implements Screen {
     final Backstab game;
     Stage stage;
     TouchPadTest touchpad;
-    Array<Enemy> enemyAL;
+    public static Array<Enemy> enemyAL;
     Date startDate= new Date();
     boolean enemyToBeCreated =false;
     Date endDate;
@@ -148,6 +146,9 @@ public class GameScreen implements Screen {
 
         game.moveCamera();
 
+
+
+
         stage.act();
 
         if(game.timmy.getX() < 0){
@@ -229,9 +230,10 @@ public class GameScreen implements Screen {
 
     private void checkCharacterAction(){
         if(game.stateTime < 5){
-            game.timmy.goIdle();
+            game.timmy.goAtackEnergyBall(true);
         }
         if(touchpad.isTouched()){
+            game.timmy.goAtackEnergyBall(false);
             if(touchpad.getKnobPercentX() > 0.4){
 
                 game.timmy.setDirection(AvailableActions.LOOK_RIGHT);
@@ -253,10 +255,10 @@ public class GameScreen implements Screen {
                 game.timmy.goMove(AvailableActions.MOVE_DOWN);
 
             }else{
-                game.timmy.goIdle();
+                game.timmy.goAtackEnergyBall(true);
             }
         }else{
-            game.timmy.goIdle();
+            game.timmy.goAtackEnergyBall(true);
         }
     }
 

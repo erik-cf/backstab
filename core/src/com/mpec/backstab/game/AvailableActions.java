@@ -10,6 +10,10 @@ public interface AvailableActions {
     String name_gun_down = "gun_down";
     String name_gun_right = "gun_right";
 
+    String largeball = "bigball";
+    String mediumball = "mediumball";
+    String littleball = "littleball";
+
     String name_move_up = "move_up";
     String name_move_left = "move_left";
     String name_move_down = "move_down";
@@ -82,6 +86,7 @@ public interface AvailableActions {
     int MOVE_DOWN = 0x1000002f;
     int MOVE_RIGHT = 0x100003f;
     int MOVE_UP = 0x100004f;
+    int ENERGY_BALL = 0x100005f;
 
     int CREATE_GOLEM = 0x200001f;
     int CREATE_SWORD_ZOMBIE = 0x200002f;

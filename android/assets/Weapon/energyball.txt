@@ -1,0 +1,47 @@
+energyball.png
+size: 630, 98
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bigball
+  rotate: false
+  xy: 0, 0
+  size: 105, 98
+  orig: 105, 98
+  offset: 0, 0
+  index: 0
+bigball
+  rotate: false
+  xy: 105, 0
+  size: 105, 98
+  orig: 105, 98
+  offset: 0, 0
+  index: 1
+mediumball
+  rotate: false
+  xy: 210, 0
+  size: 105, 98
+  orig: 105, 98
+  offset: 0, 0
+  index: 0
+mediumball
+  rotate: false
+  xy: 315, 0
+  size: 105, 98
+  orig: 105, 98
+  offset: 0, 0
+  index: 1
+littleball
+  rotate: false
+  xy: 420, 0
+  size: 105, 98
+  orig: 105, 98
+  offset: 0, 0
+  index: 0
+littleball
+  rotate: false
+  xy: 525, 0
+  size: 105, 98
+  orig: 105, 98
+  offset: 0, 0
+  index: 1

@@ -182,7 +182,7 @@ public class Enemy extends Actor implements AvailableActions {
         if (((game.timmy.getY() - getY() >= -1) && (game.timmy.getY() - getY() <= 1)) && game.timmy.getX() > getX()) {
 
 
-            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= 25)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
 
                 if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
                     goAttack(LOOK_RIGHT);
