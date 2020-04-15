@@ -151,8 +151,6 @@ public class Playable extends Actor implements AvailableActions {
     }
 
     public boolean hasMoved(){
-        System.out.println("Previous position: " + previousPosition.x + " , " + previousPosition.y);
-        System.out.println("Timmy: " + getX() + " , " + getY());
         if(previousPosition.x != getX() || previousPosition.y != getY()){
             previousPosition.x = getX();
             previousPosition.y = getY();
@@ -165,10 +163,10 @@ public class Playable extends Actor implements AvailableActions {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         playableRectangle.setPosition(getX(), getY());
-        if(action != null) {
+        if(action.getTexture() != null && action != null && this != null && batch != null) {
             batch.draw(action, getX(), getY());
         }
-        if(healthRedBar != null) {
+        if(healthRedBar != null && this != null && batch != null) {
             batch.draw(healthRedBar, getX() + 3, getY() + 60, (int) (healthRedBar.getWidth() * (vidaActual / hp)), healthRedBar.getHeight());
         }
     }

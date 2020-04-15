@@ -3,12 +3,16 @@ package com.mpec.backstab.game;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+
 import com.badlogic.gdx.utils.Array;
+
 
 import com.mpec.backstab.enemy_character.Enemy;
 import com.mpec.backstab.enemy_character.Golem;
@@ -22,8 +26,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.HashMap;
+
+import javax.xml.bind.DatatypeConverter;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -46,11 +57,15 @@ public class GameScreen implements Screen {
     Date endDate;
     int numSeconds;
 
+    private BitmapFont rankingDraw;
+
     private Socket socket;
 
     JSONObject updater;
 
     HashMap<String, OtherPlayer> otherPlayers;
+
+    int ranking = 1;
 
 
     float movingX;
@@ -63,29 +78,46 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         otherPlayers = new HashMap<String, OtherPlayer>();
 
+        rankingDraw = new BitmapFont();
+        rankingDraw.setColor(Color.BLACK);
+        rankingDraw.getData().setScale(5,5);
+
         touchpad=new TouchPadTest();
         stage.addActor(game.timmy);
         stage.addActor(touchpad);
         enemyAL = new Array<Enemy>();
-        Gdx.app.postRunnable(new Runnable(){
-
+        Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
                 connectSocket();
+                sendInitialPosition();
                 configSocketEvents();
             }
         });
 
+
+    }
+
+    public void sendInitialPosition() {
+        updater = new JSONObject();
+        try{
+            updater.put("x", game.timmy.getX());
+            updater.put("y", game.timmy.getY());
+            updater.put("direction", game.timmy.getDirection());
+            socket.emit("initial", updater);
+        }catch(JSONException e){
+            Gdx.app.log("SOCKETIO", "Error sending data to server! in updateServer()");
+        }
     }
 
     public void updateServer(float delta){
         timer += delta;
         if(timer >= UPDATE_TIME && game.timmy.hasMoved()){
-            System.out.println("Entra a actalizar server!");
             updater = new JSONObject();
             try{
                 updater.put("x", game.timmy.getX());
                 updater.put("y", game.timmy.getY());
+                updater.put("direction", game.timmy.getDirection());
                 socket.emit("playerMoved", updater);
             }catch(JSONException e){
                 Gdx.app.log("SOCKETIO", "Error sending data to server! in updateServer()");
@@ -112,10 +144,9 @@ public class GameScreen implements Screen {
         movingX = (float)(game.timmy.getX() + touchpad.getKnobPercentX() * game.timmy.getMovement_speed());
         movingY = (float) (game.timmy.getY() + touchpad.getKnobPercentY() * game.timmy.getMovement_speed());
 
+        ranking = otherPlayers.size() + 1;
+
         game.moveCamera();
-
-        Gdx.app.log("HashMapSize", String.valueOf(otherPlayers.size()));
-
 
         stage.act();
 
@@ -133,10 +164,12 @@ public class GameScreen implements Screen {
         if(game.timmy.getY() + game.timmy.getAction().getHeight() > MapGenerator.WORLD_HEIGHT){
             movingY = MapGenerator.WORLD_HEIGHT - game.timmy.getAction().getHeight();
         }
+
         game.timmy.setX(movingX);
         game.timmy.setY(movingY);
         game.batch.begin();
         game.mapGenerator.paintMap(game.batch);
+        rankingDraw.draw(game.batch, String.valueOf(ranking), (game.camera.position.x + stage.getWidth() / 2 - 120), (game.camera.position.y + stage.getHeight() / 2 - 60));
         game.batch.end();
 
 
@@ -294,7 +327,7 @@ public class GameScreen implements Screen {
 
         public void connectSocket(){
             try {
-                socket = IO.socket("http://localhost:3000/?x=" + game.timmy.getX() + "&y=" + game.timmy.getY());
+                socket = IO.socket("http://localhost:3000/");
                 socket.connect();
             } catch(Exception e){
                 System.out.println(e);
@@ -305,7 +338,6 @@ public class GameScreen implements Screen {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-
                 Gdx.app.log("SocketIO", "Connected");
             }
         }).on("socketID", new Emitter.Listener() {
@@ -321,6 +353,23 @@ public class GameScreen implements Screen {
                     Gdx.app.log("SocketIO", "Error getting ID");
                 }
             }
+        }).on("getMap", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                final JSONObject data = (JSONObject) args[0];
+                try {
+
+                    if(data.get("map") != JSONObject.NULL){
+                        //game.mapGenerator = (MapGenerator) deserialize(DatatypeConverter.parseBase64Binary((String)data.get("map")));
+                    }else{
+                        /*String mapString = DatatypeConverter.printBase64Binary(serialize(game.mapGenerator));
+                        data.put("map", mapString);
+                        socket.emit("newMap", data);*/
+                    }
+                } catch (JSONException e){// | IOException | ClassNotFoundException e) {
+                    Gdx.app.log("SocketIO", "Error getting map. Error: " + e.getMessage());
+                }
+            }
         }).on("newPlayer", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -331,8 +380,10 @@ public class GameScreen implements Screen {
                     OtherPlayer otherPlayer = new OtherPlayer(game, game.timmy.getAttack(), game.timmy.getDefense(), game.timmy.getAttack_speed(), game.timmy.getHp(), game.timmy.getMovement_speed());
                     otherPlayer.setId(playerId);
                     //double attack, double defense, double attack_speed, double hp, double movement_speed
-                    stage.addActor(otherPlayer);
+
                     otherPlayers.put(playerId, otherPlayer);
+                    stage.addActor(otherPlayer);
+
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error getting New PlayerID");
                 }
@@ -345,7 +396,6 @@ public class GameScreen implements Screen {
                     String playerId = data.getString("id");
                     stage.getActors().removeValue(otherPlayers.get(playerId), true);
                     otherPlayers.remove(playerId);
-
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error getting disconnected PlayerID");
                 }
@@ -360,10 +410,43 @@ public class GameScreen implements Screen {
                     Double y = data.getDouble("y");
                     if(otherPlayers.get(playerId) != null) {
                         System.out.println("Ha entrado aqui!!!!!");
-                        otherPlayers.get(playerId).setPosition(x.floatValue(), y.floatValue());
+                        OtherPlayer otherPlayer = otherPlayers.get(playerId);
+                        otherPlayer.setPosition(x.floatValue(), y.floatValue());
+                        otherPlayer.setDirection(data.getInt("direction"));
+
+                        switch(otherPlayer.getDirection()){
+                            case AvailableActions.LOOK_UP:
+                                System.out.println("Ha entrado a look up");
+                                otherPlayer.goMove(AvailableActions.MOVE_UP);
+                                break;
+                            case AvailableActions.LOOK_DOWN:
+                                otherPlayer.goMove(AvailableActions.MOVE_DOWN);
+                                break;
+                            case AvailableActions.LOOK_LEFT:
+                                otherPlayer.goMove(AvailableActions.MOVE_LEFT);
+                                break;
+                            case AvailableActions.LOOK_RIGHT:
+                                otherPlayer.goMove(AvailableActions.MOVE_RIGHT);
+                                break;
+                        }
                     }
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error getting a player position.");
+                }
+            }
+        }).on("initial", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    String playerId = data.getString("id");
+                    Double x = data.getDouble("x");
+                    Double y = data.getDouble("y");
+                    if(otherPlayers.get(playerId) != null) {
+                        otherPlayers.get(playerId).setPosition(x.floatValue(), y.floatValue());
+                    }
+                }catch(JSONException e){
+                    Gdx.app.log("SocketIO", "Error setting initial player position.");
                 }
             }
         }).on("getPlayers", new Emitter.Listener() {
@@ -379,8 +462,10 @@ public class GameScreen implements Screen {
                         position.x = ((Double) objects.getJSONObject(i).getDouble("x")).floatValue();
                         position.y = ((Double) objects.getJSONObject(i).getDouble("y")).floatValue();
                         coopPlayer.setPosition(position.x, position.y);
-                        stage.addActor(coopPlayer);
+
                         otherPlayers.put(coopPlayer.getId(), coopPlayer);
+
+                        stage.addActor(coopPlayer);
                     }
                 } catch(JSONException e){
                     Gdx.app.log("ERROR_ARRAY", "Error getting getPlayers Array... Error: " + e.getMessage());
@@ -388,4 +473,16 @@ public class GameScreen implements Screen {
             }
         });
     }
-}
+
+    public byte[] serialize(Object obj) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(out);
+        os.writeObject(obj);
+        return out.toByteArray();
+    }
+
+    public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream in = new ByteArrayInputStream(data);
+        ObjectInputStream is = new ObjectInputStream(in);
+        return is.readObject();
+    }}

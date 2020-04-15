@@ -9,9 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.mpec.backstab.game.Backstab;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MapGenerator {
+public class MapGenerator implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public static final int OTREE = 0x00001f;
     public static final int YTREE = 0x00002f;
@@ -57,8 +60,6 @@ public class MapGenerator {
         mapActors = new Actor[WORLD_HEIGHT / 16][WORLD_WIDTH / 16];
 
         paintedNumbers = new ArrayList<String>();
-
-
     }
 
     private boolean whatToPaint(int random, int x, int y){
