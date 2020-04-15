@@ -5,11 +5,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.mpec.backstab.game.Backstab;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MapGenerator {
 
@@ -22,6 +22,9 @@ public class MapGenerator {
     public static final int WORLD_WIDTH = 3200;
     public static final int WORLD_HEIGHT = 3200;
 
+    int i;
+    int j;
+
     TextureAtlas mapAtlas;
     Array<AtlasRegion> otree;
     Array<AtlasRegion> ytree;
@@ -33,12 +36,14 @@ public class MapGenerator {
     Array<CollisionableObject> collisionableObjects;
     Array<GroundObject> groundObjects;
 
+    Actor[][] mapActors;
+
     AtlasRegion[][] groundMap;
     AtlasRegion[][] objectsMap;
 
     int whereToDrawX;
     int whereToDrawY;
-
+    Rectangle rect;
     public static ArrayList<String> paintedNumbers;
     public static Array<Rectangle> collision = new Array<Rectangle>();
 
@@ -49,9 +54,8 @@ public class MapGenerator {
         ground = mapAtlas.findRegions("ground");
         water = mapAtlas.findRegions("water");
         hole = mapAtlas.findRegions("hole");
+        mapActors = new Actor[WORLD_HEIGHT / 16][WORLD_WIDTH / 16];
 
-        groundMap = new AtlasRegion[WORLD_HEIGHT / 16][WORLD_WIDTH / 16];
-        objectsMap = new AtlasRegion[WORLD_HEIGHT / 16][WORLD_WIDTH / 16];
         paintedNumbers = new ArrayList<String>();
 
 
@@ -73,12 +77,13 @@ public class MapGenerator {
 
     public void createMap(){
         collision.clear();
-        for(int i = (WORLD_HEIGHT / 16) - 1; i >= 0; i--){
-            for(int j = 0; j < (WORLD_WIDTH / 16); j++){
+        paintedNumbers.clear();
+        groundMap = new AtlasRegion[WORLD_HEIGHT / 16][WORLD_WIDTH / 16];
+        objectsMap = new AtlasRegion[WORLD_HEIGHT / 16][WORLD_WIDTH / 16];
+        for(i = (WORLD_HEIGHT / 16) - 1; i >= 0; i--){
+            for(j = 0; j < (WORLD_WIDTH / 16); j++){
                 if(!paintedNumbers.contains(i + "," + j)) {
                     if(paintObject()){
-                        //paintWater(j, i);
-                        //int n = whatToPaint((int)(Math.random() * 5));
                         if(!whatToPaint((int)(Math.random() * 4), j, i)){
                             groundMap[i][j] = ground.get((int) (Math.random() * 10));
                         }
@@ -99,8 +104,8 @@ public class MapGenerator {
     }
 
     public void dispose(){
-        for(int i = (WORLD_HEIGHT / 16) - 1; i >= 0; i--){
-            for(int j = 0; j < (WORLD_WIDTH / 16); j++){
+        for(i = (WORLD_HEIGHT / 16) - 1; i >= 0; i--){
+            for(j = 0; j < (WORLD_WIDTH / 16); j++){
                 if(groundMap[i][j] != null) {
                     groundMap[i][j].getTexture().dispose();
                 }else{
@@ -115,19 +120,19 @@ public class MapGenerator {
     }
 
     public void paintMap(SpriteBatch batch){
+
         whereToDrawY = 0;
         whereToDrawX = 0;
-        Rectangle rect;
-        for(int i = (WORLD_HEIGHT / 16) - 1; i >= 0; i--){
-            for(int j = 0; j < (WORLD_WIDTH / 16); j++){
+        for(i = 0; i < WORLD_HEIGHT / 16; i++){
+            for(j = 0; j < (WORLD_WIDTH / 16); j++){
                 if(groundMap[i][j] != null) {
-                    batch.draw(groundMap[i][j], whereToDrawX, whereToDrawY);
+                    batch.draw(groundMap[i][j], j * 16, i * 16);
                 }else{
-                    rect = new Rectangle();
-                    batch.draw(objectsMap[i][j], whereToDrawX, whereToDrawY);
-                    rect.setPosition(whereToDrawX - 32, whereToDrawY);
-                    rect.setSize(16, 16);
-                    collision.add(rect);
+//                    rect = new Rectangle();
+                    batch.draw(objectsMap[i][j], j*16, i * 16);
+//                    rect.setPosition(j * 16 - 32, i*16);
+//                    rect.setSize(16, 16);
+//                    collision.add(rect);
                 }
                 whereToDrawX += 16;
             }
@@ -153,29 +158,13 @@ public class MapGenerator {
             for(int j = 0; j < randJ; j++){
                 if(i == randI - 1){
                     if(j == 0){
-                        objectsMap[y - i][x + j] = water.get(0);
-                    }else if(j == (randJ - 1)){
-                        objectsMap[y - i][x + j] = water.get(2);
-                    }else{
-                        objectsMap[y - i][x + j] = water.get(1);
-                    }
-                }else if(i == (randI - 2)){
-                    if(j == 0){
-                        objectsMap[y - i][x + j] = water.get(3);
-                    }else if(j == (randJ - 1)){
-                        objectsMap[y - i][x + j] = water.get(5);
-                    }else{
-                        objectsMap[y - i][x + j] = water.get(4);
-                    }
-                }else if(i == 0){
-                    if(j == 0){
                         objectsMap[y - i][x + j] = water.get(9);
                     }else if(j == (randJ - 1)){
                         objectsMap[y - i][x + j] = water.get(11);
                     }else{
                         objectsMap[y - i][x + j] = water.get(10);
                     }
-                }else{
+                }else if(i == (randI - 2)){
                     if(j == 0){
                         objectsMap[y - i][x + j] = water.get(6);
                     }else if(j == (randJ - 1)){
@@ -183,9 +172,29 @@ public class MapGenerator {
                     }else{
                         objectsMap[y - i][x + j] = water.get(7);
                     }
+                }else if(i == 0){
+                    if(j == 0){
+                        objectsMap[y - i][x + j] = water.get(0);
+                    }else if(j == (randJ - 1)){
+                        objectsMap[y - i][x + j] = water.get(2);
+                    }else{
+                        objectsMap[y - i][x + j] = water.get(1);
+                    }
+                }else{
+                    if(j == 0){
+                        objectsMap[y - i][x + j] = water.get(3);
+                    }else if(j == (randJ - 1)){
+                        objectsMap[y - i][x + j] = water.get(5);
+                    }else{
+                        objectsMap[y - i][x + j] = water.get(4);
+                    }
                 }
                 //realPositions.put(x * 16, y * 16);
                 paintedNumbers.add((y - i) + "," + (x + j));
+                rect = new Rectangle();
+                rect.setSize(16, 16);
+                rect.setPosition((x-j) * 16, (y-i) * 16);
+                collision.add(rect);
             }
         }
         return true;
@@ -202,29 +211,13 @@ public class MapGenerator {
             for(int j = 0; j < randJ; j++){
                 if(i == randI - 1){
                     if(j == 0){
-                        objectsMap[y - i][x + j] = hole.get(0);
-                    }else if(j == (randJ - 1)){
-                        objectsMap[y - i][x + j] = hole.get(2);
-                    }else{
-                        objectsMap[y - i][x + j] = hole.get(1);
-                    }
-                }else if(i == (randI - 2)){
-                    if(j == 0){
-                        objectsMap[y - i][x + j] = hole.get(3);
-                    }else if(j == (randJ - 1)){
-                        objectsMap[y - i][x + j] = hole.get(5);
-                    }else{
-                        objectsMap[y - i][x + j] = hole.get(4);
-                    }
-                }else if(i == 0){
-                    if(j == 0){
                         objectsMap[y - i][x + j] = hole.get(9);
                     }else if(j == (randJ - 1)){
                         objectsMap[y - i][x + j] = hole.get(11);
                     }else{
                         objectsMap[y - i][x + j] = hole.get(10);
                     }
-                }else{
+                }else if(i == (randI - 2)){
                     if(j == 0){
                         objectsMap[y - i][x + j] = hole.get(6);
                     }else if(j == (randJ - 1)){
@@ -232,8 +225,28 @@ public class MapGenerator {
                     }else{
                         objectsMap[y - i][x + j] = hole.get(7);
                     }
+                }else if(i == 0){
+                    if(j == 0){
+                        objectsMap[y - i][x + j] = hole.get(0);
+                    }else if(j == (randJ - 1)){
+                        objectsMap[y - i][x + j] = hole.get(2);
+                    }else{
+                        objectsMap[y - i][x + j] = hole.get(1);
+                    }
+                }else{
+                    if(j == 0){
+                        objectsMap[y - i][x + j] = hole.get(3);
+                    }else if(j == (randJ - 1)){
+                        objectsMap[y - i][x + j] = hole.get(5);
+                    }else{
+                        objectsMap[y - i][x + j] = hole.get(4);
+                    }
                 }
                 paintedNumbers.add((y - i) + "," + (x + j));
+                rect = new Rectangle();
+                rect.setSize(16, 16);
+                rect.setPosition((x-j) * 16, (y-i) * 16);
+                collision.add(rect);
             }
         }
         return true;
@@ -245,7 +258,7 @@ public class MapGenerator {
             return false;
         }
 
-        for(int i = 2; i >= 0; i--) {
+        for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 3; j++) {
                 if(j == 0){
                     objectsMap[y - i][x + j] = otree.get(cont - 2);
@@ -256,6 +269,10 @@ public class MapGenerator {
                 }
                 cont--;
                 paintedNumbers.add((y-i) + "," + (x+j));
+                rect = new Rectangle();
+                rect.setSize(16, 16);
+                rect.setPosition((x-j) * 16, (y-i) * 16);
+                collision.add(rect);
             }
         }
         return true;
@@ -267,7 +284,7 @@ public class MapGenerator {
             return false;
         }
 
-        for(int i = 2; i >= 0; i--) {
+        for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 3; j++) {
                 if(j == 0){
                     objectsMap[y - i][x + j] = ytree.get(cont - 2);
@@ -278,6 +295,10 @@ public class MapGenerator {
                 }
                 cont--;
                 paintedNumbers.add((y - i) + "," + (x + j));
+                rect = new Rectangle();
+                rect.setSize(16, 16);
+                rect.setPosition((x-j) * 16, (y-i) * 16);
+                collision.add(rect);
             }
         }
         return true;

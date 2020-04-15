@@ -10,12 +10,15 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mpec.backstab.game.AvailableActions;
 import com.mpec.backstab.game.Backstab;
 import com.mpec.backstab.map.MapGenerator;
 
 public class Playable extends Actor implements AvailableActions {
+
+    protected String id;
 
     protected double attack;
     protected double defense;
@@ -32,6 +35,8 @@ public class Playable extends Actor implements AvailableActions {
 
     public Sound slashPlayer;
     public Sound walkPlayer;
+
+    protected Vector2 previousPosition;
 
     public Sprite action;
     int direction;
@@ -53,7 +58,7 @@ public class Playable extends Actor implements AvailableActions {
 
         action = new Sprite();
         this.setPosition((float)(Math.random() * MapGenerator.WORLD_WIDTH), (float)(Math.random() * MapGenerator.WORLD_HEIGHT));
-        playerAtlas = new TextureAtlas(Gdx.files.internal("Player/tilesetCaracter.txt"));
+
         slashPlayer= Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
         walkPlayer=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/footstepGrass.wav"));
 
@@ -62,9 +67,15 @@ public class Playable extends Actor implements AvailableActions {
         playableRectangle.setX(action.getX());
         playableRectangle.setY(action.getY());
 
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
+            }
+        });
 
-        healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
-        goIdle();
+
+        previousPosition = new Vector2(getX(), getY());
     }
 
     public void goMove(int action) {
@@ -139,12 +150,35 @@ public class Playable extends Actor implements AvailableActions {
 
     }
 
+    public boolean hasMoved(){
+        System.out.println("Previous position: " + previousPosition.x + " , " + previousPosition.y);
+        System.out.println("Timmy: " + getX() + " , " + getY());
+        if(previousPosition.x != getX() || previousPosition.y != getY()){
+            previousPosition.x = getX();
+            previousPosition.y = getY();
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         playableRectangle.setPosition(getX(), getY());
-        batch.draw(action, getX(), getY());
-        batch.draw(healthRedBar, getX()+3, getY()+60, (int)(healthRedBar.getWidth() * (vidaActual/hp)), healthRedBar.getHeight());
+        if(action != null) {
+            batch.draw(action, getX(), getY());
+        }
+        if(healthRedBar != null) {
+            batch.draw(healthRedBar, getX() + 3, getY() + 60, (int) (healthRedBar.getWidth() * (vidaActual / hp)), healthRedBar.getHeight());
+        }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public TextureAtlas getPlayerAtlas() {

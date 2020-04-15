@@ -75,7 +75,7 @@ public class Enemy extends Actor implements AvailableActions {
     @Override
     public void act(float delta) {
         super.act(delta);
-        System.out.println("Ha entrado al act");
+
         if(this.getClass().equals(Golem.class)){
             followPlayerGolem();
         }else {
