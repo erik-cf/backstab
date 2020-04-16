@@ -64,6 +64,8 @@ public class Bullet extends Actor implements AvailableActions {
     public void hitEnemy(){
 
 
+        //ataca
+
 
         stage.getActors().removeValue(this,true);
         enemy.setVidaActual(enemy.getVidaActual()-(attackDamage-enemy.getDefense()));
