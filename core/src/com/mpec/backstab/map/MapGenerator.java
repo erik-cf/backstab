@@ -7,20 +7,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.mpec.backstab.game.Backstab;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MapGenerator implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    public static final int OTREE = 0x00001f;
-    public static final int YTREE = 0x00002f;
-    public static final int WATER = 0x00003f;
-    public static final int HOLE = 0x00004f;
-    public static final int ROCK = 0x00005f;
+public class MapGenerator {
 
     public static final int WORLD_WIDTH = 3200;
     public static final int WORLD_HEIGHT = 3200;
@@ -34,7 +26,6 @@ public class MapGenerator implements Serializable {
     Array<AtlasRegion> ground;
     Array<AtlasRegion> water;
     Array<AtlasRegion> hole;
-    Array<AtlasRegion> rock;
 
     Array<CollisionableObject> collisionableObjects;
     Array<GroundObject> groundObjects;
@@ -58,7 +49,6 @@ public class MapGenerator implements Serializable {
         water = mapAtlas.findRegions("water");
         hole = mapAtlas.findRegions("hole");
         mapActors = new Actor[WORLD_HEIGHT / 16][WORLD_WIDTH / 16];
-
         paintedNumbers = new ArrayList<String>();
     }
 
