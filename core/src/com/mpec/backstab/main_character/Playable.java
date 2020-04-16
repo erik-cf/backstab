@@ -38,6 +38,8 @@ public class Playable extends Actor implements AvailableActions {
     private double bulletY;
     public static Array<Bullet> bulletAL;
 
+    public boolean isInitialized;
+
     private Boolean realizarAtaque;
     public static Enemy enemigoMasCercano;
 
@@ -61,6 +63,11 @@ public class Playable extends Actor implements AvailableActions {
     final Backstab game;
     protected double vidaActual;
     Stage stage;
+
+    public Playable(Backstab game){
+        this.game = game;
+        this.isInitialized = false;
+    }
 
     public Playable(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed){
         this.game = game;
@@ -96,17 +103,51 @@ public class Playable extends Actor implements AvailableActions {
             }
         });
 
+        this.isInitialized = true;
+        previousPosition = new Vector2(getX(), getY());
+    }
+
+    public void initialize(double attack, double defense, double attack_speed, double hp, double movement_speed){
+
+        this.attack = attack;
+        this.defense = defense;
+        this.attack_speed = attack_speed;
+        this.hp = hp;
+        this.movement_speed = movement_speed;
+        realizarAtaque=false;
+        this.vidaActual = hp;
+
+        action = new Sprite();
+        this.setPosition((float)(Math.random() * MapGenerator.WORLD_WIDTH), (float)(Math.random() * MapGenerator.WORLD_HEIGHT));
+        playerAtlas = new TextureAtlas(Gdx.files.internal("Player/tilesetCaracter.txt"));
+        energyBall = new TextureAtlas(Gdx.files.internal("Weapon/energyball.txt"));
+        slashPlayer= Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
+        walkPlayer=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/footstepGrass.wav"));
+        distanceBetween=0;
+        distanceAUX=100000;
+        angleToEnemy=0;
+        bulletY=0;
+        bulletX=0;
+        direction = LOOK_DOWN;
+        playableRectangle = new Rectangle();
+        playableRectangle.setX(action.getX());
+        playableRectangle.setY(action.getY());
+
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
+            }
+        });
+
+        this.isInitialized = true;
+
 
         previousPosition = new Vector2(getX(), getY());
     }
 
     public void goAtackEnergyBall(boolean atacar, Stage stage){
-
-
             if(atacar){
-
-
-
                     Bullet bullet=null;
                     for(Enemy enemy : GameScreen.enemyAL){
 
@@ -122,22 +163,16 @@ public class Playable extends Actor implements AvailableActions {
 
                     }
                     //calcula el angulo al que esta el enemigo
+                    if(enemigoMasCercano != null) {
+                        angleToEnemy = Math.atan2(enemigoMasCercano.getY() - getY(), enemigoMasCercano.getX() - getX());
+                        bullet = new Bullet(angleToEnemy, getX(), getY(), stage, enemigoMasCercano, attack, range);
+                        bulletAL.add(bullet);
+                        stage.addActor(bullet);
 
-                    angleToEnemy = Math.atan2(enemigoMasCercano.getY()-getY() , enemigoMasCercano.getX() -getX());
-                    bullet= new Bullet (angleToEnemy,getX(),getY(),stage,enemigoMasCercano,attack);
-                    bulletAL.add(bullet);
-                    stage.addActor(bullet);
-
-
-
-                    distanceBetween=0;
-                    distanceAUX=1000000;
-                    angleToEnemy=0;
-
-
-
-
-
+                        distanceBetween = 0;
+                        distanceAUX = 1000000;
+                        angleToEnemy = 0;
+                    }
 
             }
             else{

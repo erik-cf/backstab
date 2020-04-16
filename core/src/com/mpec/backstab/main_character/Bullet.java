@@ -17,22 +17,29 @@ public class Bullet extends Actor implements AvailableActions {
     double angleToEnemy;
     double bulletX;
     double bulletY;
+    double auxBulletX;
+    double auxBulletY;
     public TextureAtlas energyBall;
     Rectangle bulletRectangle;
     Stage stage;
     Enemy enemy;
     double attackDamage;
+    double range;
 
-    public Bullet(double angleToEnemy, double bulletX, double bulletY, Stage stage, Enemy enemy,double attack) {
+    public Bullet(double angleToEnemy, double bulletX, double bulletY, Stage stage, Enemy enemy,double attack, double range) {
         this.angleToEnemy = angleToEnemy;
         this.bulletX = bulletX;
         this.bulletY = bulletY;
         this.stage=stage;
         this.enemy=enemy;
         this.attackDamage=attack;
+        this.range = range;
         bulletRectangle=new Rectangle();
         bulletRectangle.setPosition((float)bulletX,(float)bulletY);
         energyBall = new TextureAtlas(Gdx.files.internal("Weapon/energyball.txt"));
+
+        auxBulletX = bulletX;
+        auxBulletY = bulletY;
     }
 
     @Override
@@ -47,15 +54,26 @@ public class Bullet extends Actor implements AvailableActions {
     @Override
     public void act(float delta) {
         super.act(delta);
-        bulletX += 2 * Math.cos(angleToEnemy)*Gdx.graphics.getDeltaTime()*200;
-        bulletY += 2 * Math.sin(angleToEnemy)*Gdx.graphics.getDeltaTime()*200;
+        bulletX += 2 * Math.cos(angleToEnemy) * Gdx.graphics.getDeltaTime() * 200;
+        bulletY += 2 * Math.sin(angleToEnemy)* Gdx.graphics.getDeltaTime()*200;
         bulletRectangle.setPosition((float) bulletX,(float)bulletY);
 
+
+        if(Math.sqrt(Math.pow((bulletX-auxBulletX), 2) + Math.pow((bulletY-auxBulletY), 2))>range){
+
+            stage.getActors().removeValue(this,true);
+
+        }
         for(Rectangle rect: MapGenerator.collision ){
+
+
+
 
             if(this.bulletRectangle.overlaps(rect)){
                 hitEnemy();
             }
+
+
 
         }
 

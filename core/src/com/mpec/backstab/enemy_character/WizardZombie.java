@@ -24,6 +24,18 @@ public class WizardZombie extends Enemy implements AvailableActions {
         enemyRectangle.setSize(enemySprite.getWidth(), enemySprite.getHeight());
     }
 
+    public WizardZombie(Backstab game){
+        super(game);
+    }
+
+    @Override
+    public void initialize(double attack, double defense, double attack_speed, double hp, double movement_speed, double range) {
+        super.initialize(attack, defense, attack_speed, hp, movement_speed, range);
+        enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/WizardZombie/WizardZombie.txt"));
+        goIdle();
+        enemyRectangle.setSize(enemySprite.getWidth(), enemySprite.getHeight());
+    }
+
     @Override
     public void act(float delta) {
         super.act(delta);
