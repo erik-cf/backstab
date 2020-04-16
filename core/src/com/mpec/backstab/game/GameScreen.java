@@ -128,26 +128,27 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        for(Map.Entry<String, OtherPlayer> entry : otherPlayers.entrySet()){
-            if(!entry.getValue().isInitialized){
-                entry.getValue().initialize(game.timmy.getAttack(), game.timmy.getDefense(), game.timmy.getAttack_speed(), game.timmy.getHp(), game.timmy.getMovement_speed());
-                stage.addActor(entry.getValue());
-            }
-        }
-
-        for(int i = initializableMonsters.size - 1; i >= 0; i--){
-            if(initializableMonsters.get(i).getClass().equals(Golem.class)){
-                initializableMonsters.get(i).initialize(Golem.baseAttack, Golem.baseDefense, Golem.baseAttackSpeed, Golem.baseHp, Golem.baseMovementSpeed, Golem.baseRange);
-            }else if (initializableMonsters.get(i).getClass().equals(WizardZombie.class)){
-                initializableMonsters.get(i).initialize(WizardZombie.baseAttack, WizardZombie.baseDefense, WizardZombie.baseAttackSpeed, WizardZombie.baseHp, WizardZombie.baseMovementSpeed, WizardZombie.baseRange);
-            }else if (initializableMonsters.get(i).getClass().equals(SwordZombie.class)){
-                initializableMonsters.get(i).initialize(SwordZombie.baseAttack, SwordZombie.baseDefense, SwordZombie.baseAttackSpeed, SwordZombie.baseHp, SwordZombie.baseMovementSpeed, SwordZombie.baseRange);
+        if(multiplayer) {
+            for (Map.Entry<String, OtherPlayer> entry : otherPlayers.entrySet()) {
+                if (!entry.getValue().isInitialized) {
+                    entry.getValue().initialize(game.timmy.getAttack(), game.timmy.getDefense(), game.timmy.getAttack_speed(), game.timmy.getHp(), game.timmy.getMovement_speed());
+                    stage.addActor(entry.getValue());
+                }
             }
 
-            stage.addActor(initializableMonsters.get(i));
-            enemyAL.add(initializableMonsters.get(i));
-            initializableMonsters.removeIndex(i);
+            for (int i = initializableMonsters.size - 1; i >= 0; i--) {
+                if (initializableMonsters.get(i).getClass().equals(Golem.class)) {
+                    initializableMonsters.get(i).initialize(Golem.baseAttack, Golem.baseDefense, Golem.baseAttackSpeed, Golem.baseHp, Golem.baseMovementSpeed, Golem.baseRange);
+                } else if (initializableMonsters.get(i).getClass().equals(WizardZombie.class)) {
+                    initializableMonsters.get(i).initialize(WizardZombie.baseAttack, WizardZombie.baseDefense, WizardZombie.baseAttackSpeed, WizardZombie.baseHp, WizardZombie.baseMovementSpeed, WizardZombie.baseRange);
+                } else if (initializableMonsters.get(i).getClass().equals(SwordZombie.class)) {
+                    initializableMonsters.get(i).initialize(SwordZombie.baseAttack, SwordZombie.baseDefense, SwordZombie.baseAttackSpeed, SwordZombie.baseHp, SwordZombie.baseMovementSpeed, SwordZombie.baseRange);
+                }
+
+                stage.addActor(initializableMonsters.get(i));
+                enemyAL.add(initializableMonsters.get(i));
+                initializableMonsters.removeIndex(i);
+            }
         }
 
         game.camera.update();
