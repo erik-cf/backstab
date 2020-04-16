@@ -54,6 +54,7 @@ public class GameScreen implements Screen {
     boolean enemyToBeCreated =false;
     Date endDate;
     int numSeconds;
+    float attackTimer;
 
     private BitmapFont rankingDraw;
 
@@ -75,7 +76,7 @@ public class GameScreen implements Screen {
         stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
         otherPlayers = new HashMap<String, OtherPlayer>();
-
+        attackTimer=0;
         rankingDraw = new BitmapFont();
         rankingDraw.setColor(Color.BLACK);
         rankingDraw.getData().setScale(5,5);
@@ -146,7 +147,7 @@ public class GameScreen implements Screen {
 
         game.moveCamera();
 
-
+        attackTimer+=Gdx.graphics.getDeltaTime();
 
 
         stage.act();
@@ -229,11 +230,9 @@ public class GameScreen implements Screen {
     }
 
     private void checkCharacterAction(){
-        if(game.stateTime < 5){
-            game.timmy.goAtackEnergyBall(true);
-        }
+
         if(touchpad.isTouched()){
-            game.timmy.goAtackEnergyBall(false);
+            game.timmy.goAtackEnergyBall(false,stage);
             if(touchpad.getKnobPercentX() > 0.4){
 
                 game.timmy.setDirection(AvailableActions.LOOK_RIGHT);
@@ -255,10 +254,17 @@ public class GameScreen implements Screen {
                 game.timmy.goMove(AvailableActions.MOVE_DOWN);
 
             }else{
-                game.timmy.goAtackEnergyBall(true);
+                if(game.timmy.getAttack_speed()*Gdx.graphics.getDeltaTime()<attackTimer) {
+                    game.timmy.goAtackEnergyBall(true, stage);
+                    attackTimer=0;
+                }
             }
         }else{
-            game.timmy.goAtackEnergyBall(true);
+            if(game.timmy.getAttack_speed()*Gdx.graphics.getDeltaTime()<attackTimer) {
+                game.timmy.goAtackEnergyBall(true, stage);
+                attackTimer=0;
+            }
+
         }
     }
 
@@ -293,15 +299,15 @@ public class GameScreen implements Screen {
             Enemy enemy = null;
             switch(whichEnemy){
                 case AvailableActions.CREATE_GOLEM:
-                    enemy = new Golem(game, Golem.baseAttack * game.multiplier,Golem.baseDefense * game.multiplier, Golem.baseAttackSpeed * game.multiplier, Golem.baseHp * game.multiplier, Golem.baseMovementSpeed * game.multiplier, Golem.baseRange * game.multiplier);
+                    enemy = new Golem(game, Golem.baseAttack * game.multiplier,Golem.baseDefense * game.multiplier, Golem.baseAttackSpeed * game.multiplier, Golem.baseHp * game.multiplier, Golem.baseMovementSpeed * game.multiplier, Golem.baseRange * game.multiplier,stage);
                     enemyAL.add(enemy);
                     break;
                 case AvailableActions.CREATE_SWORD_ZOMBIE:
-                    enemy = new SwordZombie(game, SwordZombie.baseAttack * game.multiplier,SwordZombie.baseDefense * game.multiplier, SwordZombie.baseAttackSpeed * game.multiplier, SwordZombie.baseHp * game.multiplier, SwordZombie.baseMovementSpeed * game.multiplier, SwordZombie.baseRange * game.multiplier);
+                    enemy = new SwordZombie(game, SwordZombie.baseAttack * game.multiplier,SwordZombie.baseDefense * game.multiplier, SwordZombie.baseAttackSpeed * game.multiplier, SwordZombie.baseHp * game.multiplier, SwordZombie.baseMovementSpeed * game.multiplier, SwordZombie.baseRange * game.multiplier,stage);
                     enemyAL.add(enemy);
                     break;
                 case AvailableActions.CREATE_WIZARD_ZOMBIE:
-                    enemy = new WizardZombie(game, WizardZombie.baseAttack * game.multiplier,WizardZombie.baseDefense * game.multiplier, WizardZombie.baseAttackSpeed * game.multiplier, WizardZombie.baseHp * game.multiplier, WizardZombie.baseMovementSpeed * game.multiplier, WizardZombie.baseRange * game.multiplier);
+                    enemy = new WizardZombie(game, WizardZombie.baseAttack * game.multiplier,WizardZombie.baseDefense * game.multiplier, WizardZombie.baseAttackSpeed * game.multiplier, WizardZombie.baseHp * game.multiplier, WizardZombie.baseMovementSpeed * game.multiplier, WizardZombie.baseRange * game.multiplier,stage);
                     enemyAL.add(enemy);
                     break;
             }

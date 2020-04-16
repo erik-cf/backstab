@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mpec.backstab.game.AvailableActions;
 import com.mpec.backstab.game.Backstab;
 
@@ -16,9 +17,10 @@ public class SwordZombie extends Enemy implements AvailableActions {
     public static double baseHp;
     public static double baseAttackSpeed;
     public static double baseRange;
+    Stage stage;
 
-    public SwordZombie(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range) {
-        super(game, attack, defense, attack_speed, hp, movement_speed, range);
+    public SwordZombie(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range, Stage stage) {
+        super(game, attack, defense, attack_speed, hp, movement_speed, range,stage);
         enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/SwordZombie/sword-zombie.txt"));
         goIdle();
         enemyRectangle.setSize(enemySprite.getWidth(), enemySprite.getHeight());

@@ -11,8 +11,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mpec.backstab.game.AvailableActions;
 import com.mpec.backstab.game.Backstab;
+import com.mpec.backstab.game.GameScreen;
 import com.mpec.backstab.map.MapGenerator;
 
 import java.util.Date;
@@ -46,12 +48,15 @@ public class Enemy extends Actor implements AvailableActions {
     
     final Backstab game;
 
-    public Enemy(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range) {
+    Stage stage;
+
+    public Enemy(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range,Stage stage) {
         this.game = game;
         this.attack = attack;
         this.defense = defense;
         this.attack_speed = attack_speed;
         this.hp = hp;
+        this.stage=stage;
         this.movement_speed = movement_speed;
         this.range = range;
         this.vidaActual = hp;
@@ -69,6 +74,11 @@ public class Enemy extends Actor implements AvailableActions {
            enemyRectangle.setPosition(getX(), getY());
            batch.draw(enemySprite, getX(), getY());
            batch.draw(healthRedBar, getX()+2, getY()+65, (int) (healthRedBar.getWidth() * (vidaActual/hp)), healthRedBar.getHeight());
+       }
+       else{
+           stage.getActors().removeValue(this,true);
+           GameScreen.enemyAL.removeValue(this,true);
+
        }
     }
 
