@@ -27,6 +27,8 @@ public class Enemy extends Actor implements AvailableActions {
     protected Animation<TextureRegion> enemyAnimation;
     protected int direction;
 
+    public boolean isInitialized;
+
     public double vidaActual;
 
     boolean playSoundSlash=true;
@@ -38,6 +40,7 @@ public class Enemy extends Actor implements AvailableActions {
     protected double hp;
     protected double movement_speed;
     protected double range;
+    protected float multiplier;
 
     private boolean ataqueRealizado=false;
     int numSeconds;
@@ -57,18 +60,46 @@ public class Enemy extends Actor implements AvailableActions {
         this.vidaActual = hp;
         direction = LOOK_DOWN;
         enemyRectangle =new Rectangle();
-        this.healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                Enemy.this.healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
+            }
+        });
+        isInitialized = true;
         slashEnemy=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
         this.setX((float)Math.random()* MapGenerator.WORLD_WIDTH);
         this.setY((float)Math.random()* MapGenerator.WORLD_HEIGHT);
+    }
+
+    public Enemy(Backstab game){
+        this.game = game;
+        isInitialized = false;
+    }
+
+    public void initialize(double attack, double defense, double attack_speed, double hp, double movement_speed, double range){
+        this.attack = attack * multiplier;
+        this.defense = defense * multiplier;
+        this.attack_speed = attack_speed * multiplier;
+        this.hp = hp * multiplier;
+        this.movement_speed = movement_speed * multiplier;
+        this.range = range;
+        this.vidaActual = hp;
+        direction = LOOK_DOWN;
+        enemyRectangle =new Rectangle();
+        healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
+        isInitialized = true;
+        slashEnemy=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
        if(vidaActual>0) {
            enemyRectangle.setPosition(getX(), getY());
-           batch.draw(enemySprite, getX(), getY());
-           batch.draw(healthRedBar, getX()+2, getY()+65, (int) (healthRedBar.getWidth() * (vidaActual/hp)), healthRedBar.getHeight());
+           if(enemySprite != null && enemySprite.getTexture() != null && healthRedBar != null) {
+               batch.draw(enemySprite, getX(), getY());
+               batch.draw(healthRedBar, getX() + 2, getY() + 65, (int) (healthRedBar.getWidth() * (vidaActual / hp)), healthRedBar.getHeight());
+           }
        }
     }
 
@@ -84,44 +115,48 @@ public class Enemy extends Actor implements AvailableActions {
     }
 
     protected void actionToDraw(int action) {
-        switch (action) {
-            case MOVE_UP:
-                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
-                direction = LOOK_UP;
-                break;
-            case MOVE_DOWN:
-                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
-                direction = LOOK_DOWN;
-                break;
-            case MOVE_RIGHT:
-                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
-                direction = LOOK_RIGHT;
-                break;
-            case MOVE_LEFT:
-                enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_left), Animation.PlayMode.LOOP);
-                direction = LOOK_LEFT;
-                break;
+        if(enemyAtlas != null) {
+            switch (action) {
+                case MOVE_UP:
+                    enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
+                    direction = LOOK_UP;
+                    break;
+                case MOVE_DOWN:
+                    enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
+                    direction = LOOK_DOWN;
+                    break;
+                case MOVE_RIGHT:
+                    enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
+                    direction = LOOK_RIGHT;
+                    break;
+                case MOVE_LEFT:
+                    enemyAnimation = new Animation<TextureRegion>(5f, enemyAtlas.findRegions(name_move_left), Animation.PlayMode.LOOP);
+                    direction = LOOK_LEFT;
+                    break;
 
+            }
+            enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
         }
-        enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
     }
 
     protected void goIdle() {
-        switch (direction) {
-            case LOOK_UP:
-                enemyAnimation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
-                break;
-            case LOOK_RIGHT:
-                enemyAnimation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
-                break;
-            case LOOK_DOWN:
-                enemyAnimation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
-                break;
-            case LOOK_LEFT:
-                enemyAnimation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_left), Animation.PlayMode.LOOP);
-                break;
+        if(enemyAtlas != null) {
+            switch (direction) {
+                case LOOK_UP:
+                    enemyAnimation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_up), Animation.PlayMode.LOOP);
+                    break;
+                case LOOK_RIGHT:
+                    enemyAnimation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_right), Animation.PlayMode.LOOP);
+                    break;
+                case LOOK_DOWN:
+                    enemyAnimation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_down), Animation.PlayMode.LOOP);
+                    break;
+                case LOOK_LEFT:
+                    enemyAnimation = new Animation<TextureRegion>(10f, enemyAtlas.findRegions(name_move_left), Animation.PlayMode.LOOP);
+                    break;
+            }
+            enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
         }
-        enemySprite = new Sprite(enemyAnimation.getKeyFrame(game.stateTime, true));
     }
 
     protected void goAttack(int direction) {
@@ -505,5 +540,13 @@ public class Enemy extends Actor implements AvailableActions {
 
     public Backstab getGame() {
         return game;
+    }
+
+    public void setMultiplier(float multiplier){
+        this.multiplier = multiplier;
+    }
+
+    public float getMultiplier(){
+        return this.multiplier;
     }
 }
