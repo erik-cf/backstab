@@ -39,7 +39,7 @@ import io.socket.emitter.Emitter;
 
 public class GameScreen implements Screen {
 
-    private final float UPDATE_TIME = 1 / 60f;
+    private final float UPDATE_TIME = 1/60f;
 
     float timer;
 
@@ -53,6 +53,7 @@ public class GameScreen implements Screen {
     boolean enemyToBeCreated = false;
     Date endDate;
     int numSeconds;
+    float attackTimer;
 
     private BitmapFont rankingDraw;
 
@@ -78,7 +79,7 @@ public class GameScreen implements Screen {
         stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
         otherPlayers = new HashMap<String, OtherPlayer>();
-
+        attackTimer=0;
         rankingDraw = new BitmapFont();
         rankingDraw.setColor(Color.BLACK);
         rankingDraw.getData().setScale(5, 5);
@@ -168,6 +169,8 @@ public class GameScreen implements Screen {
 
         game.moveCamera();
 
+        attackTimer+=Gdx.graphics.getDeltaTime();
+
 
         stage.act();
 
@@ -207,8 +210,8 @@ public class GameScreen implements Screen {
         }
 
 
-        if (game.timmy.getVidaActual() <= 0) {
-            game.setScreen(new EndMenuScreen(game, numSeconds));
+        if(game.timmy.getVidaActual()<=0){
+            game.setScreen(new EndMenuScreen(game,numSeconds));
         }
 
         stage.draw();
@@ -238,7 +241,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         game.batch.dispose();
-        for (Enemy enemy : enemyAL) {
+        for(Enemy enemy : enemyAL){
             enemy.getSlashEnemy().dispose();
             enemy.getHealthRedBar().dispose();
             enemy.getEnemySprite().getTexture().dispose();
@@ -253,13 +256,11 @@ public class GameScreen implements Screen {
         socket.disconnect();
     }
 
-    private void checkCharacterAction() {
-        if (game.stateTime < 5) {
-            game.timmy.goAtackEnergyBall(true);
-        }
-        if (touchpad.isTouched()) {
-            game.timmy.goAtackEnergyBall(false);
-            if (touchpad.getKnobPercentX() > 0.4) {
+    private void checkCharacterAction(){
+
+        if(touchpad.isTouched()){
+            game.timmy.goAtackEnergyBall(false,stage);
+            if(touchpad.getKnobPercentX() > 0.4){
 
                 game.timmy.setDirection(AvailableActions.LOOK_RIGHT);
                 game.timmy.goMove(AvailableActions.MOVE_RIGHT);
@@ -279,11 +280,18 @@ public class GameScreen implements Screen {
                 game.timmy.setDirection(AvailableActions.LOOK_DOWN);
                 game.timmy.goMove(AvailableActions.MOVE_DOWN);
 
-            } else {
-                game.timmy.goAtackEnergyBall(true);
+            }else{
+                if(game.timmy.getAttack_speed()*Gdx.graphics.getDeltaTime()<attackTimer) {
+                    game.timmy.goAtackEnergyBall(true, stage);
+                    attackTimer=0;
+                }
             }
-        } else {
-            game.timmy.goAtackEnergyBall(true);
+        }else{
+            if(game.timmy.getAttack_speed()*Gdx.graphics.getDeltaTime()<attackTimer) {
+                game.timmy.goAtackEnergyBall(true, stage);
+                attackTimer=0;
+            }
+
         }
     }
 
@@ -319,15 +327,15 @@ public class GameScreen implements Screen {
             Enemy enemy = null;
             switch (whichEnemy) {
                 case AvailableActions.CREATE_GOLEM:
-                    enemy = new Golem(game, Golem.baseAttack * game.multiplier, Golem.baseDefense * game.multiplier, Golem.baseAttackSpeed * game.multiplier, Golem.baseHp * game.multiplier, Golem.baseMovementSpeed * game.multiplier, Golem.baseRange * game.multiplier);
+                    enemy = new Golem(game, Golem.baseAttack * game.multiplier,Golem.baseDefense * game.multiplier, Golem.baseAttackSpeed * game.multiplier, Golem.baseHp * game.multiplier, Golem.baseMovementSpeed * game.multiplier, Golem.baseRange * game.multiplier,stage);
                     enemyAL.add(enemy);
                     break;
                 case AvailableActions.CREATE_SWORD_ZOMBIE:
-                    enemy = new SwordZombie(game, SwordZombie.baseAttack * game.multiplier, SwordZombie.baseDefense * game.multiplier, SwordZombie.baseAttackSpeed * game.multiplier, SwordZombie.baseHp * game.multiplier, SwordZombie.baseMovementSpeed * game.multiplier, SwordZombie.baseRange * game.multiplier);
+                    enemy = new SwordZombie(game, SwordZombie.baseAttack * game.multiplier,SwordZombie.baseDefense * game.multiplier, SwordZombie.baseAttackSpeed * game.multiplier, SwordZombie.baseHp * game.multiplier, SwordZombie.baseMovementSpeed * game.multiplier, SwordZombie.baseRange * game.multiplier,stage);
                     enemyAL.add(enemy);
                     break;
                 case AvailableActions.CREATE_WIZARD_ZOMBIE:
-                    enemy = new WizardZombie(game, WizardZombie.baseAttack * game.multiplier, WizardZombie.baseDefense * game.multiplier, WizardZombie.baseAttackSpeed * game.multiplier, WizardZombie.baseHp * game.multiplier, WizardZombie.baseMovementSpeed * game.multiplier, WizardZombie.baseRange * game.multiplier);
+                    enemy = new WizardZombie(game, WizardZombie.baseAttack * game.multiplier,WizardZombie.baseDefense * game.multiplier, WizardZombie.baseAttackSpeed * game.multiplier, WizardZombie.baseHp * game.multiplier, WizardZombie.baseMovementSpeed * game.multiplier, WizardZombie.baseRange * game.multiplier,stage);
                     enemyAL.add(enemy);
                     break;
             }
@@ -353,16 +361,14 @@ public class GameScreen implements Screen {
         }
     }
 
-    public void connectSocket() {
-        try {
-            socket = IO.socket("http://localhost:3000/");
-            socket.connect();
-
-
-        } catch (Exception e) {
-            System.out.println(e);
+        public void connectSocket(){
+            try {
+                socket = IO.socket("http://localhost:3000/");
+                socket.connect();
+            } catch(Exception e){
+                System.out.println(e);
+            }
         }
-    }
 
     public void configSocketEvents() {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
