@@ -156,7 +156,6 @@ public class GameScreen implements Screen {
         }
 
         game.camera.update();
-        //System.out.println(multiplayer);
         if (multiplayer) {
             updateServer(Gdx.graphics.getDeltaTime());
         }
