@@ -3,6 +3,7 @@ package com.mpec.backstab.game;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 
@@ -55,6 +56,7 @@ public class GameScreen implements Screen {
     Date endDate;
     int numSeconds;
     float attackTimer;
+    public Sound energyBulletSound;
 
     private BitmapFont rankingDraw;
 
@@ -78,6 +80,7 @@ public class GameScreen implements Screen {
         otherPlayers = new HashMap<String, OtherPlayer>();
         attackTimer=0;
         rankingDraw = new BitmapFont();
+        energyBulletSound=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/Shoots/energyBallSound.wav"));
         rankingDraw.setColor(Color.BLACK);
         rankingDraw.getData().setScale(5,5);
 
@@ -257,12 +260,14 @@ public class GameScreen implements Screen {
                 if(game.timmy.getAttack_speed()*Gdx.graphics.getDeltaTime()<attackTimer) {
                     game.timmy.goAtackEnergyBall(true, stage);
                     attackTimer=0;
+                    energyBulletSound.play(0.2f);
                 }
             }
         }else{
             if(game.timmy.getAttack_speed()*Gdx.graphics.getDeltaTime()<attackTimer) {
                 game.timmy.goAtackEnergyBall(true, stage);
                 attackTimer=0;
+                energyBulletSound.play(0.2f);
             }
 
         }
