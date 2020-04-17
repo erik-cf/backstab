@@ -1,5 +1,6 @@
 package com.mpec.backstab.main_character;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -112,6 +113,7 @@ public class Bullet extends Actor implements AvailableActions {
                 GameScreen.enemyAL.removeValue(enemy, true);
                 MapGenerator.collision.removeValue(enemy.getEnemyRectangle(), true);
                 GameScreen.killedEnemies.add(enemy.getId());
+                GameScreen.contadorMatados++;
             }
         }
     }
