@@ -4,9 +4,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mpec.backstab.game.Backstab;
 import com.mpec.backstab.main_character.Playable;
 
-public class Drop extends Actor {
+public abstract class Drop extends Actor {
 
     protected long id;
 
@@ -25,7 +26,10 @@ public class Drop extends Actor {
 
     protected boolean active;
 
-    public Drop(String dropName, int value, int duration, int min_range, int max_range){
+    protected final Backstab game;
+
+    public Drop(Backstab game, String dropName, int value, int duration, int min_range, int max_range){
+        this.game = game;
         this.dropName = dropName;
         this.value = value;
         this.duration = duration;
@@ -33,6 +37,10 @@ public class Drop extends Actor {
         this.max_range = max_range;
         active = false;
     }
+
+    public abstract void initialize();
+
+    public abstract void changeStats();
 
     @Override
     public void draw(Batch batch, float parentAlpha) {

@@ -15,6 +15,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.mpec.backstab.drops.ASBoost;
+import com.mpec.backstab.drops.ASReduce;
+import com.mpec.backstab.drops.ATKBoost;
+import com.mpec.backstab.drops.ATKReduce;
+import com.mpec.backstab.drops.Drop;
+import com.mpec.backstab.drops.MSBoost;
+import com.mpec.backstab.drops.MSReduce;
+import com.mpec.backstab.drops.MobBoost;
 import com.mpec.backstab.enemy_character.Enemy;
 import com.mpec.backstab.enemy_character.Golem;
 import com.mpec.backstab.enemy_character.SwordZombie;
@@ -52,6 +60,8 @@ public class GameScreen implements Screen {
 
     public static boolean bulletIsShot;
 
+    public static int contadorDrops = 0;
+
     String id;
     JSONObject enemyJSON;
     JSONArray enemyJSONArray;
@@ -65,6 +75,7 @@ public class GameScreen implements Screen {
     int numSeconds;
     float attackTimer;
 
+    private Drop pickedDrop;
 
     private BitmapFont rankingDraw;
 
@@ -81,11 +92,13 @@ public class GameScreen implements Screen {
 
     float movingX;
     float movingY;
+    Array<Drop> groundDrops;
 
     public static int contadorMatados=0;
 
     Array<Enemy> initializableMonsters;
     Array<Bullet> initializableBullets;
+    Array<Drop> initializableDrops;
 
     public static boolean multiplayer = false;
 
@@ -97,11 +110,15 @@ public class GameScreen implements Screen {
         otherPlayers = new HashMap<String, OtherPlayer>();
         attackTimer=0;
         rankingDraw = new BitmapFont();
+        contadorMatados = 0;
+        contadorDrops = 0;
+        groundDrops = new Array<Drop>();
 
         rankingDraw.setColor(Color.BLACK);
         rankingDraw.getData().setScale(5, 5);
         initializableMonsters = new Array<Enemy>();
         initializableBullets = new Array<Bullet>();
+        initializableDrops = new Array<Drop>();
         touchpad = new TouchPadTest();
         bulletIsShot = false;
         stage.addActor(game.timmy);
@@ -159,14 +176,15 @@ public class GameScreen implements Screen {
             updater = new JSONObject();
             enemyJSONArray = new JSONArray();
 
-            for (int i = 0; i < killedEnemies.size; i++) {
+            for (int i = killedEnemies.size - 1; i >= 0; i--) {
                 enemyJSON = new JSONObject();
                 enemyJSON.put("id", killedEnemies.get(i));
                 enemyJSONArray.put(enemyJSON);
+                killedEnemies.removeIndex(i);
             }
+
             updater.put("enemy", enemyJSONArray);
             socket.emit("enemiesDead", updater);
-
 
             timer = 0;
         }
@@ -179,6 +197,35 @@ public class GameScreen implements Screen {
             socket.emit("bulletShot", updater);
             GameScreen.bulletIsShot = false;
         }
+
+        if(ASReduce.asReduceActive){
+            ASReduce.asReduceActive = false;
+            socket.emit("asReduce");
+        }
+
+        if(ATKReduce.atkReduceActive){
+            ATKReduce.atkReduceActive = false;
+            socket.emit("atkReduce");
+        }
+
+        if(MSReduce.msReduceActive){
+            MSReduce.msReduceActive = false;
+            socket.emit("msReduce");
+        }
+
+        if(MobBoost.mobBoostActive){
+            MobBoost.mobBoostActive = false;
+            socket.emit("mobBoost");
+        }
+    }
+
+    public void pickedADrop(){
+        if(pickedDrop != null){
+            JSONObject object = new JSONObject();
+            object.put("dropId", pickedDrop.getId());
+            socket.emit("pickedADrop", object);
+        }
+
     }
 
     @Override
@@ -190,12 +237,20 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        game.batch.begin();
+        game.mapGenerator.paintMap(game.batch);
+        rankingDraw.draw(game.batch, String.valueOf(ranking), (game.camera.position.x + stage.getWidth() / 2 - 120), (game.camera.position.y + stage.getHeight() / 2 - 60));
+        game.batch.end();
         if(multiplayer) {
             for (Map.Entry<String, OtherPlayer> entry : otherPlayers.entrySet()) {
                 if (!entry.getValue().isInitialized) {
                     entry.getValue().initialize(game.timmy.getAttack(), game.timmy.getDefense(), game.timmy.getAttack_speed(), game.timmy.getHp(), game.timmy.getMovement_speed());
                     stage.addActor(entry.getValue());
                 }
+            }
+
+            if(pickDrop()){
+                pickedADrop();
             }
 
             for (int i = initializableMonsters.size - 1; i >= 0; i--) {
@@ -216,10 +271,14 @@ public class GameScreen implements Screen {
                 stage.addActor(initializableBullets.get(i));
                 initializableBullets.removeIndex(i);
             }
-        }
 
-        game.camera.update();
-        if (multiplayer) {
+            for (int i = initializableDrops.size - 1; i >= 0; i--) {
+                initializableDrops.get(i).initialize();
+                groundDrops.add(initializableDrops.get(i));
+                stage.addActor(initializableDrops.get(i));
+                initializableDrops.removeIndex(i);
+            }
+
             updateServer(Gdx.graphics.getDeltaTime());
         }
         game.stateTime = game.stateTime + 1 + Gdx.graphics.getDeltaTime();
@@ -235,8 +294,10 @@ public class GameScreen implements Screen {
 
         attackTimer+=Gdx.graphics.getDeltaTime();
 
+        game.camera.update();
 
         stage.act();
+
 
         if (game.timmy.getX() < 0) {
             movingX = 0;
@@ -261,12 +322,6 @@ public class GameScreen implements Screen {
         }
 
 
-        game.batch.begin();
-        game.mapGenerator.paintMap(game.batch);
-        rankingDraw.draw(game.batch, String.valueOf(ranking), (game.camera.position.x + stage.getWidth() / 2 - 120), (game.camera.position.y + stage.getHeight() / 2 - 60));
-        game.batch.end();
-
-
         if (!multiplayer) {
             try {
                 whichEnemy((int) (Math.random() * 3));
@@ -277,11 +332,13 @@ public class GameScreen implements Screen {
 
 
         if(game.timmy.getVidaActual()<=0){
-            game.setScreen(new EndMenuScreen(game,numSeconds));
+            game.setScreen(new EndMenuScreen(game, numSeconds, ranking));
             socket.disconnect();
         }
 
         stage.draw();
+
+
 
     }
 
@@ -385,7 +442,23 @@ public class GameScreen implements Screen {
             }
         }
         return false;
+    }
 
+    public boolean pickDrop(){
+        for(int i = groundDrops.size - 1; i >= 0; i--){
+            if(game.timmy.getPlayableRectangle().overlaps(groundDrops.get(i).getDropRectangle())){
+                groundDrops.get(i).changeStats();
+                if(groundDrops.get(i).getDropName().equalsIgnoreCase("mobs_damage_boost")){
+                    ((MobBoost)groundDrops.get(i)).applyDrop();
+                }
+                stage.getActors().removeValue(groundDrops.get(i), true);
+                pickedDrop = groundDrops.get(i);
+                contadorDrops++;
+                groundDrops.removeIndex(i);
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -689,6 +762,38 @@ public class GameScreen implements Screen {
                     Gdx.app.log("ERROR_newMonster", "Error getting new monster created... Error: " + e.getMessage());
                 }
             }
+        }).on("newDrop", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+
+                JSONObject object = (JSONObject) args[0];
+                Drop drop = null;
+                try {
+                    int range = object.getInt("range") + 1;
+                    if(range <= MSBoost.staticMax_Range){
+                        drop = new MSBoost(game);
+                    }else if(range >= ASBoost.staticMin_Range && range <= ASBoost.staticMax_Range){
+                        drop = new ASBoost(game);
+                    }else if(range >= ATKBoost.staticMin_Range && range <= ATKBoost.staticMax_Range){
+                        drop = new ATKBoost(game);
+                    }else if(range >= MSReduce.staticMin_Range && range <= MSReduce.staticMax_Range){
+                        drop = new MSReduce(game);
+                    }else if(range >= ATKReduce.staticMin_Range && range <= ATKReduce.staticMax_Range){
+                        drop = new ATKReduce(game);
+                    }else if(range >= ASReduce.staticMin_Range && range <= ASReduce.staticMax_Range){
+                        drop = new ASReduce(game);
+                    }else if(range >= MobBoost.staticMin_Range && range <= MobBoost.staticMax_Range){
+                        drop = new MobBoost(game);
+                    }
+                    if(drop != null){
+                        drop.setPosition(((Double) object.getDouble("x")).floatValue(), ((Double) object.getDouble("y")).floatValue());
+                        drop.setId(object.getLong("id"));
+                        initializableDrops.add(drop);
+                    }
+                } catch (JSONException e) {
+                    Gdx.app.log("ERROR_newMonster", "Error getting new monster created... Error: " + e.getMessage());
+                }
+            }
         }).on("bulletShot", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -699,6 +804,43 @@ public class GameScreen implements Screen {
                 initializableBullets.add(bullet);
                 } catch (JSONException e) {
                     Gdx.app.log("ERROR_newMonster", "Error getting new monster created... Error: " + e.getMessage());
+                }
+            }
+        }).on("asReduce", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                new ASReduce(game).applyDrop();
+            }
+        }).on("atkReduce", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                new ATKReduce(game).applyDrop();
+            }
+        }).on("msReduce", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                System.out.println("movement Speed reduce!");
+                new MSReduce(game).applyDrop();
+            }
+        }).on("mobBoost", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                new MobBoost(game).applyDrop();
+            }
+        }).on("pickedADrop", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    long dropId = data.getLong("dropId");
+                    for(int i = groundDrops.size - 1; i >= 0; i--){
+                        if(groundDrops.get(i).getId() == dropId){
+                            stage.getActors().removeValue(groundDrops.get(i), true);
+                            groundDrops.removeIndex(i);
+                        }
+                    }
+                } catch (JSONException e) {
+                    Gdx.app.log("SocketIO", "Error getting disconnected PlayerID");
                 }
             }
         });

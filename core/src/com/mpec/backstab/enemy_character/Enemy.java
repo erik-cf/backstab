@@ -175,7 +175,7 @@ public class Enemy extends Actor implements AvailableActions {
     }
 
     protected void goAttack(int direction) {
-        nearestPlayer.setVidaActual(nearestPlayer.getVidaActual() - (attack - nearestPlayer.getDefense()));
+        nearestPlayer.setVidaActual(nearestPlayer.getVidaActual() - attack);
         if(playSoundSlash==true ) {
             slashEnemy.play(1);
             playSoundSlash=false;

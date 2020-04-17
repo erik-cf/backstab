@@ -28,12 +28,14 @@ public class EndMenuScreen implements Screen {
     BitmapFont gameTimeFont;
     BitmapFont totalKillsFont;
     BitmapFont totalObjectsFont;
+    BitmapFont rankingText;
     Music introMusic;
+    int posicion;
     int totalTiempo;
 
     Stage stage;
 
-    public EndMenuScreen(Backstab game,int totalTiempo){
+    public EndMenuScreen(Backstab game,int totalTiempo, int posicion){
         stage = new Stage(game.viewport, game.batch);
         introMusic= Gdx.audio.newMusic(Gdx.files.internal("Sounds/Menu/menuIntro.wav"));
         Gdx.input.setInputProcessor(stage);
@@ -55,13 +57,15 @@ public class EndMenuScreen implements Screen {
         endButtonStyle.up = skin.getDrawable("untouched");
         endButton = new TextButton("", endButtonStyle);
         endButton.setBackground(skin.getDrawable("untouched"));
-
+        rankingText = new BitmapFont();
+        rankingText.setColor(0,0,0,1);
         endButton.setWidth(510f);
         endButton.setHeight(78f);
         endButton.setX(game.camera.position.x - (endButton.getWidth() / 2));
         endButton.setY((game.camera.position.y - stage.getHeight() / 2) + 100f);
         introMusic.play();
         this.totalTiempo=totalTiempo;
+        this.posicion = posicion;
 
 
         stage.addActor(endButton);
@@ -88,7 +92,8 @@ public class EndMenuScreen implements Screen {
         endButton.draw(game.batch, 1);
         gameTimeFont.draw(game.batch,"Tiempo de partida: "+totalTiempo+" segundos",game.camera.position.x - (endGameMenu.getWidth() / 2)+100, game.camera.position.y - (endGameMenu.getHeight() / 2)+250);
         totalKillsFont.draw(game.batch,"Enemigos Matados: "+ GameScreen.contadorMatados,game.camera.position.x - (endGameMenu.getWidth() / 2)+100, game.camera.position.y - (endGameMenu.getHeight() / 2)+225);
-        totalObjectsFont.draw(game.batch,"Objetos recogidos: 1",game.camera.position.x - (endGameMenu.getWidth() / 2)+100, game.camera.position.y - (endGameMenu.getHeight() / 2)+200);
+        totalObjectsFont.draw(game.batch,"Objetos recogidos: " + GameScreen.contadorDrops,game.camera.position.x - (endGameMenu.getWidth() / 2)+100, game.camera.position.y - (endGameMenu.getHeight() / 2)+200);
+        rankingText.draw(game.batch, "Posición: " + posicion, game.camera.position.x - (endGameMenu.getWidth() / 2)+100, game.camera.position.y - (endGameMenu.getHeight() / 2)+175);
         game.batch.end();
     }
 
@@ -120,6 +125,7 @@ public class EndMenuScreen implements Screen {
         game.timmy.getWalkPlayer().dispose();
         game.timmy.getPlayerAtlas().dispose();
         game.timmy.getWalkPlayer().dispose();
+        introMusic.dispose();
     }
 
     private void listeners(){
