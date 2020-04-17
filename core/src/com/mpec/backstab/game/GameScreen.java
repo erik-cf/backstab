@@ -3,12 +3,14 @@ package com.mpec.backstab.game;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
@@ -17,6 +19,7 @@ import com.mpec.backstab.enemy_character.Golem;
 import com.mpec.backstab.enemy_character.SwordZombie;
 import com.mpec.backstab.enemy_character.WizardZombie;
 import com.mpec.backstab.main_character.OtherPlayer;
+import com.mpec.backstab.main_character.Playable;
 import com.mpec.backstab.map.MapGenerator;
 
 import org.json.JSONArray;
@@ -39,7 +42,7 @@ import io.socket.emitter.Emitter;
 
 public class GameScreen implements Screen {
 
-    private final float UPDATE_TIME = 1 / 60f;
+    private final float UPDATE_TIME = 1/60f;
 
     float timer;
 
@@ -53,6 +56,8 @@ public class GameScreen implements Screen {
     boolean enemyToBeCreated = false;
     Date endDate;
     int numSeconds;
+    float attackTimer;
+    public Sound energyBulletSound;
 
     private BitmapFont rankingDraw;
 
@@ -60,7 +65,7 @@ public class GameScreen implements Screen {
 
     JSONObject updater;
 
-    HashMap<String, OtherPlayer> otherPlayers;
+    public static HashMap<String, OtherPlayer> otherPlayers;
 
     int ranking = 1;
 
@@ -78,8 +83,9 @@ public class GameScreen implements Screen {
         stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
         otherPlayers = new HashMap<String, OtherPlayer>();
-
+        attackTimer=0;
         rankingDraw = new BitmapFont();
+        energyBulletSound=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/Shoots/energyBallSound.wav"));
         rankingDraw.setColor(Color.BLACK);
         rankingDraw.getData().setScale(5, 5);
         initializableMonsters = new Array<Enemy>();
@@ -128,30 +134,30 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        for(Map.Entry<String, OtherPlayer> entry : otherPlayers.entrySet()){
-            if(!entry.getValue().isInitialized){
-                entry.getValue().initialize(game.timmy.getAttack(), game.timmy.getDefense(), game.timmy.getAttack_speed(), game.timmy.getHp(), game.timmy.getMovement_speed());
-                stage.addActor(entry.getValue());
-            }
-        }
-
-        for(int i = initializableMonsters.size - 1; i >= 0; i--){
-            if(initializableMonsters.get(i).getClass().equals(Golem.class)){
-                initializableMonsters.get(i).initialize(Golem.baseAttack, Golem.baseDefense, Golem.baseAttackSpeed, Golem.baseHp, Golem.baseMovementSpeed, Golem.baseRange);
-            }else if (initializableMonsters.get(i).getClass().equals(WizardZombie.class)){
-                initializableMonsters.get(i).initialize(WizardZombie.baseAttack, WizardZombie.baseDefense, WizardZombie.baseAttackSpeed, WizardZombie.baseHp, WizardZombie.baseMovementSpeed, WizardZombie.baseRange);
-            }else if (initializableMonsters.get(i).getClass().equals(SwordZombie.class)){
-                initializableMonsters.get(i).initialize(SwordZombie.baseAttack, SwordZombie.baseDefense, SwordZombie.baseAttackSpeed, SwordZombie.baseHp, SwordZombie.baseMovementSpeed, SwordZombie.baseRange);
+        if(multiplayer) {
+            for (Map.Entry<String, OtherPlayer> entry : otherPlayers.entrySet()) {
+                if (!entry.getValue().isInitialized) {
+                    entry.getValue().initialize(game.timmy.getAttack(), game.timmy.getDefense(), game.timmy.getAttack_speed(), game.timmy.getHp(), game.timmy.getMovement_speed());
+                    stage.addActor(entry.getValue());
+                }
             }
 
-            stage.addActor(initializableMonsters.get(i));
-            enemyAL.add(initializableMonsters.get(i));
-            initializableMonsters.removeIndex(i);
+            for (int i = initializableMonsters.size - 1; i >= 0; i--) {
+                if (initializableMonsters.get(i).getClass().equals(Golem.class)) {
+                    initializableMonsters.get(i).initialize(Golem.baseAttack, Golem.baseDefense, Golem.baseAttackSpeed, Golem.baseHp, Golem.baseMovementSpeed, Golem.baseRange);
+                } else if (initializableMonsters.get(i).getClass().equals(WizardZombie.class)) {
+                    initializableMonsters.get(i).initialize(WizardZombie.baseAttack, WizardZombie.baseDefense, WizardZombie.baseAttackSpeed, WizardZombie.baseHp, WizardZombie.baseMovementSpeed, WizardZombie.baseRange);
+                } else if (initializableMonsters.get(i).getClass().equals(SwordZombie.class)) {
+                    initializableMonsters.get(i).initialize(SwordZombie.baseAttack, SwordZombie.baseDefense, SwordZombie.baseAttackSpeed, SwordZombie.baseHp, SwordZombie.baseMovementSpeed, SwordZombie.baseRange);
+                }
+
+                stage.addActor(initializableMonsters.get(i));
+                enemyAL.add(initializableMonsters.get(i));
+                initializableMonsters.removeIndex(i);
+            }
         }
 
         game.camera.update();
-        //System.out.println(multiplayer);
         if (multiplayer) {
             updateServer(Gdx.graphics.getDeltaTime());
         }
@@ -166,6 +172,8 @@ public class GameScreen implements Screen {
         ranking = otherPlayers.size() + 1;
 
         game.moveCamera();
+
+        attackTimer+=Gdx.graphics.getDeltaTime();
 
 
         stage.act();
@@ -206,8 +214,9 @@ public class GameScreen implements Screen {
         }
 
 
-        if (game.timmy.getVidaActual() <= 0) {
-            game.setScreen(new EndMenuScreen(game, numSeconds));
+        if(game.timmy.getVidaActual()<=0){
+            game.setScreen(new EndMenuScreen(game,numSeconds));
+            socket.disconnect();
         }
 
         stage.draw();
@@ -237,7 +246,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         game.batch.dispose();
-        for (Enemy enemy : enemyAL) {
+        for(Enemy enemy : enemyAL){
             enemy.getSlashEnemy().dispose();
             enemy.getHealthRedBar().dispose();
             enemy.getEnemySprite().getTexture().dispose();
@@ -252,13 +261,11 @@ public class GameScreen implements Screen {
         socket.disconnect();
     }
 
-    private void checkCharacterAction() {
-        if (game.stateTime < 5) {
-            game.timmy.goAtackEnergyBall(true);
-        }
-        if (touchpad.isTouched()) {
-            game.timmy.goAtackEnergyBall(false);
-            if (touchpad.getKnobPercentX() > 0.4) {
+    private void checkCharacterAction(){
+
+        if(touchpad.isTouched()){
+            game.timmy.goAtackEnergyBall(false,stage);
+            if(touchpad.getKnobPercentX() > 0.4){
 
                 game.timmy.setDirection(AvailableActions.LOOK_RIGHT);
                 game.timmy.goMove(AvailableActions.MOVE_RIGHT);
@@ -278,11 +285,20 @@ public class GameScreen implements Screen {
                 game.timmy.setDirection(AvailableActions.LOOK_DOWN);
                 game.timmy.goMove(AvailableActions.MOVE_DOWN);
 
-            } else {
-                game.timmy.goAtackEnergyBall(true);
+            }else{
+                if(game.timmy.getAttack_speed()*Gdx.graphics.getDeltaTime()<attackTimer) {
+                    game.timmy.goAtackEnergyBall(true, stage);
+                    attackTimer=0;
+                    energyBulletSound.play(0.2f);
+                }
             }
-        } else {
-            game.timmy.goAtackEnergyBall(true);
+        }else{
+            if(game.timmy.getAttack_speed()*Gdx.graphics.getDeltaTime()<attackTimer) {
+                game.timmy.goAtackEnergyBall(true, stage);
+                attackTimer=0;
+                energyBulletSound.play(0.2f);
+            }
+
         }
     }
 
@@ -318,15 +334,15 @@ public class GameScreen implements Screen {
             Enemy enemy = null;
             switch (whichEnemy) {
                 case AvailableActions.CREATE_GOLEM:
-                    enemy = new Golem(game, Golem.baseAttack * game.multiplier, Golem.baseDefense * game.multiplier, Golem.baseAttackSpeed * game.multiplier, Golem.baseHp * game.multiplier, Golem.baseMovementSpeed * game.multiplier, Golem.baseRange * game.multiplier);
+                    enemy = new Golem(game, Golem.baseAttack * game.multiplier,Golem.baseDefense * game.multiplier, Golem.baseAttackSpeed * game.multiplier, Golem.baseHp * game.multiplier, Golem.baseMovementSpeed * game.multiplier, Golem.baseRange * game.multiplier,stage);
                     enemyAL.add(enemy);
                     break;
                 case AvailableActions.CREATE_SWORD_ZOMBIE:
-                    enemy = new SwordZombie(game, SwordZombie.baseAttack * game.multiplier, SwordZombie.baseDefense * game.multiplier, SwordZombie.baseAttackSpeed * game.multiplier, SwordZombie.baseHp * game.multiplier, SwordZombie.baseMovementSpeed * game.multiplier, SwordZombie.baseRange * game.multiplier);
+                    enemy = new SwordZombie(game, SwordZombie.baseAttack * game.multiplier,SwordZombie.baseDefense * game.multiplier, SwordZombie.baseAttackSpeed * game.multiplier, SwordZombie.baseHp * game.multiplier, SwordZombie.baseMovementSpeed * game.multiplier, SwordZombie.baseRange * game.multiplier,stage);
                     enemyAL.add(enemy);
                     break;
                 case AvailableActions.CREATE_WIZARD_ZOMBIE:
-                    enemy = new WizardZombie(game, WizardZombie.baseAttack * game.multiplier, WizardZombie.baseDefense * game.multiplier, WizardZombie.baseAttackSpeed * game.multiplier, WizardZombie.baseHp * game.multiplier, WizardZombie.baseMovementSpeed * game.multiplier, WizardZombie.baseRange * game.multiplier);
+                    enemy = new WizardZombie(game, WizardZombie.baseAttack * game.multiplier,WizardZombie.baseDefense * game.multiplier, WizardZombie.baseAttackSpeed * game.multiplier, WizardZombie.baseHp * game.multiplier, WizardZombie.baseMovementSpeed * game.multiplier, WizardZombie.baseRange * game.multiplier,stage);
                     enemyAL.add(enemy);
                     break;
             }
@@ -352,13 +368,11 @@ public class GameScreen implements Screen {
         }
     }
 
-    public void connectSocket() {
+    public void connectSocket(){
         try {
             socket = IO.socket("http://localhost:3000/");
             socket.connect();
-
-
-        } catch (Exception e) {
+        } catch(Exception e){
             System.out.println(e);
         }
     }
@@ -504,39 +518,35 @@ public class GameScreen implements Screen {
         }).on("getMonsters", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                final JSONArray objects = (JSONArray) args[0];
-                Gdx.app.postRunnable(new Runnable() {
-                    @Override
-                    public void run() {
-                        JSONObject object;
-                        Enemy enemy = null;
-                        float multiplier;
-                        try {
-                            for (int i = 0; i < objects.length(); i++) {
-                                object = objects.getJSONObject(i);
-                                multiplier = ((Double) object.getDouble("multiplier")).floatValue();
-                                switch (object.getInt("id")) {
-                                    case 0:
-                                        enemy = new Golem(game, Golem.baseAttack * multiplier, Golem.baseDefense * multiplier, Golem.baseAttackSpeed * multiplier, Golem.baseHp * multiplier, Golem.baseMovementSpeed * multiplier, Golem.baseRange);
-                                        break;
-                                    case 1:
-                                        enemy = new WizardZombie(game, WizardZombie.baseAttack * multiplier, WizardZombie.baseDefense * multiplier, WizardZombie.baseAttackSpeed * multiplier, WizardZombie.baseHp * multiplier, WizardZombie.baseMovementSpeed * multiplier, WizardZombie.baseRange);
-                                        break;
-                                    case 2:
-                                        enemy = new SwordZombie(game, SwordZombie.baseAttack * multiplier, SwordZombie.baseDefense * multiplier, SwordZombie.baseAttackSpeed * multiplier, SwordZombie.baseHp * multiplier, SwordZombie.baseMovementSpeed * multiplier, SwordZombie.baseRange);
-                                        break;
-                                }
-                                if (enemy != null) {
-                                    enemy.setPosition(((Double) object.getDouble("x")).floatValue(), ((Double) object.getDouble("y")).floatValue());
-                                    enemyAL.add(enemy);
-                                    stage.addActor(enemy);
-                                }
-                            }
-                        } catch (JSONException e) {
-                            Gdx.app.log("ERROR_ARRAY", "Error getting monsters Array... Error: " + e.getMessage());
+                JSONArray objects = (JSONArray) args[0];
+
+                JSONObject object;
+                Enemy enemy = null;
+                float multiplier;
+                try {
+                    for (int i = 0; i < objects.length(); i++) {
+                        object = objects.getJSONObject(i);
+                        multiplier = ((Double) object.getDouble("multiplier")).floatValue();
+                        switch (object.getInt("id")) {
+                            case 0:
+                                enemy = new Golem(game);
+                                break;
+                            case 1:
+                                enemy = new WizardZombie(game);
+                                break;
+                            case 2:
+                                enemy = new SwordZombie(game);
+                                break;
+                        }
+                        if (enemy != null) {
+                            enemy.setPosition(((Double) object.getDouble("x")).floatValue(), ((Double) object.getDouble("y")).floatValue());
+                            enemy.setMultiplier(multiplier);
+                            initializableMonsters.add(enemy);
                         }
                     }
-                });
+                } catch (JSONException e) {
+                    Gdx.app.log("ERROR_ARRAY", "Error getting monsters Array... Error: " + e.getMessage());
+                }
 
 
             }
@@ -562,7 +572,6 @@ public class GameScreen implements Screen {
                     }
                     if (enemy != null) {
                         enemy.setPosition(((Double) object.getDouble("x")).floatValue(), ((Double) object.getDouble("y")).floatValue());
-                        System.out.println("X: " + enemy.getX() + ", Y: " + enemy.getY());
                         enemy.setMultiplier(multiplier);
                         initializableMonsters.add(enemy);
                         /*enemyAL.add(enemy);
@@ -573,6 +582,12 @@ public class GameScreen implements Screen {
                 }
             }
         });
+    }
+
+    public static float getDistance(Enemy enemy, Playable player){
+        Vector2 source = new Vector2(player.getX(), player.getY());
+        Vector2 target = new Vector2(enemy.getX(), enemy.getY());
+        return source.dst(target);
     }
 
     public byte[] serialize(Object obj) throws IOException {

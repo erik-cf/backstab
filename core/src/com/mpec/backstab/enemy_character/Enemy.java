@@ -1,5 +1,6 @@
 package com.mpec.backstab.enemy_character;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,11 +12,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mpec.backstab.game.AvailableActions;
 import com.mpec.backstab.game.Backstab;
+import com.mpec.backstab.game.GameScreen;
+import com.mpec.backstab.main_character.OtherPlayer;
+import com.mpec.backstab.main_character.Playable;
 import com.mpec.backstab.map.MapGenerator;
 
 import java.util.Date;
+import java.util.Map;
 
 public class Enemy extends Actor implements AvailableActions {
     protected Sound slashEnemy;
@@ -29,52 +35,58 @@ public class Enemy extends Actor implements AvailableActions {
 
     public boolean isInitialized;
 
+    private Playable nearestPlayer;
+
     public double vidaActual;
 
     boolean playSoundSlash=true;
     int contadorSlash=0;
-    
+    float distanceAux;
     protected double attack;
     protected double defense;
     protected double attack_speed;
     protected double hp;
     protected double movement_speed;
     protected double range;
+    float minDistance;
+
     protected float multiplier;
 
     private boolean ataqueRealizado=false;
     int numSeconds;
 
     private Date tiempo= new Date();
-    
+
     final Backstab game;
 
-    public Enemy(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range) {
+    Stage stage;
+
+    public Enemy(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range,Stage stage) {
         this.game = game;
         this.attack = attack;
         this.defense = defense;
         this.attack_speed = attack_speed;
         this.hp = hp;
+        this.stage=stage;
         this.movement_speed = movement_speed;
         this.range = range;
         this.vidaActual = hp;
         direction = LOOK_DOWN;
         enemyRectangle =new Rectangle();
-        Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
-                Enemy.this.healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
-            }
-        });
+        this.healthRedBar=new Texture(Gdx.files.internal("Enemy/enemyHealthBar/redbar.png"));
         isInitialized = true;
         slashEnemy=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
         this.setX((float)Math.random()* MapGenerator.WORLD_WIDTH);
         this.setY((float)Math.random()* MapGenerator.WORLD_HEIGHT);
+        minDistance = 9999;
+        distanceAux = 0;
     }
 
     public Enemy(Backstab game){
         this.game = game;
         isInitialized = false;
+        minDistance = 9999;
+        distanceAux = 0;
     }
 
     public void initialize(double attack, double defense, double attack_speed, double hp, double movement_speed, double range){
@@ -94,13 +106,18 @@ public class Enemy extends Actor implements AvailableActions {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-       if(vidaActual>0) {
-           enemyRectangle.setPosition(getX(), getY());
-           if(enemySprite != null && enemySprite.getTexture() != null && healthRedBar != null) {
-               batch.draw(enemySprite, getX(), getY());
-               batch.draw(healthRedBar, getX() + 2, getY() + 65, (int) (healthRedBar.getWidth() * (vidaActual / hp)), healthRedBar.getHeight());
-           }
-       }
+        if(vidaActual>0) {
+            enemyRectangle.setPosition(getX(), getY());
+            batch.draw(enemySprite, getX(), getY());
+            batch.draw(healthRedBar, getX()+2, getY()+65, (int) (healthRedBar.getWidth() * (vidaActual/hp)), healthRedBar.getHeight());
+        }
+        else{
+            if(this == null) {
+                stage.getActors().removeValue(this, true);
+                GameScreen.enemyAL.removeValue(this, true);
+            }
+
+        }
     }
 
     @Override
@@ -212,12 +229,26 @@ public class Enemy extends Actor implements AvailableActions {
     }
 
     public void followPlayer() {
+
+        for(Map.Entry<String, OtherPlayer> entry : GameScreen.otherPlayers.entrySet()){
+            distanceAux = GameScreen.getDistance(this, entry.getValue());
+            if(distanceAux < minDistance){
+                nearestPlayer = entry.getValue();
+                minDistance = distanceAux;
+            }
+        }
+        distanceAux = GameScreen.getDistance(this, game.timmy);
+        if(distanceAux < minDistance){
+            nearestPlayer = game.timmy;
+            minDistance = distanceAux;
+        }
+
         numSeconds = (int)((new Date().getTime() - tiempo.getTime()) / 1000);
-        
-        if (((game.timmy.getY() - getY() >= -1) && (game.timmy.getY() - getY() <= 1)) && game.timmy.getX() > getX()) {
+
+        if (((nearestPlayer.getY() - getY() >= -1) && (nearestPlayer.getY() - getY() <= 1)) && nearestPlayer.getX() > getX()) {
 
 
-            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+            if(((nearestPlayer.getY() - getY() <= range) && (nearestPlayer.getX() - getX() <= range)) && ((nearestPlayer.getY() - getY() >= -range) && (nearestPlayer.getX() - getX() >= -range))){
 
                 if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
                     goAttack(LOOK_RIGHT);
@@ -232,8 +263,8 @@ public class Enemy extends Actor implements AvailableActions {
                 actionToDraw(MOVE_RIGHT);
                 this.setX(getX() + (int)getMovement_speed());
             }
-        } else if (((game.timmy.getY() - getY() >= -1) && (game.timmy.getY() - getY() <= 1)) && game.timmy.getX() < getX()) {
-            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+        } else if (((nearestPlayer.getY() - getY() >= -1) && (nearestPlayer.getY() - getY() <= 1)) && nearestPlayer.getX() < getX()) {
+            if(((nearestPlayer.getY() - getY() <= range) && (nearestPlayer.getX() - getX() <= range)) && ((nearestPlayer.getY() - getY() >= -range) && (nearestPlayer.getX() - getX() >= -range))){
                 if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
                     goAttack(LOOK_LEFT);
                     ataqueRealizado=true;
@@ -244,11 +275,11 @@ public class Enemy extends Actor implements AvailableActions {
             }
             else {
                 actionToDraw(MOVE_LEFT);
-                
+
                 this.setX(getX() - (int)getMovement_speed());
             }
-        } else if (((game.timmy.getX() - getX() >= -1) && (game.timmy.getX() - getX() <= 1)) && game.timmy.getY() > getY()) {
-            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+        } else if (((nearestPlayer.getX() - getX() >= -1) && (nearestPlayer.getX() - getX() <= 1)) && nearestPlayer.getY() > getY()) {
+            if(((nearestPlayer.getY() - getY() <= range) && (nearestPlayer.getX() - getX() <= range)) && ((nearestPlayer.getY() - getY() >= -range) && (nearestPlayer.getX() - getX() >= -range))){
                 if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
                     goAttack(LOOK_UP);
                     ataqueRealizado=true;
@@ -266,9 +297,9 @@ public class Enemy extends Actor implements AvailableActions {
                 this.setY(getY() + (int)getMovement_speed());
                 this.setX(getX());
             }
-        } else if (((game.timmy.getX() - getX() >= -1) && (game.timmy.getX() - getX() <= 1)) && game.timmy.getY() < getY()) {
+        } else if (((nearestPlayer.getX() - getX() >= -1) && (nearestPlayer.getX() - getX() <= 1)) && nearestPlayer.getY() < getY()) {
 
-            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+            if(((nearestPlayer.getY() - getY() <= range) && (nearestPlayer.getX() - getX() <= range)) && ((nearestPlayer.getY() - getY() >= -range) && (nearestPlayer.getX() - getX() >= -range))){
                 if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
                     goAttack(LOOK_DOWN);
                     ataqueRealizado=true;
@@ -281,8 +312,8 @@ public class Enemy extends Actor implements AvailableActions {
                 actionToDraw(MOVE_DOWN);
                 this.setY(getY() - (int)getMovement_speed());
             }
-        } else if (game.timmy.getY() > getY() && game.timmy.getX() > getX()) {
-            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+        } else if (nearestPlayer.getY() > getY() && nearestPlayer.getX() > getX()) {
+            if(((nearestPlayer.getY() - getY() <= range) && (nearestPlayer.getX() - getX() <= range)) && ((nearestPlayer.getY() - getY() >= -range) && (nearestPlayer.getX() - getX() >= -range))){
                 if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
                     goAttack(LOOK_RIGHT);
                     ataqueRealizado=true;
@@ -299,8 +330,8 @@ public class Enemy extends Actor implements AvailableActions {
                 this.setX(getX() + (int)getMovement_speed());
             }
 
-        } else if (game.timmy.getY() > getY() && game.timmy.getX() < getX()) {
-            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+        } else if (nearestPlayer.getY() > getY() && nearestPlayer.getX() < getX()) {
+            if(((nearestPlayer.getY() - getY() <= range) && (nearestPlayer.getX() - getX() <= range)) && ((nearestPlayer.getY() - getY() >= -range) && (nearestPlayer.getX() - getX() >= -range))){
                 if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
                     goAttack(LOOK_LEFT);
                     ataqueRealizado=true;
@@ -315,8 +346,8 @@ public class Enemy extends Actor implements AvailableActions {
                 this.setY(getY() + (int)getMovement_speed());
                 this.setX(getX() - (int)getMovement_speed());
             }
-        } else if (game.timmy.getY() < getY() && game.timmy.getX() > getX()) {
-            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+        } else if (nearestPlayer.getY() < getY() && nearestPlayer.getX() > getX()) {
+            if(((nearestPlayer.getY() - getY() <= range) && (nearestPlayer.getX() - getX() <= range)) && ((nearestPlayer.getY() - getY() >= -range) && (nearestPlayer.getX() - getX() >= -range))){
                 if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
                     goAttack(LOOK_RIGHT);
                     ataqueRealizado=true;
@@ -331,8 +362,8 @@ public class Enemy extends Actor implements AvailableActions {
                 this.setY(getY() - (int)getMovement_speed());
                 this.setX(getX() + (int)getMovement_speed());
             }
-        } else if (game.timmy.getY() < getY() && game.timmy.getX() < getX()) {
-            if(((game.timmy.getY() - getY() <= range) && (game.timmy.getX() - getX() <= range)) && ((game.timmy.getY() - getY() >= -range) && (game.timmy.getX() - getX() >= -range))){
+        } else if (nearestPlayer.getY() < getY() && nearestPlayer.getX() < getX()) {
+            if(((nearestPlayer.getY() - getY() <= range) && (nearestPlayer.getX() - getX() <= range)) && ((nearestPlayer.getY() - getY() >= -range) && (nearestPlayer.getX() - getX() >= -range))){
                 if(numSeconds%attack_speed==0 && ataqueRealizado==false) {
                     goAttack(LOOK_LEFT);
                     ataqueRealizado=true;
@@ -417,7 +448,7 @@ public class Enemy extends Actor implements AvailableActions {
 
         }
     }
-    
+
     public double getVidaActual() {
         return vidaActual;
     }

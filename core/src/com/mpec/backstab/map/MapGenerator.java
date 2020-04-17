@@ -184,7 +184,7 @@ public class MapGenerator {
                 paintedNumbers.add((y - i) + "," + (x + j));
                 rect = new Rectangle();
                 rect.setSize(16, 16);
-                rect.setPosition((x+j) * 16, (y-i) * 16);
+                rect.setPosition((x-j) * 16, (y-i) * 16);
                 collision.add(rect);
             }
         }
