@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mpec.backstab.enemy_character.Enemy;
 import com.mpec.backstab.game.AvailableActions;
+
 import com.mpec.backstab.game.GameScreen;
 import com.mpec.backstab.map.MapGenerator;
 
@@ -22,20 +23,19 @@ public class Bullet extends Actor implements AvailableActions {
     public TextureAtlas energyBall;
     Rectangle bulletRectangle;
     Stage stage;
-    Enemy enemy;
     double attackDamage;
     double range;
 
-    public Bullet(double angleToEnemy, double bulletX, double bulletY, Stage stage, Enemy enemy,double attack, double range) {
+    public Bullet(double angleToEnemy, double bulletX, double bulletY, Stage stage, double attack, double range) {
         this.angleToEnemy = angleToEnemy;
         this.bulletX = bulletX;
         this.bulletY = bulletY;
         this.stage=stage;
-        this.enemy=enemy;
         this.attackDamage=attack;
         this.range = range;
         bulletRectangle=new Rectangle();
         bulletRectangle.setPosition((float)bulletX,(float)bulletY);
+        bulletRectangle.setSize(48, 48);
         energyBall = new TextureAtlas(Gdx.files.internal("Weapon/energyball.txt"));
 
         auxBulletX = bulletX;
@@ -64,13 +64,10 @@ public class Bullet extends Actor implements AvailableActions {
             stage.getActors().removeValue(this,true);
 
         }
-        for(Rectangle rect: MapGenerator.collision ){
+        for(Enemy enemy : GameScreen.enemyAL){
 
-
-
-
-            if(this.bulletRectangle.overlaps(rect)){
-                hitEnemy();
+            if(this.bulletRectangle.overlaps(enemy.getEnemyRectangle())){
+                hitEnemy(enemy);
             }
 
 
@@ -79,15 +76,15 @@ public class Bullet extends Actor implements AvailableActions {
 
     }
 
-    public void hitEnemy(){
-
-
-
-
-
+    public void hitEnemy(Enemy enemy){
         stage.getActors().removeValue(this,true);
         enemy.setVidaActual(enemy.getVidaActual()-(attackDamage-enemy.getDefense()));
-
+        if(enemy.getVidaActual() <= 0){
+            stage.getActors().removeValue(enemy, true);
+            GameScreen.enemyAL.removeValue(enemy, true);
+            MapGenerator.collision.removeValue(enemy.getEnemyRectangle(), true);
+            GameScreen.killedEnemies.add(enemy);
+        }
     }
 
 

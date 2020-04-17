@@ -21,15 +21,9 @@ public class SwordZombie extends Enemy implements AvailableActions {
 
     public SwordZombie(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range, Stage stage) {
         super(game, attack, defense, attack_speed, hp, movement_speed, range,stage);
-        Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
                 enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/SwordZombie/sword-zombie.txt"));
                 goIdle();
                 enemyRectangle.setSize(enemySprite.getWidth(), enemySprite.getHeight());
-            }
-
-        });
     }
 
     public SwordZombie(Backstab game){

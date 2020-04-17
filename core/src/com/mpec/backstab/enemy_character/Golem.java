@@ -13,19 +13,13 @@ public class Golem extends Enemy {
     public static double baseHp;
     public static double baseAttackSpeed;
     public static double baseRange;
-    Stage stage;
 
 
     public Golem(Backstab game, double attack, double defense, double attack_speed, double hp, double movement_speed, double range,Stage stage){
         super(game, attack, defense, attack_speed, hp, movement_speed, range,stage);
-        Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
                 enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/golemEnemy.txt"));
                 goIdle();
                 enemyRectangle.setSize(enemySprite.getWidth(), enemySprite.getHeight());
-            }
-        });
     }
 
     public Golem(Backstab game){
@@ -37,7 +31,7 @@ public class Golem extends Enemy {
         super.initialize(attack, defense, attack_speed, hp, movement_speed, range);
         enemyAtlas = new TextureAtlas(Gdx.files.internal("Enemy/golemEnemy.txt"));
         goIdle();
-        enemyRectangle.setSize(enemySprite.getWidth(), enemySprite.getHeight());
+        enemyRectangle.setSize(enemySprite.getTexture().getWidth(), enemySprite.getTexture().getHeight());
     }
 
     @Override

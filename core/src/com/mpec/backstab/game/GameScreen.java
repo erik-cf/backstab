@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.mpec.backstab.enemy_character.Enemy;
 import com.mpec.backstab.enemy_character.Golem;
 import com.mpec.backstab.enemy_character.SwordZombie;
@@ -42,12 +43,15 @@ import io.socket.emitter.Emitter;
 
 public class GameScreen implements Screen {
 
-    private final float UPDATE_TIME = 1/60f;
+    private final float UPDATE_TIME = 1/20f;
 
     float timer;
 
-    String id;
+    private int whichEnemyID;
 
+    String id;
+    JSONObject enemyJSON;
+    JSONArray enemyJSONArray;
     final Backstab game;
     Stage stage;
     TouchPadTest touchpad;
@@ -65,6 +69,8 @@ public class GameScreen implements Screen {
 
     JSONObject updater;
 
+    public static Array<Enemy> killedEnemies;
+
     public static HashMap<String, OtherPlayer> otherPlayers;
 
     int ranking = 1;
@@ -75,7 +81,7 @@ public class GameScreen implements Screen {
 
     Array<Enemy> initializableMonsters;
 
-    boolean multiplayer = false;
+    public static boolean multiplayer = false;
 
 
     public GameScreen(Backstab game) {
@@ -92,6 +98,7 @@ public class GameScreen implements Screen {
         touchpad = new TouchPadTest();
         stage.addActor(game.timmy);
         stage.addActor(touchpad);
+        killedEnemies = new Array<Enemy>();
         enemyAL = new Array<Enemy>();
         connectSocket();
         sendInitialPosition();
@@ -112,16 +119,38 @@ public class GameScreen implements Screen {
 
     public void updateServer(float delta) {
         timer += delta;
-        if (timer >= UPDATE_TIME && game.timmy.hasMoved()) {
-            updater = new JSONObject();
-            try {
-                updater.put("x", game.timmy.getX());
-                updater.put("y", game.timmy.getY());
-                updater.put("direction", game.timmy.getDirection());
-                socket.emit("playerMoved", updater);
-            } catch (JSONException e) {
-                Gdx.app.log("SOCKETIO", "Error sending data to server! in updateServer()");
+        if (timer >= UPDATE_TIME){
+            if(game.timmy.hasMoved()) {
+                updater = new JSONObject();
+                try {
+                    updater.put("x", game.timmy.getX());
+                    updater.put("y", game.timmy.getY());
+                    updater.put("direction", game.timmy.getDirection());
+                    socket.emit("playerMoved", updater);
+                } catch (JSONException e) {
+                    Gdx.app.log("SOCKETIO", "Error sending data to server! in updateServer()");
+                }
             }
+
+            updater = new JSONObject();
+            enemyJSONArray = new JSONArray();
+            try {
+                for (int i = 0; i < enemyAL.size; i++) {
+                    enemyJSON = new JSONObject();
+                    enemyJSON.put("id", enemyAL.get(i).getId());
+                    enemyJSON.put("whichEnemyId", enemyAL.get(i).getWhichEnemyId());
+                    enemyJSON.put("x", enemyAL.get(i).getX());
+                    enemyJSON.put("y", enemyAL.get(i).getY());
+                    enemyJSON.put("multiplier", enemyAL.get(i).getMultiplier());
+                    enemyJSON.put("vidaActual", enemyAL.get(i).getVidaActual());
+                    enemyJSONArray.put(enemyJSON);
+                }
+                updater.put("enemy", enemyJSONArray);
+                socket.emit("updateMonsters", updater);
+            }catch(GdxRuntimeException e){
+
+            }
+            timer = 0;
         }
     }
 
@@ -166,8 +195,7 @@ public class GameScreen implements Screen {
         touchpad.setBounds(game.camera.position.x - touchpad.getWidth() / 2, game.camera.position.y - stage.getHeight() / 2 + 15, 150, 150);
         endDate = new Date();
         numSeconds = (int) ((endDate.getTime() - startDate.getTime()) / 1000);
-        movingX = (float) (game.timmy.getX() + touchpad.getKnobPercentX() * game.timmy.getMovement_speed());
-        movingY = (float) (game.timmy.getY() + touchpad.getKnobPercentY() * game.timmy.getMovement_speed());
+
 
         ranking = otherPlayers.size() + 1;
 
@@ -194,6 +222,8 @@ public class GameScreen implements Screen {
         }
 
         if (!playerOverlaps()) {
+            movingX = (float) (game.timmy.getX() + touchpad.getKnobPercentX() * game.timmy.getMovement_speed() * Gdx.graphics.getDeltaTime());
+            movingY = (float) (game.timmy.getY() + touchpad.getKnobPercentY() * game.timmy.getMovement_speed() * Gdx.graphics.getDeltaTime());
             game.timmy.getPlayableRectangle().setPosition(movingX, movingY);
             game.timmy.setPosition(movingX, movingY);
         }
@@ -453,7 +483,6 @@ public class GameScreen implements Screen {
                     Double x = data.getDouble("x");
                     Double y = data.getDouble("y");
                     if (otherPlayers.get(playerId) != null) {
-                        System.out.println("Ha entrado aqui!!!!!");
                         OtherPlayer otherPlayer = otherPlayers.get(playerId);
                         otherPlayer.setPosition(x.floatValue(), y.floatValue());
                         otherPlayer.setDirection(data.getInt("direction"));
@@ -527,7 +556,7 @@ public class GameScreen implements Screen {
                     for (int i = 0; i < objects.length(); i++) {
                         object = objects.getJSONObject(i);
                         multiplier = ((Double) object.getDouble("multiplier")).floatValue();
-                        switch (object.getInt("id")) {
+                        switch (object.getInt("whichEnemyId")) {
                             case 0:
                                 enemy = new Golem(game);
                                 break;
@@ -541,6 +570,7 @@ public class GameScreen implements Screen {
                         if (enemy != null) {
                             enemy.setPosition(((Double) object.getDouble("x")).floatValue(), ((Double) object.getDouble("y")).floatValue());
                             enemy.setMultiplier(multiplier);
+                            enemy.setId(object.getLong("id"));
                             initializableMonsters.add(enemy);
                         }
                     }
@@ -550,16 +580,38 @@ public class GameScreen implements Screen {
 
 
             }
+        }).on("updateMonsters", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONArray objects = ((JSONObject) args[0]).getJSONArray("enemy");
+                JSONObject object;
+                try {
+                    for (int i = 0; i < objects.length(); i++) {
+                        object = objects.getJSONObject(i);
+                        for(Enemy enemy : enemyAL){
+                            if(object.getLong("id") == enemy.getId()){
+                                enemy.setX(((Double)object.getDouble("x")).floatValue());
+                                enemy.setY(((Double)object.getDouble("y")).floatValue());
+                                enemy.setVidaActual(object.getDouble("vidaActual"));
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    Gdx.app.log("ERROR_ARRAY", "Error getting monsters Array to update... Error: " + e.getMessage());
+                }
+
+
+            }
         }).on("createMonster", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                System.out.println("Ha entrado en newMonster!");
+
                 JSONObject object = (JSONObject) args[0];
                 Enemy enemy = null;
                 float multiplier;
                 try {
                     multiplier = ((Double) object.getDouble("multiplier")).floatValue();
-                    switch (object.getInt("id")) {
+                    switch (object.getInt("whichEnemyId")) {
                         case 0:
                             enemy = new Golem(game);
                             break;
@@ -573,6 +625,7 @@ public class GameScreen implements Screen {
                     if (enemy != null) {
                         enemy.setPosition(((Double) object.getDouble("x")).floatValue(), ((Double) object.getDouble("y")).floatValue());
                         enemy.setMultiplier(multiplier);
+                        enemy.setId(object.getLong("id"));
                         initializableMonsters.add(enemy);
                         /*enemyAL.add(enemy);
                         stage.addActor(enemy);*/
@@ -587,7 +640,7 @@ public class GameScreen implements Screen {
     public static float getDistance(Enemy enemy, Playable player){
         Vector2 source = new Vector2(player.getX(), player.getY());
         Vector2 target = new Vector2(enemy.getX(), enemy.getY());
-        return source.dst(target);
+        return (float)Math.sqrt(Math.pow((source.x - target.x), 2) + Math.pow((source.y - target.y), 2));
     }
 
     public byte[] serialize(Object obj) throws IOException {

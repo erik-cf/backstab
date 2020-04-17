@@ -165,7 +165,7 @@ public class Playable extends Actor implements AvailableActions {
             //calcula el angulo al que esta el enemigo
             if(enemigoMasCercano != null) {
                 angleToEnemy = Math.atan2(enemigoMasCercano.getY() - getY(), enemigoMasCercano.getX() - getX());
-                bullet = new Bullet(angleToEnemy, getX(), getY(), stage, enemigoMasCercano, attack, range);
+                bullet = new Bullet(angleToEnemy, getX(), getY(), stage, attack, range);
                 bulletAL.add(bullet);
                 stage.addActor(bullet);
 
