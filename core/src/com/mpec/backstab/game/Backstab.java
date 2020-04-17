@@ -12,6 +12,7 @@ import com.mpec.backstab.api.ApiTools;
 import com.mpec.backstab.main_character.Timmy;
 import com.mpec.backstab.map.MapGenerator;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Backstab extends Game {
@@ -31,6 +32,7 @@ public class Backstab extends Game {
 	public Timmy timmy;
 
 	JSONObject getter;
+	JSONArray getterArray;
 
 	FitViewport viewport;
 	public float stateTime;
@@ -53,6 +55,8 @@ public class Backstab extends Game {
 			maxDrop = getter.getInt("max_drop_time");
 			baseMonsters = getter.getInt("base_monsters_count");
 			collisionProb = getter.getInt("collision_probability");
+			//getterArray = ApiTools.InfoRequest("DropsData").getJSONArray("dropsData");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,12 +1,16 @@
 package com.mpec.backstab.drops;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mpec.backstab.main_character.Playable;
 
 public class Drop extends Actor {
 
-    protected String name;
+    protected long id;
+
+    protected String dropName;
     protected int value;
     protected int duration;
     protected int min_range;
@@ -15,10 +19,14 @@ public class Drop extends Actor {
     protected Texture dropTexture;
     protected Rectangle dropRectangle;
 
+    protected long pickedAt;
+
+    protected Playable owner;
+
     protected boolean active;
 
-    public Drop(String name, int value, int duration, int min_range, int max_range){
-        this.name = name;
+    public Drop(String dropName, int value, int duration, int min_range, int max_range){
+        this.dropName = dropName;
         this.value = value;
         this.duration = duration;
         this.min_range = min_range;
@@ -27,13 +35,19 @@ public class Drop extends Actor {
     }
 
     @Override
-    public String getName() {
-        return name;
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
+        if(dropTexture != null){
+            batch.draw(dropTexture, getX(), getY());
+        }
     }
 
-    @Override
-    public void setName(String name) {
-        this.name = name;
+    public String getDropName() {
+        return dropName;
+    }
+
+    public void setDropName(String name) {
+        this.dropName = name;
     }
 
     public int getValue() {
@@ -90,5 +104,29 @@ public class Drop extends Actor {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Playable getOwner(){
+        return this.owner;
+    }
+
+    public void setOwner(Playable owner){
+        this.owner = owner;
+    }
+
+    public long getPickedAt() {
+        return pickedAt;
+    }
+
+    public void setPickedAt(long pickedAt) {
+        this.pickedAt = pickedAt;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

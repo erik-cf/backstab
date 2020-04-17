@@ -1,6 +1,7 @@
 package com.mpec.backstab.main_character;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
@@ -25,8 +26,11 @@ public class Bullet extends Actor implements AvailableActions {
     Stage stage;
     double attackDamage;
     double range;
+    boolean isLocal;
 
-    public Bullet(double angleToEnemy, double bulletX, double bulletY, Stage stage, double attack, double range) {
+    public Sound energyBulletSound;
+
+    public Bullet(double angleToEnemy, double bulletX, double bulletY, Stage stage, double attack, double range, boolean isLocal) {
         this.angleToEnemy = angleToEnemy;
         this.bulletX = bulletX;
         this.bulletY = bulletY;
@@ -37,9 +41,32 @@ public class Bullet extends Actor implements AvailableActions {
         bulletRectangle.setPosition((float)bulletX,(float)bulletY);
         bulletRectangle.setSize(48, 48);
         energyBall = new TextureAtlas(Gdx.files.internal("Weapon/energyball.txt"));
-
+        this.isLocal = isLocal;
         auxBulletX = bulletX;
         auxBulletY = bulletY;
+        GameScreen.bulletIsShot = true;
+        energyBulletSound=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/Shoots/energyBallSound.wav"));
+        energyBulletSound.play(0.2f);
+    }
+
+    public Bullet(double angleToEnemy, double bulletX, double bulletY, Stage stage, double range, boolean isLocal){
+        this.angleToEnemy = angleToEnemy;
+        this.bulletX = bulletX;
+        this.bulletY = bulletY;
+        this.stage=stage;
+        this.range = range;
+        auxBulletX = bulletX;
+        auxBulletY = bulletY;
+        bulletRectangle=new Rectangle();
+        bulletRectangle.setPosition((float)bulletX,(float)bulletY);
+        bulletRectangle.setSize(48, 48);
+        this.isLocal = false;
+    }
+
+    public void initialize(){
+        energyBall = new TextureAtlas(Gdx.files.internal("Weapon/energyball.txt"));
+        energyBulletSound=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/Shoots/energyBallSound.wav"));
+        energyBulletSound.play(0.2f);
     }
 
     @Override
@@ -64,10 +91,10 @@ public class Bullet extends Actor implements AvailableActions {
             stage.getActors().removeValue(this,true);
 
         }
-        for(Enemy enemy : GameScreen.enemyAL){
+        for(int i = 0; i < GameScreen.enemyAL.size; i++){//Enemy enemy : GameScreen.enemyAL){
 
-            if(this.bulletRectangle.overlaps(enemy.getEnemyRectangle())){
-                hitEnemy(enemy);
+            if(this.bulletRectangle.overlaps(GameScreen.enemyAL.get(i).getEnemyRectangle())){
+                hitEnemy(GameScreen.enemyAL.get(i));
             }
 
 
@@ -78,12 +105,14 @@ public class Bullet extends Actor implements AvailableActions {
 
     public void hitEnemy(Enemy enemy){
         stage.getActors().removeValue(this,true);
-        enemy.setVidaActual(enemy.getVidaActual()-(attackDamage-enemy.getDefense()));
-        if(enemy.getVidaActual() <= 0){
-            stage.getActors().removeValue(enemy, true);
-            GameScreen.enemyAL.removeValue(enemy, true);
-            MapGenerator.collision.removeValue(enemy.getEnemyRectangle(), true);
-            GameScreen.killedEnemies.add(enemy);
+        if(isLocal) {
+            enemy.setVidaActual(enemy.getVidaActual() - (attackDamage - enemy.getDefense()));
+            if (enemy.getVidaActual() <= 0) {
+                stage.getActors().removeValue(enemy, true);
+                GameScreen.enemyAL.removeValue(enemy, true);
+                MapGenerator.collision.removeValue(enemy.getEnemyRectangle(), true);
+                GameScreen.killedEnemies.add(enemy.getId());
+            }
         }
     }
 
@@ -110,5 +139,9 @@ public class Bullet extends Actor implements AvailableActions {
 
     public void setBulletY(double bulletY) {
         this.bulletY = bulletY;
+    }
+
+    public double getRange(){
+        return this.range;
     }
 }

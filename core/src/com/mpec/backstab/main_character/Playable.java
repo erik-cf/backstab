@@ -38,6 +38,9 @@ public class Playable extends Actor implements AvailableActions {
     private double bulletY;
     public static Array<Bullet> bulletAL;
 
+    public static Bullet bulletToSend;
+
+
     public boolean isInitialized;
 
     private Boolean realizarAtaque;
@@ -118,7 +121,7 @@ public class Playable extends Actor implements AvailableActions {
         this.vidaActual = hp;
 
         action = new Sprite();
-        this.setPosition((float)(Math.random() * MapGenerator.WORLD_WIDTH), (float)(Math.random() * MapGenerator.WORLD_HEIGHT));
+
         playerAtlas = new TextureAtlas(Gdx.files.internal("Player/tilesetCaracter.txt"));
         energyBall = new TextureAtlas(Gdx.files.internal("Weapon/energyball.txt"));
         slashPlayer= Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/swordSlashPlayer.wav"));
@@ -164,14 +167,18 @@ public class Playable extends Actor implements AvailableActions {
             }
             //calcula el angulo al que esta el enemigo
             if(enemigoMasCercano != null) {
+                goAttack(direction);
                 angleToEnemy = Math.atan2(enemigoMasCercano.getY() - getY(), enemigoMasCercano.getX() - getX());
-                bullet = new Bullet(angleToEnemy, getX(), getY(), stage, attack, range);
+                bullet = new Bullet(angleToEnemy, getX(), getY(), stage, attack, range, true);
+                bulletToSend = bullet;
                 bulletAL.add(bullet);
                 stage.addActor(bullet);
 
                 distanceBetween = 0;
                 distanceAUX = 1000000;
                 angleToEnemy = 0;
+            }else{
+                goIdle();
             }
 
         }
@@ -235,7 +242,6 @@ public class Playable extends Actor implements AvailableActions {
     }
 
     public void goAttack(int direction){
-        slashPlayer.play(1);
         switch(direction){
             case LOOK_UP:
                 animation = new Animation<TextureRegion>(2f, playerAtlas.findRegions(name_bow_up), Animation.PlayMode.LOOP);

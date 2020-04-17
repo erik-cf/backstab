@@ -19,6 +19,7 @@ import com.mpec.backstab.enemy_character.Enemy;
 import com.mpec.backstab.enemy_character.Golem;
 import com.mpec.backstab.enemy_character.SwordZombie;
 import com.mpec.backstab.enemy_character.WizardZombie;
+import com.mpec.backstab.main_character.Bullet;
 import com.mpec.backstab.main_character.OtherPlayer;
 import com.mpec.backstab.main_character.Playable;
 import com.mpec.backstab.map.MapGenerator;
@@ -49,6 +50,8 @@ public class GameScreen implements Screen {
 
     private int whichEnemyID;
 
+    public static boolean bulletIsShot;
+
     String id;
     JSONObject enemyJSON;
     JSONArray enemyJSONArray;
@@ -61,7 +64,7 @@ public class GameScreen implements Screen {
     Date endDate;
     int numSeconds;
     float attackTimer;
-    public Sound energyBulletSound;
+
 
     private BitmapFont rankingDraw;
 
@@ -69,7 +72,7 @@ public class GameScreen implements Screen {
 
     JSONObject updater;
 
-    public static Array<Enemy> killedEnemies;
+    public static Array<Long> killedEnemies;
 
     public static HashMap<String, OtherPlayer> otherPlayers;
 
@@ -80,6 +83,7 @@ public class GameScreen implements Screen {
     float movingY;
 
     Array<Enemy> initializableMonsters;
+    Array<Bullet> initializableBullets;
 
     public static boolean multiplayer = false;
 
@@ -91,14 +95,16 @@ public class GameScreen implements Screen {
         otherPlayers = new HashMap<String, OtherPlayer>();
         attackTimer=0;
         rankingDraw = new BitmapFont();
-        energyBulletSound=Gdx.audio.newSound(Gdx.files.internal("Sounds/Player/Shoots/energyBallSound.wav"));
+
         rankingDraw.setColor(Color.BLACK);
         rankingDraw.getData().setScale(5, 5);
         initializableMonsters = new Array<Enemy>();
+        initializableBullets = new Array<Bullet>();
         touchpad = new TouchPadTest();
+        bulletIsShot = false;
         stage.addActor(game.timmy);
         stage.addActor(touchpad);
-        killedEnemies = new Array<Enemy>();
+        killedEnemies = new Array<Long>();
         enemyAL = new Array<Enemy>();
         connectSocket();
         sendInitialPosition();
@@ -134,23 +140,42 @@ public class GameScreen implements Screen {
 
             updater = new JSONObject();
             enemyJSONArray = new JSONArray();
-            try {
-                for (int i = 0; i < enemyAL.size; i++) {
-                    enemyJSON = new JSONObject();
-                    enemyJSON.put("id", enemyAL.get(i).getId());
-                    enemyJSON.put("whichEnemyId", enemyAL.get(i).getWhichEnemyId());
-                    enemyJSON.put("x", enemyAL.get(i).getX());
-                    enemyJSON.put("y", enemyAL.get(i).getY());
-                    enemyJSON.put("multiplier", enemyAL.get(i).getMultiplier());
-                    enemyJSON.put("vidaActual", enemyAL.get(i).getVidaActual());
-                    enemyJSONArray.put(enemyJSON);
-                }
-                updater.put("enemy", enemyJSONArray);
-                socket.emit("updateMonsters", updater);
-            }catch(GdxRuntimeException e){
 
+            for (int i = 0; i < enemyAL.size; i++) {
+                enemyJSON = new JSONObject();
+                enemyJSON.put("id", enemyAL.get(i).getId());
+                enemyJSON.put("whichEnemyId", enemyAL.get(i).getWhichEnemyId());
+                enemyJSON.put("x", enemyAL.get(i).getX());
+                enemyJSON.put("y", enemyAL.get(i).getY());
+                enemyJSON.put("multiplier", enemyAL.get(i).getMultiplier());
+                enemyJSON.put("vidaActual", enemyAL.get(i).getVidaActual());
+                enemyJSONArray.put(enemyJSON);
             }
+            updater.put("enemy", enemyJSONArray);
+            socket.emit("updateMonsters", updater);
+
+            updater = new JSONObject();
+            enemyJSONArray = new JSONArray();
+
+            for (int i = 0; i < killedEnemies.size; i++) {
+                enemyJSON = new JSONObject();
+                enemyJSON.put("id", killedEnemies.get(i));
+                enemyJSONArray.put(enemyJSON);
+            }
+            updater.put("enemy", enemyJSONArray);
+            socket.emit("enemiesDead", updater);
+
+
             timer = 0;
+        }
+        if(bulletIsShot){
+            updater = new JSONObject();
+            updater.put("angle", Playable.bulletToSend.getAngleToEnemy());
+            updater.put("x", Playable.bulletToSend.getBulletX());
+            updater.put("y", Playable.bulletToSend.getBulletY());
+            updater.put("range", Playable.bulletToSend.getRange());
+            socket.emit("bulletShot", updater);
+            GameScreen.bulletIsShot = false;
         }
     }
 
@@ -183,6 +208,11 @@ public class GameScreen implements Screen {
                 stage.addActor(initializableMonsters.get(i));
                 enemyAL.add(initializableMonsters.get(i));
                 initializableMonsters.removeIndex(i);
+            }
+            for (int i = initializableBullets.size - 1; i >= 0; i--) {
+                initializableBullets.get(i).initialize();
+                stage.addActor(initializableBullets.get(i));
+                initializableBullets.removeIndex(i);
             }
         }
 
@@ -319,14 +349,14 @@ public class GameScreen implements Screen {
                 if(game.timmy.getAttack_speed()*Gdx.graphics.getDeltaTime()<attackTimer) {
                     game.timmy.goAtackEnergyBall(true, stage);
                     attackTimer=0;
-                    energyBulletSound.play(0.2f);
+
                 }
             }
         }else{
             if(game.timmy.getAttack_speed()*Gdx.graphics.getDeltaTime()<attackTimer) {
                 game.timmy.goAtackEnergyBall(true, stage);
                 attackTimer=0;
-                energyBulletSound.play(0.2f);
+
             }
 
         }
@@ -592,7 +622,30 @@ public class GameScreen implements Screen {
                             if(object.getLong("id") == enemy.getId()){
                                 enemy.setX(((Double)object.getDouble("x")).floatValue());
                                 enemy.setY(((Double)object.getDouble("y")).floatValue());
-                                enemy.setVidaActual(object.getDouble("vidaActual"));
+                                if(enemy.getVidaActual() > object.getDouble("vidaActual")) {
+                                    enemy.setVidaActual(object.getDouble("vidaActual"));
+                                }
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    Gdx.app.log("ERROR_ARRAY", "Error getting monsters Array to update... Error: " + e.getMessage());
+                }
+
+
+            }
+        }).on("enemiesDead", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONArray objects = ((JSONObject) args[0]).getJSONArray("enemy");
+                JSONObject object;
+                try {
+                    for (int i = 0; i < objects.length(); i++) {
+                        object = objects.getJSONObject(i);
+                        for(int j = 0; j < enemyAL.size; j++){
+                            if(object.getLong("id") == enemyAL.get(j).getId()){
+                                stage.getActors().removeValue(enemyAL.get(j), true);
+                                enemyAL.removeValue(enemyAL.get(j), true);
                             }
                         }
                     }
@@ -630,6 +683,18 @@ public class GameScreen implements Screen {
                         /*enemyAL.add(enemy);
                         stage.addActor(enemy);*/
                     }
+                } catch (JSONException e) {
+                    Gdx.app.log("ERROR_newMonster", "Error getting new monster created... Error: " + e.getMessage());
+                }
+            }
+        }).on("bulletShot", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+
+                JSONObject object = (JSONObject) args[0];
+                try{
+                Bullet bullet = new Bullet(object.getDouble("angle"), object.getDouble("x"), object.getDouble("y"), stage, object.getDouble("range"), false);
+                initializableBullets.add(bullet);
                 } catch (JSONException e) {
                     Gdx.app.log("ERROR_newMonster", "Error getting new monster created... Error: " + e.getMessage());
                 }
