@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.mpec.backstab.enemy_character.Enemy;
 
 public class EndMenuScreen implements Screen {
 
@@ -86,7 +87,7 @@ public class EndMenuScreen implements Screen {
         game.batch.draw(endGameMenu, game.camera.position.x - (endGameMenu.getWidth() / 2), game.camera.position.y - (endGameMenu.getHeight() / 2));
         endButton.draw(game.batch, 1);
         gameTimeFont.draw(game.batch,"Tiempo de partida: "+totalTiempo+" segundos",game.camera.position.x - (endGameMenu.getWidth() / 2)+100, game.camera.position.y - (endGameMenu.getHeight() / 2)+250);
-        totalKillsFont.draw(game.batch,"Enemigos Matados: Over 9000",game.camera.position.x - (endGameMenu.getWidth() / 2)+100, game.camera.position.y - (endGameMenu.getHeight() / 2)+225);
+        totalKillsFont.draw(game.batch,"Enemigos Matados: "+ GameScreen.contadorMatados,game.camera.position.x - (endGameMenu.getWidth() / 2)+100, game.camera.position.y - (endGameMenu.getHeight() / 2)+225);
         totalObjectsFont.draw(game.batch,"Objetos recogidos: 1",game.camera.position.x - (endGameMenu.getWidth() / 2)+100, game.camera.position.y - (endGameMenu.getHeight() / 2)+200);
         game.batch.end();
     }

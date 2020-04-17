@@ -59,6 +59,7 @@ public class Enemy extends Actor implements AvailableActions {
 
     private Date tiempo= new Date();
 
+
     final Backstab game;
 
     private long id;
@@ -113,6 +114,7 @@ public class Enemy extends Actor implements AvailableActions {
         if(vidaActual>0) {
             batch.draw(enemySprite, getX(), getY());
             batch.draw(healthRedBar, getX()+2, getY()+65, (int) (healthRedBar.getWidth() * (vidaActual/hp)), healthRedBar.getHeight());
+
         }
     }
 
@@ -173,7 +175,7 @@ public class Enemy extends Actor implements AvailableActions {
     }
 
     protected void goAttack(int direction) {
-        //nearestPlayer.setVidaActual(nearestPlayer.getVidaActual() - (attack - nearestPlayer.getDefense()));
+        nearestPlayer.setVidaActual(nearestPlayer.getVidaActual() - (attack - nearestPlayer.getDefense()));
         if(playSoundSlash==true ) {
             slashEnemy.play(1);
             playSoundSlash=false;

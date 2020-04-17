@@ -79,6 +79,8 @@ public class GameScreen implements Screen {
     float movingX;
     float movingY;
 
+    public static int contadorMatados=0;
+
     Array<Enemy> initializableMonsters;
 
     public static boolean multiplayer = false;
